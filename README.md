@@ -1,9 +1,9 @@
-# 🧠 Brain Detox
+# 🧠 Brave Brain
 
-**Detox your brain, reclaim your focus**
+**Be brave, train your brain, reclaim your focus**
 
 <div align="center">
-  <img src="app/src/main/res/drawable/logo_no_bg.png" alt="Brain Detox Logo" width="200"/>
+  <img src="app/src/main/res/drawable/logo_no_bg.png" alt="Brave Brain Logo" width="200"/>
 </div>
 
 ---
@@ -26,9 +26,9 @@
 
 ## 🎯 Overview
 
-**Brain Detox** is a powerful Android application designed to help users break free from digital addiction and regain control over their screen time. In our hyper-connected world, it's easy to fall into the trap of endless scrolling and mindless app usage. Brain Detox provides intelligent app blocking, time tracking, and gamified challenges to promote healthier digital habits.
+**Brave Brain** is a powerful Android application designed to help users break free from digital addiction and regain control over their screen time. In our hyper-connected world, it's easy to fall into the trap of endless scrolling and mindless app usage. Brave Brain provides intelligent app blocking, time tracking, and gamified challenges to promote healthier digital habits.
 
-### Why Brain Detox?
+### Why Brave Brain?
 
 - 🎯 **Smart Blocking**: Automatically blocks distracting apps when time limits are reached
 - 📊 **Real-time Monitoring**: Tracks app usage with precision and provides detailed insights
@@ -117,8 +117,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/brain-detox.git
-   cd brain-detox
+   git clone https://github.com/Xenonesis/Brave-Brain.git
+   cd Brave-Brain
    ```
 
 2. **Open in Android Studio**
@@ -138,7 +138,7 @@
    ```
 
 ### APK Installation
-1. Download the latest APK from the [Releases](https://github.com/your-username/brain-detox/releases) page
+1. Download the latest APK from the [Releases](https://github.com/Xenonesis/Brave-Brain/releases) page
 2. Enable "Install from Unknown Sources" in your device settings
 3. Install the APK file
 4. Launch the app and complete the onboarding process
@@ -147,7 +147,7 @@
 
 ## 🔐 Permissions
 
-Brain Detox requires specific permissions to function effectively:
+Brave Brain requires specific permissions to function effectively:
 
 ### 📊 Usage Access Permission
 - **Purpose**: Monitor which apps are currently in use and track usage time
@@ -222,7 +222,7 @@ Brain Detox requires specific permissions to function effectively:
 
 ## 🏗️ Architecture
 
-Brain Detox follows modern Android development practices:
+Brave Brain follows modern Android development practices:
 
 ### 📁 Project Structure
 ```
@@ -408,7 +408,7 @@ We welcome contributions to Brain Detox! Here's how you can help:
 4. Restart the app to refresh the service
 
 #### Background Service Stops
-1. Disable battery optimization for Brain Detox
+1. Disable battery optimization for Brave Brain
 2. Check if the app has been force-stopped
 3. Verify foreground service permissions
 4. Restart the device if issues persist
@@ -431,8 +431,8 @@ We welcome contributions to Brain Detox! Here's how you can help:
 
 ### Getting Help
 - **Documentation**: Check this README and in-app help
-- **Issues**: Report bugs on the [GitHub Issues](https://github.com/your-username/brain-detox/issues) page
-- **Discussions**: Join conversations in [GitHub Discussions](https://github.com/your-username/brain-detox/discussions)
+- **Issues**: Report bugs on the [GitHub Issues](https://github.com/Xenonesis/Brave-Brain/issues) page
+- **Discussions**: Join conversations in [GitHub Discussions](https://github.com/Xenonesis/Brave-Brain/discussions)
 
 ### Feedback
 We value your feedback! Please share:
@@ -466,8 +466,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔄 Version History
 
-### v1.0.0 (Current)
-- ✨ Initial release
+### v0.20 (Current)
+- ✨ Rebranded to "Brave Brain" with updated messaging
+- 🎯 Enhanced focus on courage and brain training
+- 📱 Updated app identity and descriptions
+- 🔄 Version increment for continued development
+
+### v0.10
+- ✨ Initial release as "Brain Detox"
 - 🚫 App blocking functionality
 - ⏱️ Time tracking and limits
 - 🧮 Math challenge system
@@ -485,9 +491,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
   <p><strong>Built with ❤️ for digital wellness</strong></p>
-  <p>© 2024 Brain Detox. All rights reserved.</p>
+  <p>© 2024 Brave Brain. All rights reserved.</p>
 </div>
 
 ---
 
-*Take control of your digital life. Start your brain detox journey today!* 🧠✨
+*Be brave, train your brain. Start your journey today!* 🧠✨

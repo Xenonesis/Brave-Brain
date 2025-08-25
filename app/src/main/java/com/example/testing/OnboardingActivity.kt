@@ -36,8 +36,8 @@ class OnboardingActivity : AppCompatActivity() {
 
     private val onboardingPages = listOf(
         OnboardingPage(
-            "Welcome to Brain Detox",
-            "Take control of your digital habits and reduce mindless scrolling. Set limits, block distractions, and focus on what matters most.",
+            "Welcome to Brave Brain",
+            "Be brave and take control of your digital habits. Train your brain to resist mindless scrolling and focus on what truly matters in your life.",
             R.drawable.logo_no_bg
         ),
         OnboardingPage(
