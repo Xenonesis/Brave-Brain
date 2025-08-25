@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Button Styles for Time Limit Blocking -->
+    
+    <!-- Primary Button Style (Continue) -->
+    <style name="TimeLimitPrimaryButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="elevation">0dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">18dp</item>
+        <item name="android:minHeight">64dp</item>
+    </style>
+    
+    <!-- Secondary Button Style (Cancel) -->
+    <style name="TimeLimitSecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="elevation">0dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:minHeight">56dp</item>
+    </style>
+    
+    <!-- Button Card Container Style -->
+    <style name="ButtonCardContainer">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">@android:color/transparent</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+    
+    <!-- Primary Button Card -->
+    <style name="PrimaryButtonCard" parent="ButtonCardContainer">
+        <item name="cardElevation">6dp</item>
+        <item name="cardCornerRadius">16dp</item>
+    </style>
+    
+    <!-- Secondary Button Card -->
+    <style name="SecondaryButtonCard" parent="ButtonCardContainer">
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">14dp</item>
+    </style>
+    
+</resources>

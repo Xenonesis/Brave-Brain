@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Time Limit Blocking Screen Strings -->
+    <string name="time_limit_access_title">Access Time Limits</string>
+    <string name="time_limit_access_subtitle">Manage your digital wellness settings</string>
+    <string name="time_limit_access_question">Do you want to access and modify time limits for your apps?</string>
+    <string name="time_limit_access_question_short">Do you want to access and modify time limits?</string>
+    
+    <!-- Countdown Messages -->
+    <string name="redirecting_in_seconds">Redirecting in %d seconds…</string>
+    <string name="redirecting_in_second">Redirecting in 1 second…</string>
+    <string name="redirecting_now">Redirecting now…</string>
+    <string name="redirecting_to_home">Redirecting to home…</string>
+    
+    <!-- Button Labels -->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_continue">Continue</string>
+    
+    <!-- Content Descriptions for Accessibility -->
+    <string name="content_desc_cancel_button">Cancel and return to home screen</string>
+    <string name="content_desc_continue_button">Continue to access time limit settings</string>
+    <string name="content_desc_settings_icon">Time limit settings icon</string>
+    <string name="content_desc_progress_indicator">Countdown progress indicator</string>
+    <string name="content_desc_security_badge">Secure access control indicator</string>
+    
+    <!-- Info Section -->
+    <string name="info_section_title">What happens next?</string>
+    <string name="info_section_description">This will allow you to modify time limits for your selected apps. You\'ll need to complete a quick verification challenge for security.</string>
+    <string name="info_section_description_short">You\'ll complete a verification challenge for security.</string>
+    
+    <!-- Security -->
+    <string name="secure_access_control">Secure Access Control</string>
+    
+    <!-- Toast Messages -->
+    <string name="toast_make_choice">Please make a choice or wait for the timer.</string>
+    <string name="toast_time_limit_screen_shown">Time limit blocking screen shown</string>
+    
+    <!-- Additional Helpful Messages -->
+    <string name="digital_wellness_subtitle">Take control of your screen time</string>
+    <string name="verification_required">Verification required for security</string>
+    <string name="parental_control_notice">Parental controls help maintain healthy digital habits</string>
+</resources>

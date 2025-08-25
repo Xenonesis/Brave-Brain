@@ -1,101 +1,308 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="32dp"
-    android:gravity="center"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/gradient_background">
 
-    <!-- Title -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="⚙️ Access Time Limits"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorOnPrimary"
-        android:gravity="center"
-        android:layout_marginBottom="32dp"/>
-
-    <!-- Question -->
-    <TextView
-        android:id="@+id/questionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Do you want to access and modify time limits for your apps?"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorOnPrimary"
-        android:gravity="center"
-        android:layout_marginBottom="48dp"/>
-
-    <!-- Countdown -->
-    <TextView
-        android:id="@+id/countdownText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Redirecting in 8 seconds..."
-        android:textSize="16sp"
-        android:textColor="@color/colorOnPrimary"
-        android:gravity="center"
-        android:layout_marginBottom="48dp"/>
-
-    <!-- Button Container -->
-    <LinearLayout
+    <!-- Background Pattern -->
+    <View
+        android:id="@+id/backgroundPattern"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/subtle_pattern_overlay"
+        android:alpha="0.1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Main Content Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mainCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="32dp">
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:elevation="16dp"
+        app:cardBackgroundColor="@color/colorSurface"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Cancel Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancelButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="Cancel"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginEnd="16dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            app:strokeColor="@color/colorOnPrimary"
-            app:strokeWidth="2dp"
-            android:textColor="@color/colorOnPrimary"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            app:cornerRadius="12dp"
-            android:gravity="center"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:gravity="center_horizontal">
 
-        <!-- Continue Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/continueButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="Continue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            app:backgroundTint="@color/colorOnPrimary"
-            android:textColor="@color/colorPrimary"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            app:cornerRadius="12dp"
-            android:gravity="center"/>
+            <!-- Icon Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="40dp"
+                app:cardElevation="8dp">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="⚙️"
+                    android:textSize="40sp"
+                    android:gravity="center"/>
 
-    <!-- Info Text -->
-    <TextView
+            </androidx.cardview.widget.CardView>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_limit_access_title"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:contentDescription="@string/time_limit_access_title"/>
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/subtitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/time_limit_access_subtitle"
+                android:textSize="16sp"
+                android:textColor="@color/textSecondary"
+                android:gravity="center"
+                android:layout_marginBottom="32dp"
+                android:fontFamily="sans-serif"/>
+
+            <!-- Question Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="@color/colorAccentLight"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:id="@+id/questionText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_limit_access_question"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccentDark"
+                        android:gravity="center"
+                        android:layout_marginBottom="16dp"
+                        android:lineSpacingExtra="4dp"/>
+
+                    <!-- Progress Indicator -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp">
+
+                        <ProgressBar
+                            android:id="@+id/countdownProgress"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="12dp"
+                            android:indeterminateTint="@color/colorPrimary"
+                            style="?android:attr/progressBarStyleSmall"/>
+
+                        <TextView
+                            android:id="@+id/countdownText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Redirecting in 4 seconds..."
+                            android:textSize="14sp"
+                            android:textColor="@color/textSecondary"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-medium"/>
+
+                    </LinearLayout>
+
+                    <!-- Countdown Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:max="8"
+                        android:progress="4"
+                        android:progressTint="@color/colorPrimary"
+                        android:progressBackgroundTint="@color/colorDivider"
+                        style="?android:attr/progressBarStyleHorizontal"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="24dp">
+
+                <!-- Continue Button (Primary Action) -->
+                <androidx.cardview.widget.CardView
+                    style="@style/PrimaryButtonCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/continueButton"
+                        style="@style/TimeLimitPrimaryButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:text="✓ Continue to Settings"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorOnPrimary"
+                        android:background="@drawable/button_ripple_primary"
+                        app:iconGravity="textStart"
+                        app:iconSize="24dp"
+                        app:iconPadding="12dp"
+                        android:contentDescription="Continue to access time limit settings"
+                        android:drawablePadding="8dp"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Cancel Button (Secondary Action) -->
+                <androidx.cardview.widget.CardView
+                    style="@style/SecondaryButtonCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/cancelButton"
+                        style="@style/TimeLimitSecondaryButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="← Return to Home"
+                        android:textSize="16sp"
+                        android:textColor="@color/textSecondary"
+                        android:background="@drawable/button_ripple_secondary"
+                        app:iconGravity="textStart"
+                        app:iconSize="20dp"
+                        app:iconPadding="8dp"
+                        android:contentDescription="Cancel and return to home screen"
+                        android:drawablePadding="6dp"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Info Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/colorBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ℹ️"
+                            android:textSize="16sp"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="What happens next?"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textPrimary"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This will allow you to modify time limits for your selected apps. You'll need to complete a quick verification challenge for security."
+                        android:textSize="13sp"
+                        android:textColor="@color/textSecondary"
+                        android:lineSpacingExtra="2dp"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Security Badge -->
+    <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This will allow you to modify time limits for your selected apps."
-        android:textSize="14sp"
-        android:textColor="@color/colorOnPrimary"
-        android:gravity="center"
-        android:alpha="0.8"/>
+        android:layout_marginBottom="24dp"
+        app:cardBackgroundColor="@color/colorSuccess"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-</LinearLayout> 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒"
+                android:textSize="14sp"
+                android:layout_marginEnd="6dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Secure Access Control"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorOnSecondary"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

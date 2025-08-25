@@ -27,6 +27,17 @@ class BlockerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        
+        // CRITICAL FIX: Start foreground service immediately in onCreate
+        // This prevents crashes on Android 8.0+ (API 26+)
+        try {
+            startForegroundServiceWithNotification()
+            android.util.Log.d("BlockerService", "Foreground service started in onCreate")
+        } catch (e: Exception) {
+            android.util.Log.e("BlockerService", "Failed to start foreground service in onCreate: ${e.message}")
+            // Don't crash the service, but log the error
+        }
+        
         handler.post(checkRunnable)
     }
 
@@ -528,15 +539,8 @@ class BlockerService : Service() {
             return START_NOT_STICKY
         }
         
-        // Try to start foreground service, but continue as background if it fails
-        try {
-            startForegroundServiceWithNotification()
-            android.util.Log.d("BlockerService", "Foreground service started successfully")
-        } catch (e: Exception) {
-            android.util.Log.e("BlockerService", "Failed to start foreground service: ${e.message}")
-            android.util.Log.d("BlockerService", "Continuing as background service")
-            // Don't stop the service, continue as background
-        }
+        // Foreground service is already started in onCreate(), no need to start again
+        android.util.Log.d("BlockerService", "Service conditions met, continuing to run")
         
         return START_STICKY
     }

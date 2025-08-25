@@ -89,6 +89,13 @@ class MainActivity : AppCompatActivity() {
         val accessButton = findViewById<MaterialButton>(R.id.accessButton)
         val selectAppsButton = findViewById<MaterialButton>(R.id.selectAppsButton)
         val setTimeLimitsButton = findViewById<MaterialButton>(R.id.setTimeLimitsButton)
+        
+        // Add null checks to prevent crashes
+        if (accessButton == null || selectAppsButton == null || setTimeLimitsButton == null) {
+            android.util.Log.e("MainActivity", "One or more buttons not found in layout")
+            Toast.makeText(this, "UI Error: Missing buttons in layout", Toast.LENGTH_LONG).show()
+            return
+        }
 
             // Show/hide access button based on permission
         if (hasUsageStatsPermission(this)) {
@@ -308,8 +315,13 @@ class MainActivity : AppCompatActivity() {
             // Get top apps usage for graph (excluding selected apps)
             val topAppsUsage = getTopAppsUsage(selectedAppUsage.keys.toSet())
 
-            // Update UI
-            findViewById<TextView>(R.id.totalScreenTime).text = "${totalDeviceHours}h ${totalDeviceRemainingMinutes}m"
+            // Update UI with null checks
+            val totalScreenTimeView = findViewById<TextView>(R.id.totalScreenTime)
+            if (totalScreenTimeView != null) {
+                totalScreenTimeView.text = "${totalDeviceHours}h ${totalDeviceRemainingMinutes}m"
+            } else {
+                android.util.Log.e("MainActivity", "totalScreenTime TextView not found")
+            }
 
             // Update usage graph
             updateUsageGraph(topAppsUsage, selectedAppUsage, totalDeviceMinutes)

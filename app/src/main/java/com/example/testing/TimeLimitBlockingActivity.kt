@@ -1,5 +1,7 @@
 package com.example.testing
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +9,21 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
 class TimeLimitBlockingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var countdownTextView: TextView? = null
+    private var progressBar: ProgressBar? = null
+    private var countdownProgress: ProgressBar? = null
+    private var continueButton: MaterialButton? = null
+    private var cancelButton: MaterialButton? = null
     private var countdownSeconds = 8
     private var isActivityActive = false
     
@@ -56,16 +65,28 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
             
             // Initialize views
             countdownTextView = findViewById(R.id.countdownText)
+            progressBar = findViewById(R.id.progressBar)
+            countdownProgress = findViewById(R.id.countdownProgress)
+            continueButton = findViewById(R.id.continueButton)
+            cancelButton = findViewById(R.id.cancelButton)
+            
+            // Initialize progress bar
+            progressBar?.max = countdownSeconds
+            progressBar?.progress = countdownSeconds
+            
             android.util.Log.d("TimeLimitBlockingActivity", "Views initialized")
             
             // Set up buttons
-            findViewById<Button>(R.id.continueButton).setOnClickListener {
+            continueButton?.setOnClickListener {
                 onContinueClicked()
             }
             
-            findViewById<Button>(R.id.cancelButton).setOnClickListener {
+            cancelButton?.setOnClickListener {
                 onCancelClicked()
             }
+            
+            // Add button animations
+            setupButtonAnimations()
             
             android.util.Log.d("TimeLimitBlockingActivity", "Buttons set up successfully")
             
@@ -102,20 +123,84 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
         }
     }
     
+    private fun setupButtonAnimations() {
+        // Subtle pulse animation for continue button to draw attention
+        val pulseAnimator = ObjectAnimator.ofFloat(continueButton, "scaleX", 1.0f, 1.05f, 1.0f)
+        pulseAnimator.duration = 2000
+        pulseAnimator.repeatCount = ValueAnimator.INFINITE
+        pulseAnimator.interpolator = AccelerateDecelerateInterpolator()
+        pulseAnimator.start()
+        
+        val pulseAnimatorY = ObjectAnimator.ofFloat(continueButton, "scaleY", 1.0f, 1.05f, 1.0f)
+        pulseAnimatorY.duration = 2000
+        pulseAnimatorY.repeatCount = ValueAnimator.INFINITE
+        pulseAnimatorY.interpolator = AccelerateDecelerateInterpolator()
+        pulseAnimatorY.start()
+    }
+    
     private fun startCountdown() {
+        val totalCountdown = countdownSeconds
         val countdownRunnable = object : Runnable {
             override fun run() {
                 if (!isActivityActive) return
                 
                 countdownSeconds--
-                countdownTextView?.text = "Redirecting in $countdownSeconds seconds..."
+                updateCountdownUI()
+                
+                // Animate progress bar
+                progressBar?.let { pb ->
+                    val animator = ObjectAnimator.ofInt(pb, "progress", pb.progress, countdownSeconds)
+                    animator.duration = 800
+                    animator.interpolator = AccelerateDecelerateInterpolator()
+                    animator.start()
+                }
+                
+                // Add urgency effects when countdown is low
+                if (countdownSeconds <= 3 && countdownSeconds > 0) {
+                    addUrgencyEffects()
+                }
                 
                 if (countdownSeconds > 0) {
                     handler.postDelayed(this, 1000)
+                } else {
+                    // Countdown finished, redirect
+                    onCountdownFinished()
                 }
             }
         }
         handler.post(countdownRunnable)
+    }
+    
+    private fun updateCountdownUI() {
+        countdownTextView?.text = when {
+            countdownSeconds > 1 -> getString(R.string.redirecting_in_seconds, countdownSeconds)
+            countdownSeconds == 1 -> getString(R.string.redirecting_in_second)
+            else -> getString(R.string.redirecting_now)
+        }
+    }
+    
+    private fun addUrgencyEffects() {
+        // Flash the countdown text
+        countdownTextView?.let { textView ->
+            val flashAnimator = ObjectAnimator.ofFloat(textView, "alpha", 1.0f, 0.3f, 1.0f)
+            flashAnimator.duration = 500
+            flashAnimator.start()
+        }
+        
+        // Slightly shake the main card
+        findViewById<View>(R.id.mainCard)?.let { card ->
+            val shakeAnimator = ObjectAnimator.ofFloat(card, "translationX", 0f, -10f, 10f, 0f)
+            shakeAnimator.duration = 300
+            shakeAnimator.start()
+        }
+    }
+    
+    private fun onCountdownFinished() {
+        // Show final message briefly
+        countdownTextView?.text = "Redirecting to home..."
+        handler.postDelayed({
+            goToHome()
+        }, 500)
     }
     
     private fun onContinueClicked() {
