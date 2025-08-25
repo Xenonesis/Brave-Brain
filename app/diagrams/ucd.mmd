@@ -1,0 +1,30 @@
+%%{init: {'theme':'base', 'themeVariables':{ 'primaryColor':'#0b5cff'}}}%%
+graph LR
+subgraph Actors
+P[Parent]
+C[Child]
+end
+subgraph System[ScreenTimeApp]
+Onboard((Onboard))
+SelectApps((Select apps to monitor))
+SetLimits((Set time limits))
+ViewStats((View usage stats))
+UseApps((Use device apps))
+RequestExtra((Request extra time))
+SolveMath((Solve math challenge))
+TriggerBlock((Trigger blocking))
+ShowBlock((Show blocking screen))
+GrantExtra((Grant extra time))
+end
+
+P --> Onboard
+P --> SelectApps
+P --> SetLimits
+P --> ViewStats
+C --> UseApps
+C --> RequestExtra
+C --> SolveMath
+UseApps --> TriggerBlock
+TriggerBlock --> ShowBlock
+RequestExtra --> SolveMath
+SolveMath --> GrantExtra

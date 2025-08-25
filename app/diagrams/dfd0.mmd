@@ -1,0 +1,5 @@
+%%{init: {'theme':'base', 'themeVariables':{ 'primaryColor':'#0b5cff'}}}%%
+graph LR
+User[Parent or Child] -->|set limits / request| AppSystem[ScreenTimeApp]
+AppSystem -->|blocks apps, shows UI| Device[Android OS]
+AppSystem -->|store/retrieve| Storage[(SharedPreferences / Local Storage)]

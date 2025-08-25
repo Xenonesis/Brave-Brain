@@ -34,4 +34,22 @@
     <color name="textPrimary">#1F2937</color>
     <color name="textSecondary">#6B7280</color>
     <color name="textTertiary">#9CA3AF</color>
+    
+    <!-- Selection States -->
+    <color name="colorSelectedBackground">#F0F9FF</color>
+    <color name="colorSelectedBorder">#3B82F6</color>
+    <color name="colorSelectedText">#1E40AF</color>
+    
+    <!-- Interactive States -->
+    <color name="colorRipple">#E0E7FF</color>
+    <color name="colorDivider">#F3F4F6</color>
+    <color name="colorSearchBackground">#F9FAFB</color>
+    
+    <!-- Badge Colors -->
+    <color name="colorBadgeBackground">#FEF3C7</color>
+    <color name="colorBadgeText">#92400E</color>
+    
+    <!-- Accent Colors -->
+    <color name="colorAccentLight">#EEF2FF</color>
+    <color name="colorAccentDark">#4338CA</color>
 </resources>

@@ -1,0 +1,25 @@
+%%{init: {'theme':'base', 'themeVariables':{ 'primaryColor':'#0b5cff'}}}%%
+graph TD
+subgraph P1[1. Usage Monitoring]
+A[Get foreground app] --> B[Update usage counters]
+B --> Storage[(Usage data store)]
+end
+
+subgraph P2[2. Blocking Decision]
+C[Check time limits] --> D{Exceeded?}
+D -- yes --> E[Trigger blocking UI/service]
+D -- no --> F[Allow app usage]
+E --> Overlay[OverlayBlockingService]
+E --> BlockingActivity[BlockingActivity]
+end
+
+subgraph P3[3. Time Increase Flow]
+G[User requests extra time] --> H[Math Challenge or AddTime Activity]
+H -- success --> I[Increase time limit in Storage]
+I --> P2
+end
+
+Storage[(SharedPreferences / time_limits, usage, selected apps)]
+User[Parent or Child] -->|configure| P3
+Device[Android OS] -->|foreground events| P1
+P1 --> P2

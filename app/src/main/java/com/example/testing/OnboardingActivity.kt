@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -33,31 +35,33 @@ class OnboardingActivity : AppCompatActivity() {
     private lateinit var nextButton: MaterialButton
     private lateinit var skipButton: MaterialButton
     private lateinit var getStartedButton: MaterialButton
+    private lateinit var progressBar: ProgressBar
+    private lateinit var pageCounter: TextView
 
     private val onboardingPages = listOf(
         OnboardingPage(
             "Welcome to Brave Brain",
-            "Be brave and take control of your digital habits. Train your brain to resist mindless scrolling and focus on what truly matters in your life.",
+            "🧠 Ready to transform your digital habits?\n\nJoin thousands who've reclaimed their focus and built healthier relationships with technology. Your journey to digital wellness starts here.",
             R.drawable.logo_no_bg
         ),
         OnboardingPage(
-            "Set App Limits",
-            "Choose which apps distract you most and set daily time limits. When you reach your limit, we'll help you take a break.",
+            "Smart App Blocking",
+            "⏱️ Set intelligent time limits for distracting apps\n\n📱 Get gentle nudges when you've spent enough time\n\n🎯 Focus on what truly matters to you",
             R.drawable.logo_no_bg
         ),
         OnboardingPage(
-            "Smart Blocking",
-            "Our intelligent system detects when you're using blocked apps and gently redirects you to more productive activities.",
+            "Real-Time Tracking",
+            "📊 Monitor your screen time with beautiful insights\n\n📈 Track your progress and celebrate improvements\n\n🏆 Build lasting digital wellness habits",
             R.drawable.logo_no_bg
         ),
         OnboardingPage(
-            "Track Your Progress",
-            "Monitor your daily screen time and see how you're improving. Celebrate your wins and stay motivated.",
+            "Gamified Challenges",
+            "🧮 Solve math puzzles to unlock extra time\n\n🎮 Make breaking habits engaging and fun\n\n💪 Train your brain to resist mindless scrolling",
             R.drawable.logo_no_bg
         ),
         OnboardingPage(
-            "Permissions Required",
-            "To help you stay focused, we need a few permissions. Don't worry - we only use them to track app usage and show blocking screens.",
+            "Get Started",
+            "🚀 Ready to take control of your digital life?\n\nWe'll need a few permissions to help you stay focused and track your progress effectively.\n\n✨ Your privacy is protected - everything stays on your device",
             R.drawable.logo_no_bg
         )
     )
@@ -84,6 +88,8 @@ class OnboardingActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.nextButton)
         skipButton = findViewById(R.id.skipButton)
         getStartedButton = findViewById(R.id.getStartedButton)
+        progressBar = findViewById(R.id.progressBar)
+        pageCounter = findViewById(R.id.pageCounter)
     }
 
     private fun setupViewPager() {
@@ -116,22 +122,49 @@ class OnboardingActivity : AppCompatActivity() {
             startPermissionFlow()
         }
 
+        // Ensure proper initial state
+        nextButton.visibility = View.VISIBLE
+        skipButton.visibility = View.VISIBLE
+        getStartedButton.visibility = View.GONE
+        
+        // Set initial button text
+        nextButton.text = getString(R.string.continue_button)
+        
+        // Set initial progress
+        progressBar.progress = 20
+        pageCounter.text = "1 of ${onboardingPages.size}"
+        
+        // Update buttons for current position
         updateButtons(0)
     }
 
     private fun updateButtons(position: Int) {
+        // Update progress bar
+        val progress = ((position + 1) * 100) / onboardingPages.size
+        progressBar.progress = progress
+        
+        // Update page counter
+        pageCounter.text = "${position + 1} of ${onboardingPages.size}"
+        
         when (position) {
             onboardingPages.size - 1 -> {
-                // Last page - show "Get Started" button
+                // Last page - show "Get Started" button only
                 nextButton.visibility = View.GONE
                 skipButton.visibility = View.GONE
                 getStartedButton.visibility = View.VISIBLE
             }
             else -> {
-                // Other pages - show "Next" and "Skip" buttons
+                // Other pages - show "Continue" and "Skip" buttons
                 nextButton.visibility = View.VISIBLE
                 skipButton.visibility = View.VISIBLE
                 getStartedButton.visibility = View.GONE
+                
+                // Update button text based on position
+                if (position == 0) {
+                    nextButton.text = getString(R.string.continue_button)
+                } else {
+                    nextButton.text = getString(R.string.next_button)
+                }
             }
         }
     }

@@ -1,61 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    android:layout_marginHorizontal="6dp"
+    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
     app:cardBackgroundColor="@color/cardBackground"
     app:strokeColor="@color/cardBorder"
-    app:strokeWidth="1dp">
+    app:strokeWidth="1dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Selection Indicator Bar -->
+    <View
+        android:id="@+id/selectionIndicator"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="20dp"
         android:gravity="center_vertical"
-        android:background="?android:attr/selectableItemBackground">
+        android:layout_marginStart="4dp">
 
-        <ImageView
-            android:id="@+id/appIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="App Icon" />
+        <!-- App Icon with Enhanced Styling -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="@color/colorAccentLight"
+            android:layout_marginEnd="16dp">
+            
+            <ImageView
+                android:id="@+id/appIcon"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:padding="2dp"
+                android:contentDescription="App Icon"
+                android:scaleType="fitCenter" />
+        </com.google.android.material.card.MaterialCardView>
 
+        <!-- App Information -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginEnd="12dp">
 
             <TextView
                 android:id="@+id/appName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="@color/textPrimary"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="6dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:id="@+id/appPackage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/textTertiary" />
+                android:textSize="13sp"
+                android:textColor="@color/textTertiary"
+                android:layout_marginBottom="4dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif" />
+
+            <!-- Selected Badge -->
+            <LinearLayout
+                android:id="@+id/selectedBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selected_badge_background"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:visibility="gone"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✓ Selected"
+                    android:textSize="11sp"
+                    android:textColor="@color/colorSelectedText"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
 
+        <!-- Enhanced Checkbox -->
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:buttonTint="@color/colorPrimary" />
+            app:buttonTint="@color/colorPrimary"
+            android:layout_marginStart="8dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2" />
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView> 
+</com.google.android.material.card.MaterialCardView>
