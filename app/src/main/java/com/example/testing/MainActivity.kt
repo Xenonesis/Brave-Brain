@@ -82,20 +82,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         try {
-        val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
-        val hasSelectedApps = (prefs.getStringSet("blocked_packages", emptySet())?.isNotEmpty() == true)
-        val hasTimeLimits = !prefs.getString("time_limits", null).isNullOrEmpty()
+            // Update date display
+            updateDateDisplay()
+            
+            val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+            val hasSelectedApps = (prefs.getStringSet("blocked_packages", emptySet())?.isNotEmpty() == true)
+            val hasTimeLimits = !prefs.getString("time_limits", null).isNullOrEmpty()
 
-        val accessButton = findViewById<MaterialButton>(R.id.accessButton)
-        val selectAppsButton = findViewById<MaterialButton>(R.id.selectAppsButton)
-        val setTimeLimitsButton = findViewById<MaterialButton>(R.id.setTimeLimitsButton)
-        
-        // Add null checks to prevent crashes
-        if (accessButton == null || selectAppsButton == null || setTimeLimitsButton == null) {
-            android.util.Log.e("MainActivity", "One or more buttons not found in layout")
-            Toast.makeText(this, "UI Error: Missing buttons in layout", Toast.LENGTH_LONG).show()
-            return
-        }
+            val accessButton = findViewById<MaterialButton>(R.id.accessButton)
+            val selectAppsButton = findViewById<MaterialButton>(R.id.selectAppsButton)
+            val setTimeLimitsButton = findViewById<MaterialButton>(R.id.setTimeLimitsButton)
+            
+            // Add null checks to prevent crashes
+            if (accessButton == null || selectAppsButton == null || setTimeLimitsButton == null) {
+                android.util.Log.e("MainActivity", "One or more buttons not found in layout")
+                Toast.makeText(this, "UI Error: Missing buttons in layout", Toast.LENGTH_LONG).show()
+                return
+            }
 
             // Show/hide access button based on permission
         if (hasUsageStatsPermission(this)) {
@@ -328,6 +331,9 @@ class MainActivity : AppCompatActivity() {
 
             // Update selected apps usage list
             updateSelectedAppsUsageList(selectedAppUsage, timeLimits)
+            
+            // Update enhanced stats
+            updateEnhancedStats()
             
             // Log stats for debugging
             android.util.Log.d("MainActivity", "Stats updated - Total Device: ${totalDeviceMinutes}m, Selected Apps: ${selectedAppUsage.values.sum()}m")
@@ -571,60 +577,108 @@ class MainActivity : AppCompatActivity() {
 
     private fun createGraphRow(appName: String, minutes: Int, percentage: Int, isSelectedApp: Boolean): LinearLayout {
         val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, 8, 0, 8)
+            orientation = LinearLayout.VERTICAL
+            setPadding(16, 12, 16, 12)
+            setBackground(ContextCompat.getDrawable(this@MainActivity, R.drawable.usage_graph_row_background))
+            
+            // Add margin between rows
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.bottomMargin = 8
+            layoutParams = params
         }
 
-        // App name
+        // Top row with app name and time
+        val topRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+
+        // App name with professional styling
         val nameText = TextView(this).apply {
             text = appName
-            textSize = 12f
-            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.textPrimary))
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f)
+            textSize = if (isSelectedApp) 15f else 14f
+            setTextColor(
+                if (isSelectedApp)
+                    ContextCompat.getColor(this@MainActivity, R.color.textPrimary)
+                else
+                    ContextCompat.getColor(this@MainActivity, R.color.textSecondary)
+            )
+            typeface = if (isSelectedApp) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        }
+
+        // Time and percentage
+        val timeText = TextView(this).apply {
+            text = "${minutes}m (${percentage}%)"
+            textSize = 12f
+            setTextColor(
+                if (isSelectedApp)
+                    ContextCompat.getColor(this@MainActivity, R.color.textHighlight)
+                else
+                    ContextCompat.getColor(this@MainActivity, R.color.textTertiary)
+            )
+            gravity = Gravity.END
+            typeface = if (isSelectedApp) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
+        }
+
+        topRow.addView(nameText)
+        topRow.addView(timeText)
+
+        // Progress bar container
+        val progressContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                24
+            )
+            setPadding(0, 8, 0, 0)
         }
 
         // Progress bar background
         val progressBackground = View(this).apply {
-            layoutParams = LinearLayout.LayoutParams(0, 8, 0.4f)
-            setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.textSecondary))
-            alpha = 0.3f
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                12
+            )
+            setBackgroundResource(R.drawable.progress_bar_background)
         }
 
         // Progress bar fill
         val progressFill = View(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                (progressBackground.width * percentage / 100).coerceAtLeast(1),
-                8
-            )
-            setBackgroundColor(
-                if (isSelectedApp) 
-                    ContextCompat.getColor(this@MainActivity, R.color.colorPrimary)
-                else 
-                    ContextCompat.getColor(this@MainActivity, R.color.colorSecondary)
-            )
+            val fillWidth = (percentage * 0.01 * 300).toInt().coerceAtLeast(4) // Minimum 4dp width
+            layoutParams = LinearLayout.LayoutParams(fillWidth, 12)
+            
+            if (isSelectedApp) {
+                setBackgroundResource(R.drawable.progress_bar_fill)
+            } else {
+                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorSecondary))
+                background.apply {
+                    if (this is android.graphics.drawable.GradientDrawable) {
+                        cornerRadius = 12f
+                    }
+                }
+            }
         }
 
-        // Progress container
-        val progressContainer = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f)
+        // Create layered progress effect
+        val progressLayerContainer = android.widget.FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                12
+            )
+            addView(progressBackground)
             addView(progressFill)
         }
 
-        // Time text
-        val timeText = TextView(this).apply {
-            text = "${minutes}m (${percentage}%)"
-            textSize = 12f
-            setTextColor(ContextCompat.getColor(this@MainActivity, R.color.textSecondary))
-            gravity = Gravity.END
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.2f)
-        }
+        progressContainer.addView(progressLayerContainer)
 
-        row.addView(nameText)
+        row.addView(topRow)
         row.addView(progressContainer)
-        row.addView(timeText)
 
         return row
     }
@@ -695,6 +749,85 @@ class MainActivity : AppCompatActivity() {
             packageManager.getApplicationLabel(applicationInfo).toString()
         } catch (e: Exception) {
             packageName
+        }
+    }
+
+    private fun updateDateDisplay() {
+        val dateTextView = findViewById<TextView>(R.id.dateTextView)
+        if (dateTextView != null) {
+            val currentDate = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault())
+            val formattedDate = dateFormat.format(currentDate.time)
+            dateTextView.text = formattedDate
+        }
+    }
+
+    private fun updateEnhancedStats() {
+        try {
+            // Update additional stats views if they exist
+            val averageSessionView = findViewById<TextView>(R.id.averageSessionTime)
+            val appsUsedCountView = findViewById<TextView>(R.id.appsUsedCount)
+            
+            if (averageSessionView != null && appsUsedCountView != null) {
+                val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+                val blockedApps = prefs.getStringSet("blocked_packages", emptySet()) ?: emptySet()
+                
+                // Calculate average session time (simplified calculation)
+                val totalMinutes = getTotalDeviceScreenTime()
+                val appsCount = getActiveAppsCount()
+                
+                // Update average session display
+                if (appsCount > 0) {
+                    val avgSession = totalMinutes / appsCount
+                    averageSessionView.text = "${avgSession}m"
+                } else {
+                    averageSessionView.text = "0m"
+                }
+                
+                // Update apps used count
+                appsUsedCountView.text = appsCount.toString()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error updating enhanced stats: ${e.message}")
+        }
+    }
+    
+    private fun getActiveAppsCount(): Int {
+        return try {
+            val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+            
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            val startTime = calendar.timeInMillis
+            val endTime = System.currentTimeMillis()
+            
+            val usageStats = usageStatsManager.queryUsageStats(
+                UsageStatsManager.INTERVAL_BEST,
+                startTime,
+                endTime
+            )
+            
+            var activeAppsCount = 0
+            for (usageStat in usageStats) {
+                val timeInForeground = usageStat.totalTimeInForeground
+                val packageName = usageStat.packageName
+                
+                if (timeInForeground > 60000 && // More than 1 minute
+                    !packageName.startsWith("com.android") &&
+                    !packageName.startsWith("android") &&
+                    !packageName.startsWith("com.google.android") &&
+                    !packageName.startsWith("com.example.testing")) {
+                    activeAppsCount++
+                }
+            }
+            
+            activeAppsCount
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error getting active apps count: ${e.message}")
+            0
         }
     }
 
