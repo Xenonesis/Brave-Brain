@@ -42,6 +42,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="24dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -51,33 +52,42 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:text="Skip"
+            android:text="@string/skip_button"
             android:textSize="16sp"
             android:textColor="@color/textSecondary"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:minWidth="80dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nextButton"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:text="Next"
+            android:text="@string/continue_button"
             android:textSize="16sp"
+            android:minWidth="120dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
             app:cornerRadius="12dp"
             app:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnPrimary" />
+            android:textColor="@color/colorOnPrimary"
+            android:elevation="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/getStartedButton"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:text="Get Started"
+            android:text="@string/get_started_button"
             android:textSize="16sp"
             android:visibility="gone"
+            android:minWidth="120dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
             app:cornerRadius="12dp"
             app:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/colorOnPrimary" />
+            android:textColor="@color/colorOnPrimary"
+            android:elevation="4dp" />
 
     </LinearLayout>
 

@@ -466,7 +466,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔄 Version History
 
-### v0.20 (Current)
+### v0.21 (Latest)
+- 🔧 **Fixed Continue button visibility**: Enhanced onboarding button styling and visibility
+- 🎨 **Improved button design**: Added proper spacing, elevation, and minimum width for better UX
+- 📱 **Better accessibility**: Added string resources for all button texts
+- 🛠️ **Layout improvements**: Enhanced button container layout for consistent appearance
+
+### v0.20
 - ✨ Rebranded to "Brave Brain" with updated messaging
 - 🎯 Enhanced focus on courage and brain training
 - 📱 Updated app identity and descriptions
