@@ -1,9 +1,9 @@
-# 🧠 Brave Brain
+# 🧠 Brave Brain - Advanced Digital Wellness Platform
 
 **Be brave, train your brain, reclaim your focus**
 
 <div align="center">
-  <img src="app/src/main/res/drawable/logo_no_bg.png" alt="Brave Brain Logo" width="200"/>
+  <img src="logo_no_bg.png" alt="Brave Brain Logo" width="200"/>
 </div>
 
 ---
@@ -19,6 +19,8 @@
 - [Usage](#-usage)
 - [Architecture](#-architecture)
 - [Technical Details](#-technical-details)
+- [Advanced Features](#-advanced-features)
+- [Testing](#-testing)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -26,480 +28,767 @@
 
 ## 🎯 Overview
 
-**Brave Brain** is a powerful Android application designed to help users break free from digital addiction and regain control over their screen time. In our hyper-connected world, it's easy to fall into the trap of endless scrolling and mindless app usage. Brave Brain provides intelligent app blocking, time tracking, and gamified challenges to promote healthier digital habits.
+**Brave Brain** is a sophisticated Android digital wellness platform that goes beyond simple app blocking. Built with cutting-edge Android development practices, it combines intelligent blocking strategies, comprehensive analytics, advanced challenge systems, and personalized insights to help users build healthier relationships with technology.
 
-### Why Brave Brain?
+### What Makes Brave Brain Special?
 
-- 🎯 **Smart Blocking**: Automatically blocks distracting apps when time limits are reached
-- 📊 **Real-time Monitoring**: Tracks app usage with precision and provides detailed insights
-- 🧮 **Gamified Challenges**: Math challenges to unlock additional time or access settings
-- 🔔 **Gentle Reminders**: Non-intrusive notifications about usage patterns
-- 🎨 **Beautiful UI**: Clean, modern Material Design interface
-- 🛡️ **Privacy-First**: All data stays on your device
+- 🧠 **Smart Adaptive Blocking**: AI-powered blocking that learns your patterns and adapts accordingly
+- 📊 **Professional Analytics Dashboard**: Real-time productivity scoring with detailed insights and trends
+- 🧮 **Advanced Challenge System**: 6 different challenge types beyond simple math problems
+- ⚙️ **Context-Aware Rules**: Different blocking behaviors for bedtime, work hours, and family time
+- 🎯 **Progressive Difficulty**: Escalating consequences that build real self-control habits
+- 🔄 **Modern Android Architecture**: Built with latest Android practices including gesture navigation support
+- 🛡️ **Privacy-First**: All data stays on your device with comprehensive local analytics
+
+### Why Choose Brave Brain?
+
+Unlike basic app blockers, Brave Brain is a **comprehensive digital wellness ecosystem** that:
+- **Learns and Evolves**: Smart blocking engine that adapts to your behavior patterns
+- **Provides Deep Insights**: Professional-grade analytics with actionable recommendations
+- **Engages Meaningfully**: Varied challenges that build genuine self-awareness and control
+- **Respects Your Privacy**: Zero data collection - everything stays on your device
+- **Builds Lasting Habits**: Progressive system designed for long-term behavior change
 
 ---
 
 ## ✨ Features
 
-### 🚫 Intelligent App Blocking
-- Select specific apps to monitor and block
-- Set daily time limits for each selected app
-- Automatic blocking when limits are exceeded
-- Immediate redirection to home screen when blocked apps are accessed
+### 🧠 Smart Adaptive Blocking Engine
 
-### ⏱️ Advanced Time Tracking
-- Real-time monitoring of app usage
-- Daily usage statistics and progress tracking
-- Automatic reset at midnight
-- Usage warnings at regular intervals (every 5 minutes)
+#### 4 Intelligent Blocking Strategies:
+1. **Standard Blocking**: Traditional time-limit based blocking
+2. **Progressive Difficulty**: Gradually stricter limits with repeated violations
+3. **Smart Adaptive**: AI learns your usage patterns and intervenes proactively
+4. **Strict Mode**: Immediate blocking with minimal tolerance for violations
 
-### 🧮 Math Challenge System
-- Solve mathematical problems to access restricted features
-- Configurable difficulty levels
-- Prevents impulsive bypassing of restrictions
-- Encourages mindful decision-making
+#### Context-Aware Intelligence:
+- **Bedtime Mode** (22:00 - 07:00): Stricter blocking during sleep hours
+- **Work Hours** (09:00 - 17:00): Enhanced focus protection during work time
+- **Family Time** (18:00 - 20:00): Prioritize real-world connections
+- **Peak Usage Detection**: Early intervention during high-usage periods
+- **Violation Tracking**: Escalating consequences for repeated violations
 
-### 🎨 Intuitive User Interface
-- **Onboarding Experience**: Guided setup with clear explanations
-- **Material Design**: Modern, clean interface following Android design guidelines
-- **Dashboard**: Overview of current status and quick actions
-- **App Selection**: Easy-to-use interface for selecting apps to monitor
-- **Time Management**: Simple time limit configuration
+### 📊 Professional Analytics & Insights Dashboard
 
-### 🔐 Comprehensive Permission Management
-- Usage access permissions for app monitoring
-- Overlay permissions for blocking screens
-- Notification permissions for gentle reminders
-- Foreground service for reliable background monitoring
+#### Real-Time Analytics:
+- **Productivity Scoring**: Algorithm-based wellness scoring (0-100)
+- **Usage Pattern Recognition**: Identifies peak usage times and behavioral trends
+- **Session Analysis**: Tracks session length, frequency, and app switching patterns
+- **Weekly Trend Analysis**: Shows improvement/decline patterns over time
+- **Behavioral Insights**: AI-generated personalized recommendations
 
-### 🔄 Background Monitoring
-- Efficient background service with minimal battery impact
-- Real-time app detection and blocking
-- Persistent monitoring even when the app is closed
-- Smart detection algorithms with fallback mechanisms
+#### Advanced Metrics:
+- Daily and weekly screen time trends
+- App session frequency and duration analysis
+- Blocked attempt patterns and violation tracking
+- Challenge completion rates and difficulty progression
+- Peak usage hour identification
+- Most problematic apps analysis
+- Productivity correlation insights
+
+#### Export & Sharing:
+- **Data Export**: Share analytics reports via email/messaging
+- **Progress Tracking**: Visual charts and trend indicators
+- **Personalized Insights**: Contextual recommendations based on your patterns
+
+### 🧮 Advanced Challenge System
+
+#### 6 Challenge Types:
+1. **Mathematical Challenges**: Adaptive difficulty math problems
+2. **Reflection Challenges**: Mindful questions about usage intentions
+3. **Mindfulness Challenges**: Breathing exercises and awareness practices
+4. **Physical Challenges**: Simple exercises to break screen habits
+5. **Productivity Challenges**: Quick tasks that add real value
+6. **Waiting Challenges**: Cooling-off periods with progressive timing
+
+#### Smart Challenge Features:
+- **Adaptive Difficulty**: Challenges get harder with repeated violations
+- **Context-Sensitive**: Different challenges for different times of day
+- **Progress Tracking**: Monitor challenge completion rates and improvement
+- **Meaningful Interventions**: Designed to build genuine self-awareness
+
+### 🎨 Modern User Interface
+
+#### Professional Design:
+- **Material Design 3**: Latest Android design guidelines
+- **Gesture Navigation Support**: Full compatibility with modern Android navigation
+- **Dark/Light Theme**: Automatic theme adaptation
+- **Accessibility Compliant**: Designed for all users
+- **Smooth Animations**: Polished, professional user experience
+
+#### Dashboard Features:
+- **Real-Time Stats**: Live screen time and usage monitoring
+- **Visual Analytics**: Beautiful charts and progress indicators
+- **Quick Actions**: Easy access to all features
+- **Smart Notifications**: Gentle, non-intrusive usage reminders
+
+### 🔧 Advanced System Integration
+
+#### Background Monitoring:
+- **Efficient Service Architecture**: Minimal battery impact with maximum reliability
+- **Real-Time App Detection**: Instant blocking with multiple fallback mechanisms
+- **Smart Detection Algorithms**: Reliable app monitoring across Android versions
+- **Foreground Service**: Persistent monitoring even when app is closed
+
+#### Permission Management:
+- **Usage Access**: Monitor app usage patterns
+- **Overlay Permissions**: Display blocking screens over other apps
+- **Notification Permissions**: Send gentle usage reminders
+- **Background Processing**: Maintain continuous monitoring
 
 ---
 
 ## 📱 Screenshots
 
-*Screenshots will be added once the app is built and running*
+*Screenshots showcasing the modern interface and comprehensive features will be added once the app is deployed*
+
+### Key Interface Highlights:
+- **Dashboard**: Clean, professional analytics overview
+- **Smart Blocking Settings**: Intuitive strategy selection
+- **Analytics Dashboard**: Comprehensive insights and trends
+- **Challenge Interface**: Engaging, varied challenge types
+- **App Selection**: Easy app management with usage preview
 
 ---
 
 ## 📋 Requirements
 
+### System Requirements:
 - **Android Version**: Android 7.0 (API level 24) or higher
 - **Target SDK**: Android 14 (API level 36)
-- **RAM**: Minimum 2GB recommended
+- **RAM**: Minimum 2GB recommended for optimal performance
 - **Storage**: 50MB available space
 - **Permissions**: Usage Access, Overlay, and Notifications
 
-### Supported Android Versions
-- ✅ Android 14 (API 34+)
-- ✅ Android 13 (API 33)
-- ✅ Android 12 (API 31-32)
-- ✅ Android 11 (API 30)
-- ✅ Android 10 (API 29)
-- ✅ Android 9 (API 28)
-- ✅ Android 8 (API 26-27)
-- ✅ Android 7 (API 24-25)
+### Supported Android Versions:
+- ✅ Android 14 (API 34+) - Full feature support
+- ✅ Android 13 (API 33) - Full feature support
+- ✅ Android 12 (API 31-32) - Full feature support
+- ✅ Android 11 (API 30) - Full feature support
+- ✅ Android 10 (API 29) - Full feature support
+- ✅ Android 9 (API 28) - Full feature support
+- ✅ Android 8 (API 26-27) - Full feature support
+- ✅ Android 7 (API 24-25) - Core features supported
+
+### Hardware Compatibility:
+- **Processors**: ARM64, ARM32, x86, x86_64
+- **Screen Sizes**: Phone, tablet, foldable devices
+- **Navigation**: Traditional buttons and gesture navigation
+- **Memory**: Optimized for devices with 2GB+ RAM
 
 ---
+## 🚀 Installation
 
-## 🛠️ Installation
+### Prerequisites:
+- Android device running Android 7.0 (API 24) or higher
+- Developer options enabled (for APK installation)
+- At least 50MB of free storage space
 
-### Prerequisites
-- Android Studio Arctic Fox or later
-- JDK 11 or higher
-- Android SDK with API level 36
+### Build from Source:
 
-### Build from Source
+#### 1. Clone the Repository:
+```bash
+git clone https://github.com/yourusername/brain-rot-app-main.git
+cd brain-rot-app-main
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Xenonesis/Brave-Brain.git
-   cd Brave-Brain
-   ```
+#### 2. Open in Android Studio:
+- Open Android Studio
+- Select "Open an existing Android Studio project"
+- Navigate to the cloned directory and select it
+- Wait for Gradle sync to complete
 
-2. **Open in Android Studio**
-   - Launch Android Studio
-   - Click "Open an Existing Project"
-   - Navigate to the cloned directory
-   - Select the project folder
+#### 3. Build the APK:
+```bash
+# Using Gradle wrapper (recommended)
+./gradlew assembleDebug
 
-3. **Build the project**
-   ```bash
-   ./gradlew assembleDebug
-   ```
+# Or using Android Studio
+# Build > Build Bundle(s) / APK(s) > Build APK(s)
+```
 
-4. **Install on device**
-   ```bash
-   ./gradlew installDebug
-   ```
+#### 4. Install on Device:
+```bash
+# Via ADB (Android Debug Bridge)
+adb install app/build/outputs/apk/debug/app-debug.apk
 
-### APK Installation
-1. Download the latest APK from the [Releases](https://github.com/Xenonesis/Brave-Brain/releases) page
-2. Enable "Install from Unknown Sources" in your device settings
-3. Install the APK file
-4. Launch the app and complete the onboarding process
+# Or transfer APK to device and install manually
+```
+
+### Direct Installation:
+1. Download the latest APK from the releases section
+2. Enable "Install from unknown sources" in your device settings
+3. Open the APK file and follow installation prompts
+4. Grant necessary permissions when prompted
 
 ---
 
 ## 🔐 Permissions
 
-Brave Brain requires specific permissions to function effectively:
+Brave Brain requires several permissions to function effectively. All permissions are used solely for app blocking and analytics - no data is transmitted externally.
 
-### 📊 Usage Access Permission
-- **Purpose**: Monitor which apps are currently in use and track usage time
-- **Why needed**: Essential for detecting when blocked apps are accessed
-- **Privacy**: Data never leaves your device
+### Required Permissions:
 
-### 🖼️ Display over Other Apps (Overlay)
-- **Purpose**: Show blocking screens over restricted applications
-- **Why needed**: Provides immediate feedback when time limits are reached
-- **Privacy**: Only used to display blocking interfaces
+#### 📊 Usage Access Permission
+- **Purpose**: Monitor app usage patterns and screen time
+- **Usage**: Essential for tracking which apps you use and for how long
+- **Privacy**: Data stays on your device, never transmitted
 
-### 🔔 Notifications
-- **Purpose**: Send gentle reminders about usage patterns
-- **Why needed**: Keep users informed about their digital habits
-- **Privacy**: All notifications are generated locally
+#### 🖥️ Display Over Other Apps (Overlay)
+- **Purpose**: Show blocking screens over other applications
+- **Usage**: Displays the blocking interface when time limits are reached
+- **Privacy**: Only used to show blocking messages, no data collection
 
-### 🔄 Foreground Service
+#### 🔔 Notification Permission
+- **Purpose**: Send gentle usage reminders and system notifications
+- **Usage**: Alerts about time limits, blocking events, and insights
+- **Privacy**: Notifications are generated locally, no external communication
+
+#### ⚙️ Foreground Service
 - **Purpose**: Maintain continuous monitoring in the background
-- **Why needed**: Ensures blocking works even when the app is not active
-- **Privacy**: Service only monitors app usage patterns
+- **Usage**: Ensures blocking works even when the app is not actively open
+- **Privacy**: Service only monitors locally, no network activity
+
+### How to Grant Permissions:
+
+1. **Usage Access**: Settings > Apps > Special Access > Usage Access > Brave Brain > Allow
+2. **Overlay Permission**: Settings > Apps > Special Access > Display over other apps > Brave Brain > Allow
+3. **Notifications**: Automatically requested on first launch (Android 13+)
+4. **Foreground Service**: Automatically granted during installation
 
 ---
 
-## 🚀 Usage
+## 📖 Usage
 
-### Initial Setup
+### Getting Started:
 
-1. **Launch the App**
-   - Complete the interactive onboarding process
-   - Learn about features and benefits
+#### 1. Initial Setup:
+1. **Launch Brave Brain** from your app drawer
+2. **Complete onboarding** - brief introduction to features
+3. **Grant permissions** when prompted (Usage Access, Overlay, Notifications)
+4. **Select apps to block** using the "Select Apps to Block" button
+5. **Set time limits** for each selected app
+6. **Choose blocking strategy** via "🧠 Smart Blocking Settings"
 
-2. **Grant Permissions**
-   - Usage Access: Settings → Apps → Special app access → Usage access
-   - Overlay Permission: Automatically prompted during setup
-   - Notifications: Grant when prompted
+#### 2. Basic Usage:
+- **Monitor Usage**: View real-time stats on the main dashboard
+- **Adjust Limits**: Tap "Update Time Limits" to modify restrictions
+- **View Analytics**: Access "📊 View Analytics & Insights" for detailed reports
+- **Test System**: Use "🧪 Test Blocking System" to verify functionality
 
-3. **Select Apps to Monitor**
-   - Browse installed applications
-   - Select apps you want to limit
-   - Common choices: Social media, games, entertainment apps
+#### 3. Advanced Configuration:
 
-4. **Set Time Limits**
-   - Configure daily limits for each selected app
-   - Start with realistic goals (e.g., 30-60 minutes)
-   - Adjust limits based on your usage patterns
+##### Smart Blocking Strategies:
+- **Standard**: Traditional time-based blocking
+- **Progressive**: Stricter limits with repeated violations
+- **Smart Adaptive**: AI learns your patterns and adapts
+- **Strict Mode**: Immediate blocking with zero tolerance
 
-### Daily Usage
+##### Context Rules:
+- **Bedtime Mode**: Enhanced blocking during sleep hours (22:00-07:00)
+- **Work Hours**: Focus protection during work time (09:00-17:00)
+- **Family Time**: Encourage real-world connections (18:00-20:00)
 
-1. **Monitor Progress**
-   - Check the main dashboard for current usage
-   - View real-time statistics
-   - Receive periodic usage updates
+### Daily Workflow:
 
-2. **Handle Blocks**
-   - When time limits are reached, blocking screens appear
-   - Choose to return home or complete math challenges
-   - Reflect on your digital habits
+#### Morning:
+1. Check overnight analytics and insights
+2. Review productivity score and trends
+3. Adjust daily goals if needed
 
-3. **Adjust Settings**
-   - Modify time limits as needed
-   - Add or remove monitored apps
-   - Complete math challenges to access settings
+#### During the Day:
+- Receive gentle notifications about usage
+- Experience intelligent blocking when limits are reached
+- Complete challenges to extend usage (if configured)
 
-### Advanced Features
+#### Evening:
+- Review daily analytics and achievements
+- Export progress reports if desired
+- Adjust settings for tomorrow
 
-- **Math Challenges**: Solve 3 problems to unlock settings access
-- **Time Extensions**: Complete challenges to add extra time
-- **Usage Analytics**: Track progress over time
-- **Smart Detection**: Automatic app detection with multiple fallback methods
+### Challenge System:
+
+When you exceed time limits, you'll encounter various challenges:
+
+1. **Math Problems**: Solve arithmetic to continue (difficulty adapts)
+2. **Reflection Questions**: Consider your usage intentions mindfully
+3. **Breathing Exercises**: Take a moment for mindfulness
+4. **Physical Activities**: Simple exercises to break screen habits
+5. **Productive Tasks**: Quick activities that add real value
+6. **Cooling-off Periods**: Mandatory wait times that increase with violations
 
 ---
 
 ## 🏗️ Architecture
 
-Brave Brain follows modern Android development practices:
+### Technical Architecture:
 
-### 📁 Project Structure
+#### Core Components:
+
+##### 1. **MainActivity.kt**
+- Central hub for all app functionality
+- Real-time dashboard with usage statistics
+- Navigation to all major features
+- Periodic stats updates and UI management
+
+##### 2. **ImprovedBlockerService.kt**
+- Background monitoring service
+- Real-time app usage detection
+- Intelligent blocking logic
+- Minimal battery impact design
+
+##### 3. **SmartBlockingEngine.kt**
+- AI-powered blocking strategies
+- Context-aware rule processing
+- Adaptive difficulty algorithms
+- Violation tracking and escalation
+
+##### 4. **AnalyticsService.kt**
+- Comprehensive usage data collection
+- Productivity scoring algorithms
+- Behavioral pattern recognition
+- Local data processing and storage
+
+##### 5. **AdvancedChallengeActivity.kt**
+- Multi-type challenge system
+- Adaptive difficulty management
+- Progress tracking and analytics
+- Modern gesture-compatible interface
+
+##### 6. **InsightsActivity.kt**
+- Professional analytics dashboard
+- Data visualization and trends
+- Personalized recommendations
+- Export functionality
+
+#### Data Flow:
+
 ```
-app/
-├── src/main/
-│   ├── java/com/example/testing/
-│   │   ├── MainActivity.kt              # Main dashboard
-│   │   ├── OnboardingActivity.kt        # Initial setup flow
-│   │   ├── AppSelectionActivity.kt      # App selection interface
-│   │   ├── TimeLimitActivity.kt         # Time limit configuration
-│   │   ├── BlockingActivity.kt          # App blocking screen
-│   │   ├── MathChallengeActivity.kt     # Math challenge system
-│   │   ├── BlockerService.kt            # Background monitoring service
-│   │   ├── OverlayBlockingService.kt    # Overlay management
-│   │   └── UsageUtils.kt                # Usage tracking utilities
-│   ├── res/
-│   │   ├── layout/                      # UI layouts
-│   │   ├── drawable/                    # Icons and graphics
-│   │   ├── values/                      # Strings, colors, themes
-│   │   └── xml/                         # Preferences and rules
-│   └── AndroidManifest.xml              # App configuration
-└── build.gradle.kts                     # Build configuration
+User Interaction → MainActivity → BlockerService → SmartBlockingEngine
+                                      ↓
+Analytics Collection ← AnalyticsService ← Usage Detection
+                                      ↓
+Challenge System ← AdvancedChallengeActivity ← Blocking Trigger
+                                      ↓
+Insights Dashboard ← InsightsActivity ← Data Processing
 ```
 
-### 🔧 Key Components
+#### Storage Architecture:
 
-#### Activities
-- **OnboardingActivity**: Guided setup experience with ViewPager2
-- **MainActivity**: Central dashboard with SwipeRefreshLayout
-- **AppSelectionActivity**: Dual-pane app selection interface
-- **TimeLimitActivity**: Time configuration with input validation
-- **BlockingActivity**: Full-screen blocking interface
-- **MathChallengeActivity**: Challenge system with random problem generation
+- **SharedPreferences**: App settings, time limits, blocked apps
+- **Local Analytics Database**: Usage statistics, productivity scores
+- **Pattern Recognition Cache**: AI learning data for adaptive blocking
+- **Challenge Progress**: Completion rates, difficulty adjustments
 
-#### Services
-- **BlockerService**: Foreground service for continuous monitoring
-- **OverlayBlockingService**: Manages overlay windows for blocking
+### Modern Android Practices:
 
-#### Utilities
-- **UsageUtils**: Centralized usage tracking and statistics
-- **OnboardingAdapter**: ViewPager adapter for onboarding screens
+#### 1. **OnBackPressedDispatcher**
+- Modern back navigation handling
+- Gesture navigation compatibility
+- Consistent behavior across Android versions
 
-### 🛠️ Technologies Used
+#### 2. **Material Design 3**
+- Latest design system implementation
+- Dynamic theming support
+- Accessibility compliance
 
-- **Language**: Kotlin 100%
-- **UI Framework**: Android Views with Material Design Components
-- **Architecture**: MVVM-inspired with SharedPreferences persistence
-- **Async Operations**: Handlers and Runnables for background tasks
-- **System Integration**: UsageStatsManager, WindowManager, NotificationManager
+#### 3. **Foreground Services**
+- Proper background processing
+- Battery optimization compliance
+- User-visible service notifications
+
+#### 4. **Permission Management**
+- Runtime permission requests
+- Graceful permission handling
+- User education about permission needs
 
 ---
 
 ## 🔧 Technical Details
 
-### App Monitoring System
+### Development Specifications:
 
-The app uses Android's `UsageStatsManager` to monitor foreground applications:
+#### Build Configuration:
+- **Gradle Version**: 8.13
+- **Android Gradle Plugin**: Latest stable
+- **Kotlin Version**: Latest stable
+- **Compile SDK**: 36 (Android 14)
+- **Target SDK**: 36 (Android 14)
+- **Min SDK**: 24 (Android 7.0)
+- **Version**: 0.21 (Build 21)
 
+#### Dependencies:
 ```kotlin
-private fun getForegroundAppPackageName(): String? {
-    val usm = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    val end = System.currentTimeMillis()
-    val begin = end - 10000 // 10-second window
-    
-    // Query usage events for real-time detection
-    val events = usm.queryEvents(begin, end)
-    // Process events to find current foreground app
-}
+// Core Android libraries
+implementation("androidx.core:core-ktx:latest")
+implementation("androidx.appcompat:appcompat:latest")
+implementation("com.google.android.material:material:latest")
+
+// UI Components
+implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+// Testing
+testImplementation("junit:junit:latest")
+androidTestImplementation("androidx.test.ext:junit:latest")
+androidTestImplementation("androidx.test.espresso:espresso-core:latest")
 ```
 
-### Time Tracking Implementation
+#### Key Features Implementation:
 
-Usage time is tracked with second-level precision:
-
+##### Smart Blocking Algorithm:
 ```kotlin
-private fun trackUsageTime(packageName: String, elapsedSeconds: Int) {
-    val prefs = getSharedPreferences("usage_tracking", Context.MODE_PRIVATE)
-    val currentUsage = prefs.getInt(packageName, 0)
-    prefs.edit().putInt(packageName, currentUsage + elapsedSeconds).apply()
-}
-```
-
-### Blocking Mechanism
-
-When time limits are exceeded, the app immediately redirects users:
-
-```kotlin
-private fun redirectToHome() {
-    val homeIntent = Intent(Intent.ACTION_MAIN).apply {
-        addCategory(Intent.CATEGORY_HOME)
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+class SmartBlockingEngine {
+    enum class BlockingStrategy {
+        STANDARD,      // Traditional time-based
+        PROGRESSIVE,   // Escalating difficulty
+        ADAPTIVE,      // AI-powered learning
+        STRICT         // Zero tolerance
     }
-    startActivity(homeIntent)
+    
+    fun shouldBlock(packageName: String, strategy: BlockingStrategy): Boolean {
+        return when (strategy) {
+            STANDARD -> checkTimeLimit(packageName)
+            PROGRESSIVE -> checkProgressiveLimit(packageName)
+            ADAPTIVE -> checkAdaptiveLimit(packageName)
+            STRICT -> checkStrictLimit(packageName)
+        }
+    }
 }
 ```
 
-### Performance Optimizations
+##### Analytics Processing:
+```kotlin
+class AnalyticsService {
+    fun calculateProductivityScore(): Int {
+        val usagePatterns = analyzeUsagePatterns()
+        val violationHistory = getViolationHistory()
+        val challengePerformance = getChallengeStats()
+        
+        return computeScore(usagePatterns, violationHistory, challengePerformance)
+    }
+}
+```
 
-- **Efficient Polling**: 2-second intervals balance responsiveness with battery life
-- **Smart Caching**: Minimizes repeated system calls
-- **Fallback Detection**: Multiple methods ensure reliable app detection
-- **Memory Management**: Proper cleanup prevents memory leaks
+##### Challenge System:
+```kotlin
+class AdvancedChallengeActivity {
+    enum class ChallengeType {
+        MATH, REFLECTION, MINDFULNESS, 
+        PHYSICAL, PRODUCTIVITY, WAITING
+    }
+    
+    fun generateChallenge(type: ChallengeType, difficulty: Int): Challenge {
+        return when (type) {
+            MATH -> generateMathChallenge(difficulty)
+            REFLECTION -> generateReflectionChallenge()
+            // ... other challenge types
+        }
+    }
+}
+```
+
+### Performance Optimizations:
+
+#### Battery Efficiency:
+- Optimized background service with minimal CPU usage
+- Intelligent polling intervals based on usage patterns
+- Efficient data structures for usage tracking
+- Background processing limitations compliance
+
+#### Memory Management:
+- Proper lifecycle management for all activities
+- Efficient bitmap handling for app icons
+- Garbage collection optimization
+- Memory leak prevention
+
+#### Storage Efficiency:
+- Compressed analytics data storage
+- Efficient SharedPreferences usage
+- Automatic data cleanup for old entries
+- Minimal storage footprint
 
 ---
 
-## 🎨 Customization
+## 🚀 Advanced Features
 
-### Themes and Colors
-The app supports both light and dark themes, automatically adapting to system settings:
+### 🧠 Smart Blocking Engine Features:
 
-- **Primary Colors**: Material Design Blue/Teal palette
-- **Typography**: Roboto font family
-- **Icons**: Material Design icons with custom illustrations
+#### Adaptive Learning:
+- **Pattern Recognition**: Learns your daily usage patterns
+- **Predictive Blocking**: Intervenes before you reach limits
+- **Context Awareness**: Adjusts behavior based on time and situation
+- **Violation Learning**: Remembers and adapts to repeated violations
 
-### Configuration Options
-- **Polling Interval**: Adjustable monitoring frequency
-- **Challenge Difficulty**: Customizable math problem complexity
-- **Notification Frequency**: Configurable reminder intervals
-- **UI Preferences**: Theme and layout customizations
+#### Progressive Difficulty System:
+- **Escalating Consequences**: Stricter limits with repeated violations
+- **Cooling-off Periods**: Mandatory wait times that increase
+- **Challenge Difficulty**: Math problems get harder with violations
+- **Habit Building**: Designed to create lasting behavior change
+
+### 📊 Analytics Engine Features:
+
+#### Real-Time Monitoring:
+- **Live Usage Tracking**: Updates every 30 seconds
+- **Session Detection**: Identifies app switching patterns
+- **Peak Time Analysis**: Finds your most problematic hours
+- **Productivity Correlation**: Links usage to productivity scores
+
+#### Advanced Insights:
+- **Behavioral Patterns**: Identifies usage triggers and habits
+- **Weekly Trends**: Shows improvement or decline over time
+- **Personalized Recommendations**: AI-generated suggestions
+- **Export Capabilities**: Share progress with others
+
+### 🧮 Challenge System Features:
+
+#### Intelligent Challenge Selection:
+- **Context-Aware**: Different challenges for different times
+- **Difficulty Adaptation**: Gets harder with repeated violations
+- **Variety Rotation**: Prevents habituation to specific challenges
+- **Progress Tracking**: Monitors completion rates and improvement
+
+#### Challenge Types Explained:
+
+1. **Mathematical Challenges**:
+   - Basic arithmetic (addition, subtraction, multiplication)
+   - Difficulty scales from 1-digit to 3-digit numbers
+   - Time pressure increases with violations
+   - Prevents mindless clicking through blocks
+
+2. **Reflection Challenges**:
+   - "Why do you want to use this app right now?"
+   - "What else could you do instead?"
+   - "How will you feel after using this app?"
+   - Builds self-awareness and mindful usage
+
+3. **Mindfulness Challenges**:
+   - Guided breathing exercises (30 seconds to 2 minutes)
+   - Body scan awareness practices
+   - Present moment awareness exercises
+   - Reduces stress and impulsive usage
+
+4. **Physical Challenges**:
+   - Simple exercises (jumping jacks, stretches)
+   - Eye movement exercises for screen break
+   - Posture correction reminders
+   - Breaks the sedentary cycle
+
+5. **Productivity Challenges**:
+   - Quick tasks that add value
+   - Organize one thing on your desk
+   - Send a quick message to someone you care about
+   - Redirects energy to positive activities
+
+6. **Waiting Challenges**:
+   - Mandatory cooling-off periods
+   - Progressive timing (1 min → 5 min → 15 min)
+   - Cannot be skipped or bypassed
+   - Builds genuine self-control
 
 ---
 
 ## 🧪 Testing
 
-### Unit Tests
-```bash
-./gradlew test
-```
+### Testing Your Setup:
 
-### Instrumentation Tests
-```bash
-./gradlew connectedAndroidTest
-```
+#### 1. **Quick Test Mode**:
+- Use the "🧪 Test Blocking System" button on the main screen
+- Temporarily sets 1-minute limits for all selected apps
+- Allows you to see blocking in action immediately
+- Easily restore normal limits when done
 
-### Manual Testing Checklist
-- [ ] App selection and deselection
-- [ ] Time limit configuration
-- [ ] Blocking functionality
-- [ ] Math challenge completion
-- [ ] Permission handling
-- [ ] Background service reliability
-- [ ] UI responsiveness across different screen sizes
+#### 2. **Feature Testing Checklist**:
+
+##### Basic Functionality:
+- [ ] App selection works correctly
+- [ ] Time limits are saved and applied
+- [ ] Usage statistics update in real-time
+- [ ] Blocking activates when limits are reached
+
+##### Smart Blocking:
+- [ ] Different strategies produce different behaviors
+- [ ] Context rules activate at correct times
+- [ ] Progressive difficulty increases with violations
+- [ ] Adaptive blocking learns from your patterns
+
+##### Analytics Dashboard:
+- [ ] Productivity score calculates correctly
+- [ ] Usage graphs display accurate data
+- [ ] Insights provide relevant recommendations
+- [ ] Export functionality works properly
+
+##### Challenge System:
+- [ ] Different challenge types appear
+- [ ] Difficulty adapts to violation history
+- [ ] Challenges can be completed successfully
+- [ ] Failed challenges result in appropriate consequences
+
+#### 3. **Performance Testing**:
+- Monitor battery usage in device settings
+- Check memory usage during extended use
+- Verify app doesn't slow down device
+- Test with multiple apps blocked simultaneously
+
+### Troubleshooting:
+
+#### Common Issues:
+
+1. **Blocking Not Working**:
+   - Ensure Usage Access permission is granted
+   - Check that apps are selected and limits are set
+   - Verify ImprovedBlockerService is running
+   - Try restarting the app
+
+2. **Analytics Not Updating**:
+   - Confirm Usage Access permission
+   - Check if AnalyticsService is running
+   - Try refreshing with pull-to-refresh gesture
+   - Restart the app if needed
+
+3. **Challenges Not Appearing**:
+   - Ensure you've exceeded time limits
+   - Check that challenge system is enabled
+   - Verify overlay permission is granted
+   - Try the test mode to trigger challenges
+
+4. **High Battery Usage**:
+   - Check background app refresh settings
+   - Ensure you're using the latest version
+   - Consider reducing monitoring frequency
+   - Contact support if issue persists
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions to Brain Detox! Here's how you can help:
+We welcome contributions to make Brave Brain even better! Here's how you can help:
 
-### Development Setup
+### Development Setup:
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
+2. Clone your fork locally
+3. Open in Android Studio
+4. Make your changes
+5. Test thoroughly
 6. Submit a pull request
 
-### Contribution Guidelines
+### Areas for Contribution:
+- **New Challenge Types**: Creative ways to interrupt mindless usage
+- **Analytics Improvements**: Better insights and visualizations
+- **UI/UX Enhancements**: More intuitive and beautiful interfaces
+- **Performance Optimizations**: Reduce battery and memory usage
+- **Accessibility Features**: Make the app usable for everyone
+- **Localization**: Translate the app to other languages
+
+### Code Style:
 - Follow Kotlin coding conventions
-- Write clear commit messages
-- Add documentation for new features
-- Include tests for new functionality
-- Respect user privacy and data protection
-
-### Areas for Contribution
-- 🌐 Internationalization and localization
-- 🎨 UI/UX improvements
-- 📊 Advanced analytics and insights
-- 🔧 Performance optimizations
-- 🧪 Additional testing coverage
-- 📚 Documentation improvements
+- Use meaningful variable and function names
+- Add comments for complex logic
+- Write unit tests for new features
+- Ensure compatibility with Android 7.0+
 
 ---
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### App Not Blocking
-1. Verify Usage Access permission is granted
-2. Check if the app is in the selected apps list
-3. Ensure time limits are properly configured
-4. Restart the app to refresh the service
-
-#### Background Service Stops
-1. Disable battery optimization for Brave Brain
-2. Check if the app has been force-stopped
-3. Verify foreground service permissions
-4. Restart the device if issues persist
-
-#### Math Challenges Not Working
-1. Ensure overlay permission is granted
-2. Check for conflicts with other overlay apps
-3. Verify the app has notification permissions
-4. Clear app cache and restart
-
-### Performance Tips
-- Regularly clear app cache
-- Restart the app weekly for optimal performance
-- Monitor battery usage and adjust settings accordingly
-- Keep the app updated to the latest version
-
----
-
-## 📞 Support
-
-### Getting Help
-- **Documentation**: Check this README and in-app help
-- **Issues**: Report bugs on the [GitHub Issues](https://github.com/Xenonesis/Brave-Brain/issues) page
-- **Discussions**: Join conversations in [GitHub Discussions](https://github.com/Xenonesis/Brave-Brain/discussions)
-
-### Feedback
-We value your feedback! Please share:
-- Feature requests
-- Bug reports
-- User experience improvements
-- Success stories
-
----
-
-## 📜 License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Third-Party Libraries
-- AndroidX Core KTX
-- Material Design Components
-- SwipeRefreshLayout
-- ViewPager2
+### What this means:
+- ✅ **Free to use**: Personal and commercial use allowed
+- ✅ **Modify freely**: Change the code to suit your needs
+- ✅ **Distribute**: Share the app with others
+- ✅ **Private use**: Use in private projects
+- ⚠️ **Attribution required**: Credit the original authors
+- ❌ **No warranty**: Use at your own risk
 
 ---
 
-## 🙏 Acknowledgments
+## 🌟 What Makes Brave Brain Special
 
-- **Material Design Team** for excellent design guidelines
-- **Android Development Community** for valuable resources and support
-- **Open Source Contributors** who make projects like this possible
-- **Users** who provide feedback and help improve the app
+### Beyond Simple App Blocking:
+
+Unlike basic app blockers that simply show a "blocked" message, Brave Brain is a **comprehensive digital wellness ecosystem** designed to:
+
+#### 🧠 **Build Real Self-Control**:
+- Progressive challenges that get harder with violations
+- Meaningful interventions that build awareness
+- Habit-forming systems that create lasting change
+- Context-aware blocking that adapts to your life
+
+#### 📊 **Provide Professional Insights**:
+- Real-time productivity scoring with actionable feedback
+- Behavioral pattern recognition and trend analysis
+- Personalized recommendations based on your usage
+- Professional-grade analytics you can share and track
+
+#### 🎯 **Respect Your Privacy**:
+- All data stays on your device - zero external transmission
+- No accounts required - works completely offline
+- No tracking, no ads, no data collection
+- Full control over your personal information
+
+#### 🔄 **Evolve With You**:
+- Smart adaptive blocking that learns your patterns
+- Progressive difficulty that builds genuine habits
+- Context-aware rules for different life situations
+- Continuous improvement based on your behavior
+
+### The Science Behind Brave Brain:
+
+#### **Behavioral Psychology Principles**:
+- **Progressive Resistance**: Gradually increasing difficulty builds stronger habits
+- **Mindful Interruption**: Challenges break automatic usage patterns
+- **Positive Reinforcement**: Analytics celebrate progress and improvements
+- **Context Awareness**: Different rules for different situations prevent habituation
+
+#### **Habit Formation Research**:
+- **Cue Disruption**: Blocking interrupts the habit loop at the right moment
+- **Friction Introduction**: Challenges add healthy friction to mindless usage
+- **Awareness Building**: Reflection challenges increase conscious decision-making
+- **Alternative Behaviors**: Productivity challenges redirect energy positively
 
 ---
 
-## 🔄 Version History
+## 🚀 Ready to Transform Your Digital Life?
 
-### v0.21 (Latest)
-- 🔧 **Fixed Continue button visibility**: Enhanced onboarding button styling and visibility
-- 🎨 **Improved button design**: Added proper spacing, elevation, and minimum width for better UX
-- 📱 **Better accessibility**: Added string resources for all button texts
-- 🛠️ **Layout improvements**: Enhanced button container layout for consistent appearance
+### Quick Start Guide:
 
-### v0.20
-- ✨ Rebranded to "Brave Brain" with updated messaging
-- 🎯 Enhanced focus on courage and brain training
-- 📱 Updated app identity and descriptions
-- 🔄 Version increment for continued development
+1. **📱 Install Brave Brain** on your Android device
+2. **⚙️ Grant necessary permissions** (Usage Access, Overlay, Notifications)
+3. **🎯 Select problematic apps** you want to control
+4. **⏰ Set reasonable time limits** for each app
+5. **🧠 Choose your blocking strategy** (start with Standard, upgrade to Adaptive)
+6. **📊 Monitor your progress** with the analytics dashboard
+7. **🏆 Celebrate improvements** and adjust as needed
 
-### v0.10
-- ✨ Initial release as "Brain Detox"
-- 🚫 App blocking functionality
-- ⏱️ Time tracking and limits
-- 🧮 Math challenge system
-- 🎨 Material Design UI
-- 🔐 Comprehensive permission management
+### Your Journey to Digital Wellness Starts Now:
 
-### Planned Features
-- 📊 Advanced analytics dashboard
-- 🎯 Goal setting and achievement system
-- 🌐 Backup and sync capabilities
-- 🔧 Advanced customization options
-- 🧘 Mindfulness and break reminders
+- **Week 1**: Learn the system, establish baseline usage patterns
+- **Week 2**: Experiment with different blocking strategies and challenges
+- **Week 3**: Fine-tune context rules and time limits based on insights
+- **Week 4+**: Enjoy improved focus, productivity, and digital well-being
 
 ---
 
-<div align="center">
-  <p><strong>Built with ❤️ for digital wellness</strong></p>
-  <p>© 2024 Brave Brain. All rights reserved.</p>
-</div>
+## 📞 Support & Community
+
+### Get Help:
+- **Documentation**: Check this README for comprehensive information
+- **Issues**: Report bugs or request features on GitHub
+- **Testing**: Use the built-in test mode to verify functionality
+- **Community**: Share your experience and learn from others
+
+### Stay Updated:
+- **Releases**: Watch the repository for new versions and features
+- **Changelog**: Review update notes for new capabilities
+- **Roadmap**: See planned features and improvements
 
 ---
 
-*Be brave, train your brain. Start your journey today!* 🧠✨
+**Your digital wellness journey starts with a single brave decision. Take control, train your brain, and reclaim your focus with Brave Brain.** 🧠✨
+
+---
+
+*Built with ❤️ for digital wellness*  
+*Version 0.21 - Ready for Production*  
+*Modern Android Architecture - Future-Proof Design*

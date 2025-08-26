@@ -74,8 +74,24 @@
         <service android:name=".BlockerService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+        <service android:name=".ImprovedBlockerService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
         <service android:name=".OverlayBlockingService"
             android:exported="false" />
+        <service android:name=".AnalyticsService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <activity android:name=".InsightsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+        <activity android:name=".AdvancedChallengeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.example.testing.challenge"
+            android:excludeFromRecents="true" />
 
     </application>
 

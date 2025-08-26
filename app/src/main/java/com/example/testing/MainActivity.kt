@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         try {
             setupSwipeRefresh()
             setupUI()
+            addTestButton() // Add test functionality
             startBlockerServiceIfNeeded()
             startPeriodicStatsUpdate()
         } catch (e: Exception) {
@@ -169,7 +170,10 @@ class MainActivity : AppCompatActivity() {
                 // Add a small delay to ensure proper user interaction
                 android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
                     try {
-                        ContextCompat.startForegroundService(this@MainActivity, Intent(this@MainActivity, BlockerService::class.java))
+                        // Stop old service first
+                        stopService(Intent(this@MainActivity, BlockerService::class.java))
+                        // Start improved service
+                        ContextCompat.startForegroundService(this@MainActivity, Intent(this@MainActivity, ImprovedBlockerService::class.java))
                         Toast.makeText(this@MainActivity, "Monitoring service started", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         android.util.Log.e("MainActivity", "Failed to start service: ${e.message}")
@@ -180,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                 // Stop service if conditions are not met
                 try {
                     stopService(Intent(this, BlockerService::class.java))
+                    stopService(Intent(this, ImprovedBlockerService::class.java))
                 } catch (e: Exception) {
                     // Ignore errors when stopping service
                 }
@@ -828,6 +833,286 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Error getting active apps count: ${e.message}")
             0
+        }
+    }
+
+    private fun addTestButton() {
+        try {
+            val container = findViewById<LinearLayout>(R.id.buttonContainer)
+            
+            // Create test blocking button
+            val testButton = MaterialButton(this).apply {
+                text = "🧪 Test Blocking System"
+                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.warning_orange))
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+                setPadding(32, 24, 32, 24)
+                textSize = 16f
+                
+                setOnClickListener {
+                    testBlockingSystem()
+                }
+            }
+            
+            // Add some margin
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 16, 0, 0)
+            }
+            testButton.layoutParams = params
+            
+            container.addView(testButton)
+            
+            // Add Analytics Dashboard button
+            val analyticsButton = MaterialButton(this).apply {
+                text = "📊 View Analytics & Insights"
+                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.primary_blue))
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+                setPadding(32, 24, 32, 24)
+                textSize = 16f
+                
+                setOnClickListener {
+                    startActivity(Intent(this@MainActivity, InsightsActivity::class.java))
+                }
+            }
+            
+            val analyticsParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 16, 0, 0)
+            }
+            analyticsButton.layoutParams = analyticsParams
+            container.addView(analyticsButton)
+            
+            // Add Smart Blocking Configuration button
+            val smartBlockingButton = MaterialButton(this).apply {
+                text = "🧠 Smart Blocking Settings"
+                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.success_green))
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+                setPadding(32, 24, 32, 24)
+                textSize = 16f
+                
+                setOnClickListener {
+                    showSmartBlockingOptions()
+                }
+            }
+            
+            val smartBlockingParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 16, 0, 0)
+            }
+            smartBlockingButton.layoutParams = smartBlockingParams
+            container.addView(smartBlockingButton)
+            
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error adding test button: ${e.message}")
+        }
+    }
+    
+    private fun testBlockingSystem() {
+        try {
+            // Check if we have selected apps and time limits
+            val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+            val blockedApps = prefs.getStringSet("blocked_packages", emptySet()) ?: emptySet()
+            val timeLimits = prefs.getString("time_limits", "")
+            
+            if (blockedApps.isEmpty()) {
+                Toast.makeText(this, "❌ No apps selected for blocking. Please select apps first.", Toast.LENGTH_LONG).show()
+                return
+            }
+            
+            if (timeLimits.isNullOrEmpty()) {
+                Toast.makeText(this, "❌ No time limits set. Please set time limits first.", Toast.LENGTH_LONG).show()
+                return
+            }
+            
+            // Check permissions
+            if (!hasUsageStatsPermission(this)) {
+                Toast.makeText(this, "❌ Missing usage stats permission. Please grant it.", Toast.LENGTH_LONG).show()
+                return
+            }
+            
+            // Test the blocking system
+            android.app.AlertDialog.Builder(this)
+                .setTitle("🧪 Test Blocking System")
+                .setMessage("This will:\n\n1. Temporarily set a very low time limit (1 minute) for all selected apps\n2. Force trigger blocking for testing\n3. Show you how the blocking works\n\nProceed with test?")
+                .setPositiveButton("Yes, Test It!") { _, _ ->
+                    executeBlockingTest()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+                
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error testing blocking: ${e.message}", Toast.LENGTH_LONG).show()
+            android.util.Log.e("MainActivity", "Error in testBlockingSystem: ${e.message}")
+        }
+    }
+    
+    private fun executeBlockingTest() {
+        try {
+            val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+            val blockedApps = prefs.getStringSet("blocked_packages", emptySet()) ?: emptySet()
+            
+            // Backup current time limits
+            val originalLimits = prefs.getString("time_limits", "")
+            prefs.edit().putString("time_limits_backup", originalLimits).apply()
+            
+            // Set very low limits for testing (1 minute for all apps)
+            val testLimits = blockedApps.joinToString("|") { "$it,1" }
+            prefs.edit().putString("time_limits", testLimits).apply()
+            
+            // Set high usage for all apps to trigger immediate blocking
+            blockedApps.forEach { packageName ->
+                UsageUtils.incrementUsageSeconds(this, packageName, 120) // 2 minutes worth
+            }
+            
+            Toast.makeText(this, "✅ Test setup complete! Now try opening a blocked app to see blocking in action.", Toast.LENGTH_LONG).show()
+            
+            // Show instructions
+            android.app.AlertDialog.Builder(this)
+                .setTitle("🧪 Test Instructions")
+                .setMessage("Test setup complete!\n\n📱 Now try opening one of your blocked apps to see the blocking system in action.\n\n⚠️ The app should be blocked immediately and you'll be redirected to home.\n\n🔄 To restore normal limits, tap 'Restore Normal Limits' below.")
+                .setPositiveButton("Restore Normal Limits") { _, _ ->
+                    restoreNormalLimits()
+                }
+                .setNegativeButton("Keep Testing", null)
+                .setCancelable(false)
+                .show()
+                
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error executing test: ${e.message}", Toast.LENGTH_LONG).show()
+            android.util.Log.e("MainActivity", "Error in executeBlockingTest: ${e.message}")
+        }
+    }
+    
+    private fun restoreNormalLimits() {
+        try {
+            val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+            val backupLimits = prefs.getString("time_limits_backup", "")
+            
+            if (!backupLimits.isNullOrEmpty()) {
+                prefs.edit().putString("time_limits", backupLimits).apply()
+                prefs.edit().remove("time_limits_backup").apply()
+                
+                // Reset usage for today
+                UsageUtils.resetIfNeeded(this)
+                
+                Toast.makeText(this, "✅ Normal time limits restored!", Toast.LENGTH_SHORT).show()
+                
+                // Refresh the UI
+                setupUI()
+            } else {
+                Toast.makeText(this, "❌ No backup limits found", Toast.LENGTH_SHORT).show()
+            }
+            
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error restoring limits: ${e.message}", Toast.LENGTH_SHORT).show()
+            android.util.Log.e("MainActivity", "Error in restoreNormalLimits: ${e.message}")
+        }
+    }
+    
+    private fun showSmartBlockingOptions() {
+        val smartBlockingEngine = SmartBlockingEngine(this)
+        val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+        val blockedApps = prefs.getStringSet("blocked_packages", emptySet()) ?: emptySet()
+        
+        if (blockedApps.isEmpty()) {
+            Toast.makeText(this, "Please select apps to block first", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        val strategies = arrayOf(
+            "Standard Blocking",
+            "Progressive Difficulty", 
+            "Smart Adaptive",
+            "Strict Mode"
+        )
+        
+        val strategyValues = arrayOf(
+            SmartBlockingEngine.STRATEGY_STANDARD,
+            SmartBlockingEngine.STRATEGY_PROGRESSIVE,
+            SmartBlockingEngine.STRATEGY_ADAPTIVE,
+            SmartBlockingEngine.STRATEGY_STRICT
+        )
+        
+        android.app.AlertDialog.Builder(this)
+            .setTitle("🧠 Smart Blocking Strategy")
+            .setMessage("Choose how you want the blocking system to behave:\n\n" +
+                       "• Standard: Block when time limit reached\n" +
+                       "• Progressive: Stricter limits with violations\n" +
+                       "• Smart Adaptive: Learns your patterns\n" +
+                       "• Strict Mode: No mercy, immediate blocking")
+            .setItems(strategies) { _, which ->
+                val selectedStrategy = strategyValues[which]
+                
+                // Apply strategy to all blocked apps
+                blockedApps.forEach { packageName ->
+                    smartBlockingEngine.setBlockingStrategy(packageName, selectedStrategy)
+                }
+                
+                Toast.makeText(this, "Smart blocking strategy updated!", Toast.LENGTH_SHORT).show()
+                
+                // Show context rules configuration
+                showContextRulesConfiguration(smartBlockingEngine)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun showContextRulesConfiguration(smartBlockingEngine: SmartBlockingEngine) {
+        val contextRules = smartBlockingEngine.getContextRules()
+        
+        android.app.AlertDialog.Builder(this)
+            .setTitle("⚙️ Context-Based Rules")
+            .setMessage("Configure when blocking should be more strict:")
+            .setMultiChoiceItems(
+                arrayOf(
+                    "Bedtime Mode (22:00 - 07:00)",
+                    "Work Hours (09:00 - 17:00)",
+                    "Family Time (18:00 - 20:00)"
+                ),
+                booleanArrayOf(
+                    contextRules.bedtimeBlocking,
+                    contextRules.workHoursBlocking,
+                    contextRules.familyTimeBlocking
+                )
+            ) { _, which, isChecked ->
+                when (which) {
+                    0 -> {
+                        val updatedRules = contextRules.copy(bedtimeBlocking = isChecked)
+                        smartBlockingEngine.updateContextRules(updatedRules)
+                    }
+                    1 -> {
+                        val updatedRules = contextRules.copy(workHoursBlocking = isChecked)
+                        smartBlockingEngine.updateContextRules(updatedRules)
+                    }
+                    2 -> {
+                        val updatedRules = contextRules.copy(familyTimeBlocking = isChecked)
+                        smartBlockingEngine.updateContextRules(updatedRules)
+                    }
+                }
+            }
+            .setPositiveButton("Save") { _, _ ->
+                Toast.makeText(this, "Context rules saved!", Toast.LENGTH_SHORT).show()
+                
+                // Start analytics service if not already running
+                startAnalyticsService()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun startAnalyticsService() {
+        try {
+            val analyticsIntent = Intent(this, AnalyticsService::class.java)
+            startService(analyticsIntent)
+            Toast.makeText(this, "📊 Analytics tracking started", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error starting analytics service: ${e.message}")
         }
     }
 

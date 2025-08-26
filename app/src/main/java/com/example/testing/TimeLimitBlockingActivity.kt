@@ -30,6 +30,14 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Setup modern back press handling
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Prevent back button from closing the screen
+                Toast.makeText(this@TimeLimitBlockingActivity, "Please make a choice or wait for the timer.", Toast.LENGTH_SHORT).show()
+            }
+        })
+        
         android.util.Log.d("TimeLimitBlockingActivity", "onCreate started - Intent: ${intent?.action}")
         android.util.Log.d("TimeLimitBlockingActivity", "onCreate - Intent extras: ${intent?.extras}")
         
@@ -246,10 +254,6 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
         }
     }
     
-    override fun onBackPressed() {
-        // Prevent back button from closing the screen
-        Toast.makeText(this, "Please make a choice or wait for the timer.", Toast.LENGTH_SHORT).show()
-    }
     
     override fun onResume() {
         super.onResume()

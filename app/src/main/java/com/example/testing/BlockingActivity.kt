@@ -1,6 +1,5 @@
 package com.example.testing
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -10,8 +9,10 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.OnBackPressedCallback
 
-class BlockingActivity : Activity() {
+class BlockingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var countdownTextView: TextView? = null
     private var countdownSeconds = 8
@@ -32,6 +33,14 @@ class BlockingActivity : Activity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Setup modern back press handling
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Prevent back button from closing the blocking screen
+                Toast.makeText(this@BlockingActivity, "App is blocked. Please wait or tap 'Go to Home'.", Toast.LENGTH_SHORT).show()
+            }
+        })
         
         // Make the activity full screen and always on top
         window.setFlags(
@@ -171,10 +180,6 @@ class BlockingActivity : Activity() {
         }
     }
     
-    override fun onBackPressed() {
-        // Prevent back button from closing the blocking screen
-        Toast.makeText(this, "App is blocked. Please wait or tap 'Go to Home'.", Toast.LENGTH_SHORT).show()
-    }
     
     override fun onDestroy() {
         android.util.Log.d("BlockingActivity", "Activity destroyed")

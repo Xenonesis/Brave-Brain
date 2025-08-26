@@ -26,6 +26,7 @@
     <color name="colorErrorLight">#FEF2F2</color>
     <color name="colorWarning">#D97706</color>
     <color name="colorWarningLight">#FEF3C7</color>
+    <color name="warning_orange">#F97316</color>
     <color name="colorSuccess">#059669</color>
     <color name="colorSuccessLight">#F0FDF4</color>
     <color name="colorInfo">#2563EB</color>
@@ -111,10 +112,21 @@
     <color name="statusBarColor">#4F46E5</color>
     <color name="navigationBarColor">#FFFFFF</color>
     <color name="windowBackground">#F8FAFC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     
     <!-- Time-based Colors -->
     <color name="morningGradient">#FEF3C7</color>
     <color name="afternoonGradient">#DBEAFE</color>
     <color name="eveningGradient">#E0E7FF</color>
     <color name="nightGradient">#F3E8FF</color>
+    
+    <!-- Aliases for layout compatibility -->
+    <color name="background_light">@color/colorBackground</color>
+    <color name="primary_blue">@color/colorPrimary</color>
+    <color name="error_red">@color/colorError</color>
+    <color name="success_green">@color/colorSuccess</color>
+    <color name="text_primary">@color/textPrimary</color>
+    <color name="text_secondary">@color/textSecondary</color>
+    <color name="card_background">@color/cardBackground</color>
 </resources>
