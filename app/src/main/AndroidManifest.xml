@@ -93,6 +93,10 @@
             android:taskAffinity="com.example.testing.challenge"
             android:excludeFromRecents="true" />
 
+        <activity android:name=".GamificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+
     </application>
 
 </manifest>

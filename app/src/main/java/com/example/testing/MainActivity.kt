@@ -143,7 +143,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
+        // Gamification button
+        val viewGamificationButton = findViewById<MaterialButton>(R.id.viewGamificationButton)
+        viewGamificationButton?.setOnClickListener {
+            startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
+        }
 
             // Update stats display
             updateStatsDisplay()
