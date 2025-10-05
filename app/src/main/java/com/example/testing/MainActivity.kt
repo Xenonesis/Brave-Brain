@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
             addTestButton() // Add test functionality
             startBlockerServiceIfNeeded()
             startPeriodicStatsUpdate()
+            
+            // Check if this activity was opened from a notification and track engagement
+            handleNotificationClick()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Error starting app: ${e.message}", Toast.LENGTH_LONG).show()
@@ -55,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         setupUI()
         updateStatsDisplay()
         startPeriodicStatsUpdate()
+        
+        // Check if this activity was opened from a notification and track engagement
+        handleNotificationClick()
     }
 
     override fun onPause() {
@@ -148,6 +154,9 @@ class MainActivity : AppCompatActivity() {
         viewGamificationButton?.setOnClickListener {
             startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
         }
+
+        // Notification Preferences button - this is added dynamically in addTestButton()
+        // No need to set it up here as it's handled separately
 
             // Update stats display
             updateStatsDisplay()
@@ -911,6 +920,28 @@ class MainActivity : AppCompatActivity() {
             }
             smartBlockingButton.layoutParams = smartBlockingParams
             container.addView(smartBlockingButton)
+
+            // Add Notification Preferences button
+            val notificationPrefsButton = MaterialButton(this).apply {
+                text = "🔔 Notification Preferences"
+                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+                setPadding(32, 24, 32, 24)
+                textSize = 16f
+                
+                setOnClickListener {
+                    startActivity(Intent(this@MainActivity, NotificationPreferenceActivity::class.java))
+                }
+            }
+
+            val notificationPrefsParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 16, 0, 0)
+            }
+            notificationPrefsButton.layoutParams = notificationPrefsParams
+            container.addView(notificationPrefsButton)
             
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Error adding test button: ${e.message}")
@@ -1120,4 +1151,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles notification click tracking when the activity is opened from a notification
+     */
+    private fun handleNotificationClick() {
+        // Check if this activity was opened from a notification
+        val notificationId = intent.extras?.getInt("notification_id", -1) ?: -1
+        if (notificationId != -1) {
+            try {
+                val contextAwareEngine = ContextAwareNotificationEngine(this)
+                contextAwareEngine.onNotificationOpened(notificationId)
+                android.util.Log.d("MainActivity", "Tracked notification click: $notificationId")
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Error tracking notification click: ${e.message}")
+            }
+        }
+    }
 }

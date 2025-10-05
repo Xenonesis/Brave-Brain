@@ -15,6 +15,10 @@ class SmartBlockingEngine(private val context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences("smart_blocking", Context.MODE_PRIVATE)
     private val analyticsPrefs: SharedPreferences = context.getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
     
+    // Notification integration
+    private var advancedNotificationManager: AdvancedNotificationManager? = null
+    private var smartBlockingNotificationIntegration: SmartBlockingEngineNotificationIntegration? = null
+    
     companion object {
         private const val VIOLATION_COUNT_KEY = "violation_count"
         private const val LAST_VIOLATION_KEY = "last_violation"
@@ -28,6 +32,15 @@ class SmartBlockingEngine(private val context: Context) {
         const val STRATEGY_PROGRESSIVE = "progressive"
         const val STRATEGY_ADAPTIVE = "adaptive"
         const val STRATEGY_STRICT = "strict"
+    }
+
+    init {
+        // Initialize notification components
+        advancedNotificationManager = AdvancedNotificationManager(context)
+        smartBlockingNotificationIntegration = SmartBlockingEngineNotificationIntegration(context, advancedNotificationManager!!)
+        
+        // Start the notification system
+        advancedNotificationManager?.start()
     }
     
     /**
@@ -76,6 +89,12 @@ class SmartBlockingEngine(private val context: Context) {
         if (currentUsage >= adjustedLimit) {
             incrementViolationCount(packageName)
             
+            // Send notification about the violation
+            smartBlockingNotificationIntegration?.sendProgressiveBlockingNotification(packageName, currentUsage, timeLimit, violationCount)
+            
+            // Send recovery suggestion
+            smartBlockingNotificationIntegration?.sendViolationRecoverySuggestion(packageName, violationCount)
+            
             val challengeType = when (violationCount) {
                 0, 1 -> ChallengeType.MATH
                 2, 3 -> ChallengeType.REFLECTION
@@ -107,6 +126,9 @@ class SmartBlockingEngine(private val context: Context) {
         
         // Check if user is in their typical high-usage period
         if (userPattern.peakHours.contains(currentHour) && currentUsage >= (adaptiveLimit * 0.8).toInt()) {
+            // Send adaptive blocking notification
+            smartBlockingNotificationIntegration?.sendAdaptiveBlockingNotification(packageName, currentUsage, timeLimit, userPattern)
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Peak usage time detected - early intervention",
@@ -117,6 +139,9 @@ class SmartBlockingEngine(private val context: Context) {
         }
         
         if (currentUsage >= adaptiveLimit) {
+            // Send adaptive blocking notification
+            smartBlockingNotificationIntegration?.sendAdaptiveBlockingNotification(packageName, currentUsage, timeLimit, userPattern)
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Adaptive limit reached based on your patterns",
@@ -136,6 +161,9 @@ class SmartBlockingEngine(private val context: Context) {
         val warningThreshold = (timeLimit * 0.9).toInt()
         
         if (currentUsage >= timeLimit) {
+            // Send strict blocking notification
+            smartBlockingNotificationIntegration?.sendStrictBlockingNotification(packageName, currentUsage, timeLimit)
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Strict mode: Time limit exceeded",
@@ -162,6 +190,14 @@ class SmartBlockingEngine(private val context: Context) {
         
         // Check bedtime rules
         if (rules.bedtimeBlocking && (currentHour >= rules.bedtimeStart || currentHour < rules.bedtimeEnd)) {
+            // Send context-based blocking notification
+            smartBlockingNotificationIntegration?.sendAdaptiveBlockingNotification(
+                packageName,
+                UsageUtils.getAppUsageMinutes(context, packageName), // current usage
+                parseTimeLimitForApp(packageName), // time limit for this app
+                analyzeUserPattern(packageName) // user pattern
+            )
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Bedtime mode active",
@@ -172,8 +208,16 @@ class SmartBlockingEngine(private val context: Context) {
         }
         
         // Check work hours rules
-        if (rules.workHoursBlocking && isWorkDay(currentDay) && 
+        if (rules.workHoursBlocking && isWorkDay(currentDay) &&
             currentHour >= rules.workHoursStart && currentHour < rules.workHoursEnd) {
+            // Send context-based blocking notification
+            smartBlockingNotificationIntegration?.sendAdaptiveBlockingNotification(
+                packageName,
+                UsageUtils.getAppUsageMinutes(context, packageName), // current usage
+                parseTimeLimitForApp(packageName), // time limit for this app
+                analyzeUserPattern(packageName) // user pattern
+            )
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Work hours - focus mode active",
@@ -185,6 +229,14 @@ class SmartBlockingEngine(private val context: Context) {
         
         // Check family time rules
         if (rules.familyTimeBlocking && rules.familyTimeHours.contains(currentHour)) {
+            // Send context-based blocking notification
+            smartBlockingNotificationIntegration?.sendAdaptiveBlockingNotification(
+                packageName,
+                UsageUtils.getAppUsageMinutes(context, packageName), // current usage
+                parseTimeLimitForApp(packageName), // time limit for this app
+                analyzeUserPattern(packageName) // user pattern
+            )
+            
             return BlockingDecision(
                 shouldBlock = true,
                 reason = "Family time - be present",
@@ -277,8 +329,9 @@ class SmartBlockingEngine(private val context: Context) {
      */
     private fun sendUsageWarning(packageName: String, currentUsage: Int, timeLimit: Int) {
         val remaining = timeLimit - currentUsage
-        // Implementation would send a notification
-        android.util.Log.d("SmartBlocking", "Warning: $remaining minutes remaining for $packageName")
+        // Use the TimeLimitNotificationIntegration to send the warning
+        val timeLimitNotificationIntegration = TimeLimitNotificationIntegration(context, advancedNotificationManager!!)
+        timeLimitNotificationIntegration.checkAndSendTimeLimitNotifications(packageName, currentUsage, timeLimit)
     }
     
     // Getter and setter methods for configuration
@@ -300,6 +353,28 @@ class SmartBlockingEngine(private val context: Context) {
         val currentCount = getViolationCount(packageName)
         prefs.edit().putInt("${VIOLATION_COUNT_KEY}_${packageName}_$today", currentCount + 1).apply()
         prefs.edit().putLong("${LAST_VIOLATION_KEY}_$packageName", System.currentTimeMillis()).apply()
+    }
+
+    /**
+     * Helper method to get time limit for a specific app from shared preferences
+     */
+    private fun parseTimeLimitForApp(packageName: String): Int {
+        val prefs = context.getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+        val timeLimitsString = prefs.getString("time_limits", "") ?: ""
+        
+        return try {
+            timeLimitsString.split("|")
+                .mapNotNull { entry ->
+                    val parts = entry.split(",")
+                    if (parts.size == 2 && parts[0] == packageName) {
+                        parts[1].toIntOrNull() ?: 0
+                    } else null
+                }
+                .firstOrNull() ?: 0
+        } catch (e: Exception) {
+            android.util.Log.e("SmartBlockingEngine", "Error parsing time limit for $packageName: ${e.message}")
+            0
+        }
     }
     
     fun getContextRules(): ContextRules {
@@ -326,6 +401,13 @@ class SmartBlockingEngine(private val context: Context) {
             .putBoolean("family_time_blocking", rules.familyTimeBlocking)
             .putStringSet("family_time_hours", rules.familyTimeHours.map { it.toString() }.toSet())
             .apply()
+    }
+
+    /**
+     * Clean up resources when the engine is no longer needed
+     */
+    fun destroy() {
+        advancedNotificationManager?.stop()
     }
     
     // Data classes

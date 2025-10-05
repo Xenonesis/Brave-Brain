@@ -17,6 +17,9 @@ import android.app.PendingIntent
 import androidx.core.app.NotificationCompat
 import android.widget.Toast
 import android.app.ActivityManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ImprovedBlockerService : Service() {
     private val handler = Handler(Looper.getMainLooper())
@@ -25,6 +28,11 @@ class ImprovedBlockerService : Service() {
     private var lastForegroundTimestamp: Long = 0L
     private var blockingInProgress = false
     private var isServiceRunning = false
+    
+    // Notification integration components
+    private var advancedNotificationManager: AdvancedNotificationManager? = null
+    private var timeLimitNotificationIntegration: TimeLimitNotificationIntegration? = null
+    private var blockingNotificationIntegration: BlockingNotificationIntegration? = null
 
     companion object {
         private const val NOTIFICATION_ID = 1001
@@ -35,6 +43,14 @@ class ImprovedBlockerService : Service() {
     override fun onCreate() {
         super.onCreate()
         android.util.Log.d("ImprovedBlockerService", "Service created")
+        
+        // Initialize notification components
+        advancedNotificationManager = AdvancedNotificationManager(this)
+        timeLimitNotificationIntegration = TimeLimitNotificationIntegration(this, advancedNotificationManager!!)
+        blockingNotificationIntegration = BlockingNotificationIntegration(this, advancedNotificationManager!!)
+        
+        // Start notification system
+        advancedNotificationManager?.start()
         
         // Start foreground service immediately
         startForegroundServiceWithNotification()
@@ -130,8 +146,8 @@ class ImprovedBlockerService : Service() {
             android.util.Log.w("ImprovedBlockerService", "BLOCKING: $packageName just reached limit!")
             blockAppImmediately(packageName)
         } else {
-            // Show progress notifications
-            showUsageWarning(packageName, newUsageMinutes, timeLimitMinutes)
+            // Use new notification integration instead of old showUsageWarning method
+            timeLimitNotificationIntegration?.checkAndSendTimeLimitNotifications(packageName, newUsageMinutes, timeLimitMinutes)
         }
     }
 
@@ -160,6 +176,11 @@ class ImprovedBlockerService : Service() {
         
         try {
             android.util.Log.w("ImprovedBlockerService", "EXECUTING BLOCK for $packageName")
+            
+            // Send post-blocking encouragement notification
+            val currentUsage = UsageUtils.getAppUsageMinutes(this, packageName)
+            val timeLimit = parseTimeLimits(getSharedPreferences("blocked_apps", Context.MODE_PRIVATE).getString("time_limits", "") ?: "").getOrDefault(packageName, 0)
+            blockingNotificationIntegration?.sendPostBlockingEncouragement(packageName, currentUsage, timeLimit)
             
             // Show blocking notification
             showBlockingNotification(packageName)
@@ -330,6 +351,10 @@ class ImprovedBlockerService : Service() {
                     val currentApp = getCurrentForegroundApp()
                     if (currentApp == blockedPackage) {
                         android.util.Log.w("ImprovedBlockerService", "Re-access detected for $blockedPackage - blocking again!")
+                        
+                        // Send repeated access notification
+                        blockingNotificationIntegration?.sendRepeatedAccessNotification(blockedPackage, iterations + 1)
+                        
                         executeBlocking(blockedPackage)
                     }
                     
@@ -347,19 +372,10 @@ class ImprovedBlockerService : Service() {
         android.util.Log.d("ImprovedBlockerService", "Started continuous monitoring for $blockedPackage")
     }
 
+    // Old method replaced by TimeLimitNotificationIntegration
     private fun showUsageWarning(packageName: String, currentMinutes: Int, limitMinutes: Int) {
-        // Show warning at 80% and 90% of limit
-        val percentage = (currentMinutes.toFloat() / limitMinutes.toFloat()) * 100
-        
-        if (percentage >= 80 && currentMinutes % 5 == 0) {
-            handler.post {
-                Toast.makeText(
-                    this,
-                    "⚠️ ${getAppName(packageName)}: $currentMinutes/$limitMinutes minutes used (${percentage.toInt()}%)",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        // This method is now deprecated in favor of the new notification integration
+        // The TimeLimitNotificationIntegration handles all progressive warnings now
     }
 
     private fun showBlockingNotification(packageName: String) {
@@ -512,6 +528,10 @@ class ImprovedBlockerService : Service() {
         android.util.Log.d("ImprovedBlockerService", "Service destroyed")
         isServiceRunning = false
         handler.removeCallbacks(monitoringRunnable)
+        
+        // Stop notification system
+        advancedNotificationManager?.stop()
+        
         super.onDestroy()
     }
 

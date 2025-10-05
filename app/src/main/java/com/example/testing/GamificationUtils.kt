@@ -1,7 +1,11 @@
 package com.example.testing
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object GamificationUtils {
     
@@ -28,6 +32,9 @@ object GamificationUtils {
             }
             
             Toast.makeText(context, "🎉 Level Up! You're now Level $newLevel!", Toast.LENGTH_LONG).show()
+            
+            // Trigger level up notification
+            triggerLevelUpNotification(context, newLevel)
         } else {
             prefs.edit().apply {
                 putInt("user_xp", newXP)
@@ -37,6 +44,9 @@ object GamificationUtils {
             if (reason.isNotEmpty()) {
                 Toast.makeText(context, "+$amount XP: $reason", Toast.LENGTH_SHORT).show()
             }
+            
+            // Trigger XP notification
+            triggerXPNotification(context, amount, reason)
         }
     }
     
@@ -54,7 +64,12 @@ object GamificationUtils {
         
         // Award XP for maintaining streaks
         if ((currentStreak + 1) % 7 == 0) {
-            awardXP(context, 100, "7-day streak milestone!")
+            awardXP(context, 10, "7-day streak milestone!")
+        }
+        
+        // Trigger streak notification if milestone reached
+        if ((currentStreak + 1) % 7 == 0 || (currentStreak + 1) == 1) {
+            triggerStreakNotification(context, streakType, currentStreak + 1)
         }
     }
     
@@ -88,6 +103,9 @@ object GamificationUtils {
             
             Toast.makeText(context, "🏆 Badge Unlocked: $badgeName!", Toast.LENGTH_LONG).show()
             awardXP(context, 50, "Badge earned!")
+            
+            // Trigger badge notification
+            triggerBadgeNotification(context, badgeName)
         }
     }
     
@@ -111,6 +129,64 @@ object GamificationUtils {
         
         if (level >= 10) {
             awardBadge(context, "Productivity Pro")
+        }
+    }
+    
+    /**
+     * Trigger XP notification through the notification service
+     */
+    private fun triggerXPNotification(context: Context, amount: Int, reason: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val intent = Intent("TRIGGER_GAMIFICATION_NOTIFICATION").apply {
+                setPackage(context.packageName)
+                putExtra("achievement_type", "xp")
+                putExtra("xp_amount", amount)
+                putExtra("reason", reason)
+            }
+            context.sendBroadcast(intent)
+        }
+    }
+    
+    /**
+     * Trigger level up notification through the notification service
+     */
+    private fun triggerLevelUpNotification(context: Context, newLevel: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val intent = Intent("TRIGGER_GAMIFICATION_NOTIFICATION").apply {
+                setPackage(context.packageName)
+                putExtra("achievement_type", "level_up")
+                putExtra("new_level", newLevel)
+            }
+            context.sendBroadcast(intent)
+        }
+    }
+    
+    /**
+     * Trigger streak notification through the notification service
+     */
+    private fun triggerStreakNotification(context: Context, streakType: String, streakCount: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val intent = Intent("TRIGGER_GAMIFICATION_NOTIFICATION").apply {
+                setPackage(context.packageName)
+                putExtra("achievement_type", "streak")
+                putExtra("streak_type", streakType)
+                putExtra("streak_count", streakCount)
+            }
+            context.sendBroadcast(intent)
+        }
+    }
+    
+    /**
+     * Trigger badge notification through the notification service
+     */
+    private fun triggerBadgeNotification(context: Context, badgeName: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val intent = Intent("TRIGGER_GAMIFICATION_NOTIFICATION").apply {
+                setPackage(context.packageName)
+                putExtra("achievement_type", "badge")
+                putExtra("badge_name", badgeName)
+            }
+            context.sendBroadcast(intent)
         }
     }
 }

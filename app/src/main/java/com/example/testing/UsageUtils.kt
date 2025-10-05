@@ -1,89 +1,120 @@
 package com.example.testing
 
 import android.content.Context
-import java.text.SimpleDateFormat
+import android.app.usage.UsageStatsManager
+import android.app.usage.UsageStats
 import java.util.*
 
+/**
+ * UsageUtils provides utility functions for getting and processing usage data
+ */
 object UsageUtils {
-    private const val PREFS_NAME = "blocked_apps"
-    private const val USAGE_KEY = "usage_today"
-    private const val LAST_RESET_KEY = "last_reset_date"
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    /**
+     * Gets usage statistics for all apps in the last 24 hours
+     */
+    fun getUsage(context: Context): Map<String, Long> {
+        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val calendar = Calendar.getInstance()
+        val endTime = calendar.timeInMillis
+        calendar.add(Calendar.DAY_OF_YEAR, -1) // Last 24 hours
+        val startTime = calendar.timeInMillis
 
-    fun resetIfNeeded(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val today = dateFormat.format(Date())
-        val lastReset = prefs.getString(LAST_RESET_KEY, null)
-        if (lastReset != today) {
-            prefs.edit().remove(USAGE_KEY).putString(LAST_RESET_KEY, today).apply()
+        val usageStatsList = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            startTime,
+            endTime
+        )
+
+        val usageMap = mutableMapOf<String, Long>()
+
+        for (usageStats in usageStatsList) {
+            usageMap[usageStats.packageName] = usageStats.totalTimeInForeground
         }
+
+        return usageMap
     }
 
-    fun getUsage(context: Context): MutableMap<String, Int> {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val usageStr = prefs.getString(USAGE_KEY, "") ?: ""
-        val map = mutableMapOf<String, Int>()
-        if (usageStr.isNotEmpty()) {
-            usageStr.split("|").forEach { entry ->
-                val parts = entry.split(",")
-                if (parts.size == 2) map[parts[0]] = parts[1].toIntOrNull() ?: 0
-            }
-        }
-        return map
+    /**
+     * Gets usage statistics for a specific app in the last 24 hours
+     */
+    fun getAppUsage(context: Context, packageName: String): Long {
+        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val calendar = Calendar.getInstance()
+        val endTime = calendar.timeInMillis
+        calendar.add(Calendar.DAY_OF_YEAR, -1) // Last 24 hours
+        val startTime = calendar.timeInMillis
+
+        val usageStatsList = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            startTime,
+            endTime
+        )
+
+        return usageStatsList.find { it.packageName == packageName }?.totalTimeInForeground ?: 0L
     }
 
-    fun setUsage(context: Context, usage: Map<String, Int>) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val str = usage.entries.joinToString("|") { "${it.key},${it.value}" }
-        prefs.edit().putString(USAGE_KEY, str).apply()
+    /**
+     * Gets the app with the highest usage in the last 24 hours
+     */
+    fun getTopApp(context: Context): Pair<String, Long>? {
+        val usageMap = getUsage(context)
+        if (usageMap.isEmpty()) return null
+
+        val topApp = usageMap.maxByOrNull { it.value }
+        return if (topApp != null) Pair(topApp.key, topApp.value) else null
     }
 
-    fun incrementUsage(context: Context, packageName: String, minutes: Int) {
-        val usage = getUsage(context)
-        val currentUsage = usage[packageName] ?: 0
-        val newUsage = currentUsage + minutes
-        usage[packageName] = newUsage
-        setUsage(context, usage)
-        
-        android.util.Log.d("UsageUtils", "Incremented $packageName: $currentUsage -> $newUsage (+$minutes)")
+    /**
+     * Gets total usage time across all apps in the last 24 hours
+     */
+    fun getTotalUsage(context: Context): Long {
+        val usageMap = getUsage(context)
+        return usageMap.values.sum()
     }
 
-    fun getAppUsage(context: Context, packageName: String): Int {
-        return getUsage(context)[packageName] ?: 0
+    /**
+     * Checks if the app has usage access permission
+     */
+    fun hasUsageAccessPermission(context: Context): Boolean {
+        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val appList = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            System.currentTimeMillis() - 1000 * 10, // Last 10 seconds
+            System.currentTimeMillis()
+        )
+        return appList != null
     }
 
-    fun incrementUsageSeconds(context: Context, packageName: String, seconds: Int) {
-        // Store usage in seconds, but keep the interface in minutes for compatibility
-        val usage = getUsageSeconds(context)
-        val currentUsage = usage[packageName] ?: 0
-        val newUsage = currentUsage + seconds
-        usage[packageName] = newUsage
-        setUsageSeconds(context, usage)
-        android.util.Log.d("UsageUtils", "Incremented $packageName: $currentUsage -> $newUsage (+$seconds seconds)")
-    }
-
+    /**
+     * Gets app usage time in minutes for a specific app
+     */
     fun getAppUsageMinutes(context: Context, packageName: String): Int {
-        // Return usage in minutes (rounded down)
-        return (getUsageSeconds(context)[packageName] ?: 0) / 60
+        val usageTime = getAppUsage(context, packageName)
+        return (usageTime / (1000 * 60)).toInt() // Convert milliseconds to minutes
     }
 
-    // Helper methods for seconds-based storage
-    private fun getUsageSeconds(context: Context): MutableMap<String, Int> {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val usageStr = prefs.getString(USAGE_KEY, "") ?: ""
-        val map = mutableMapOf<String, Int>()
-        if (usageStr.isNotEmpty()) {
-            usageStr.split("|").forEach { entry ->
-                val parts = entry.split(",")
-                if (parts.size == 2) map[parts[0]] = parts[1].toIntOrNull() ?: 0
-            }
+    /**
+     * Resets usage data if needed (e.g., if it's a new day)
+     */
+    fun resetIfNeeded(context: Context) {
+        val prefs = context.getSharedPreferences("usage_data", Context.MODE_PRIVATE)
+        val lastResetDate = prefs.getString("last_reset_date", "")
+        val currentDate = Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString()
+        
+        if (lastResetDate != currentDate) {
+            // Reset any daily counters if needed
+            prefs.edit().putString("last_reset_date", currentDate).apply()
         }
-        return map
     }
 
-    private fun setUsageSeconds(context: Context, usage: Map<String, Int>) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val str = usage.entries.joinToString("|") { "${it.key},${it.value}" }
-        prefs.edit().putString(USAGE_KEY, str).apply()
+    /**
+     * Increments usage time for a specific app by the given seconds
+     */
+    fun incrementUsageSeconds(context: Context, packageName: String, seconds: Int) {
+        // This is a simplified implementation - in reality you'd need to store this data
+        // This function would need to integrate with the usage tracking system
+        val prefs = context.getSharedPreferences("app_usage_tracking", Context.MODE_PRIVATE)
+        val currentSeconds = prefs.getInt(packageName, 0)
+        prefs.edit().putInt(packageName, currentSeconds + seconds).apply()
     }
-} 
+}

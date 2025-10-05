@@ -10,6 +10,9 @@ import android.app.usage.UsageStatsManager
 import android.app.usage.UsageEvents
 import java.util.*
 import java.text.SimpleDateFormat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Enhanced Analytics Service for comprehensive usage tracking and insights
@@ -203,13 +206,45 @@ class AnalyticsService : Service() {
         val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
         
         // Store current productivity score
-        prefs.edit().putInt(PRODUCTIVITY_SCORE_KEY, calculateProductivityScore()).apply()
+        val currentScore = calculateProductivityScore()
+        prefs.edit().putInt(PRODUCTIVITY_SCORE_KEY, currentScore).apply()
         
         // Update weekly aggregates
         updateWeeklyStats()
         
         // Generate insights and recommendations
         generateInsights()
+        
+        // Trigger notifications based on insights
+        triggerAnalyticsNotifications(currentScore)
+    }
+    
+    private fun triggerAnalyticsNotifications(currentScore: Int) {
+        val averageScore = getAverageProductivityScoreThisWeek()
+        val scoreChange = currentScore - averageScore
+        
+        // Trigger notification if there's a significant change in productivity
+        if (kotlin.math.abs(scoreChange) >= 15) {
+            val patternType = if (scoreChange > 0) "improvement" else "decline"
+            val details = if (scoreChange > 0) {
+                "Productivity improved by ${kotlin.math.abs(scoreChange)} points"
+            } else {
+                "Productivity decreased by ${kotlin.math.abs(scoreChange)} points"
+            }
+            
+            triggerPatternDetectionNotification(patternType, details)
+        }
+    }
+    
+    private fun triggerPatternDetectionNotification(patternType: String, details: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val intent = Intent("TRIGGER_ANALYTICS_NOTIFICATION").apply {
+                setPackage(packageName)
+                putExtra("pattern_type", patternType)
+                putExtra("pattern_details", details)
+            }
+            sendBroadcast(intent)
+        }
     }
     
     private fun updateWeeklyStats() {

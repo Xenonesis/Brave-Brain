@@ -82,6 +82,11 @@
         <service android:name=".AnalyticsService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".SmartNotificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <activity android:name=".InsightsActivity"
             android:exported="false"
@@ -94,6 +99,14 @@
             android:excludeFromRecents="true" />
 
         <activity android:name=".GamificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+        
+        <activity android:name=".ContextNotificationTestActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+
+        <activity android:name=".NotificationPreferenceActivity"
             android:exported="false"
             android:theme="@style/Theme.Testing" />
 
