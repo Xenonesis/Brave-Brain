@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
 
     <application
+        android:name=".BraveBrainApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -45,7 +46,7 @@
         <activity android:name=".BlockingActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:launchMode="singleTask"
-            android:taskAffinity="com.example.testing.blocking"
+            android:taskAffinity="com.bravebrain.blocking"
             android:excludeFromRecents="true"
             android:noHistory="false" />
         <activity android:name=".MathChallengeActivity" />
@@ -53,21 +54,21 @@
         <activity android:name=".TimeIncreaseActivity"
             android:theme="@style/Theme.Testing"
             android:launchMode="singleTask"
-            android:taskAffinity="com.example.testing.timeincrease"
+            android:taskAffinity="com.bravebrain.timeincrease"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:exported="true" />
         <activity android:name=".TimeLimitBlockingActivity"
             android:theme="@style/Theme.Testing"
             android:launchMode="singleTask"
-            android:taskAffinity="com.example.testing.timelimitblocking"
+            android:taskAffinity="com.bravebrain.timelimitblocking"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:exported="true" />
         <activity android:name=".AppTimeIncreaseMathActivity"
             android:theme="@style/Theme.Testing"
             android:launchMode="singleTask"
-            android:taskAffinity="com.example.testing.apptimeincreasemath"
+            android:taskAffinity="com.bravebrain.apptimeincreasemath"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:exported="true" />
@@ -95,7 +96,7 @@
             android:exported="false"
             android:theme="@style/Theme.Testing"
             android:launchMode="singleTask"
-            android:taskAffinity="com.example.testing.challenge"
+            android:taskAffinity="com.bravebrain.challenge"
             android:excludeFromRecents="true" />
 
         <activity android:name=".GamificationActivity"
@@ -111,6 +112,10 @@
             android:theme="@style/Theme.Testing" />
 
         <activity android:name=".ThemeSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+
+        <activity android:name=".FirebaseTestActivity"
             android:exported="false"
             android:theme="@style/Theme.Testing" />
 

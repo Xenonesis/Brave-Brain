@@ -12,7 +12,7 @@
     <string name="redirecting_message">Redirecting in %1$d seconds...</string>
     <string name="go_to_home">Go to Home</string>
     <string name="current_status">Current Status</string>
-    <string name="setup_configuration">Setup &amp; Configuration</string>
+    <string name="setup_configuration"><![CDATA[Setup & Configuration]]></string>
     <string name="testing">Testing</string>
     <string name="available_apps">Available Apps</string>
     <string name="selected_apps">Selected Apps</string>

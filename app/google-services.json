@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96136112843",
+    "project_id": "bravebrain-59cdc",
+    "storage_bucket": "bravebrain-59cdc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96136112843:android:dfb60f5e1df55c5f4bc94e",
+        "android_client_info": {
+          "package_name": "com.bravebrain"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBc4HKleZITdt161mjf-vOpJyqEhWAqSF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
