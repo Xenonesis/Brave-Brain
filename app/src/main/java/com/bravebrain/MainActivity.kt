@@ -71,6 +71,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
         
+        // Sync data to Firestore
+        DataSyncManager(this).syncAllData()        
         // Update UI and stats when returning from other activities
         setupUI()
         updateStatsDisplay()

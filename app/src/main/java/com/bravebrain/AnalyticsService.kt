@@ -215,7 +215,9 @@ class AnalyticsService : Service() {
         // Generate insights and recommendations
         generateInsights()
         
-        // Trigger notifications based on insights
+        
+        // Sync analytics to Firestore
+        DataSyncManager(this).syncAllData()        // Trigger notifications based on insights
         triggerAnalyticsNotifications(currentScore)
     }
     

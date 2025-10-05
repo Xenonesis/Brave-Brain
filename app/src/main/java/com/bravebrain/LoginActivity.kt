@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -25,24 +26,55 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var authManager: FirebaseAuthManager
     
     companion object {
-        private const val GOOGLE_SIGN_IN_REQUEST_CODE = 9001
         private const val PREFS_NAME = "auth_prefs"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
+    }
+    
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        showLoading(true)
+        
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val task = com.google.android.gms.auth.api.signin.GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+                
+                val authResult = withContext(Dispatchers.IO) {
+                    authManager.signInWithGoogle(account.idToken!!)
+                }
+                
+                showLoading(false)
+                
+                authResult.fold(
+                    onSuccess = { user ->
+                        Toast.makeText(this@LoginActivity, "Welcome!", Toast.LENGTH_SHORT).show()
+                        saveLoginState()
+                        navigateToNextScreen()
+                    },
+                    onFailure = { error ->
+                        Toast.makeText(this@LoginActivity, "Google sign in failed: ${error.message}", Toast.LENGTH_LONG).show()
+                    }
+                )
+            } catch (e: Exception) {
+                showLoading(false)
+                Toast.makeText(this@LoginActivity, "Google sign in failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         
-        // Check if user is already logged in
+        authManager = FirebaseAuthManager(this)
+
         if (isUserLoggedIn()) {
             navigateToNextScreen()
             return
         }
         
         setContentView(R.layout.activity_login)
-        
-        authManager = FirebaseAuthManager(this)
         
         setupViews()
         setupListeners()
@@ -153,42 +185,7 @@ class LoginActivity : AppCompatActivity() {
     
     private fun signInWithGoogle() {
         val signInIntent = authManager.getSignInIntent()
-        startActivityForResult(signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
-    }
-    
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        
-        if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
-            showLoading(true)
-            
-            CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    val task = com.google.android.gms.auth.api.signin.GoogleSignIn.getSignedInAccountFromIntent(data)
-                    val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
-                    
-                    val result = withContext(Dispatchers.IO) {
-                        authManager.signInWithGoogle(account.idToken!!)
-                    }
-                    
-                    showLoading(false)
-                    
-                    result.fold(
-                        onSuccess = { user ->
-                            Toast.makeText(this@LoginActivity, "Welcome!", Toast.LENGTH_SHORT).show()
-                            saveLoginState()
-                            navigateToNextScreen()
-                        },
-                        onFailure = { error ->
-                            Toast.makeText(this@LoginActivity, "Google sign in failed: ${error.message}", Toast.LENGTH_LONG).show()
-                        }
-                    )
-                } catch (e: Exception) {
-                    showLoading(false)
-                    Toast.makeText(this@LoginActivity, "Google sign in failed: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+        googleSignInLauncher.launch(signInIntent)
     }
     
     private fun showLoading(show: Boolean) {
@@ -205,6 +202,9 @@ class LoginActivity : AppCompatActivity() {
             .edit()
             .putBoolean(KEY_IS_LOGGED_IN, true)
             .apply()
+        
+        // Sync all local data to Firestore after login
+        DataSyncManager(this).syncAllData()
     }
     
     private fun isUserLoggedIn(): Boolean {
@@ -214,7 +214,6 @@ class LoginActivity : AppCompatActivity() {
     }
     
     private fun navigateToNextScreen() {
-        // Check if onboarding is complete
         val onboardingPrefs = getSharedPreferences("onboarding", Context.MODE_PRIVATE)
         val onboardingComplete = onboardingPrefs.getBoolean("onboarding_complete", false)
         
