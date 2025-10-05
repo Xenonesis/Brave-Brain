@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
 }
+import java.util.Properties
+import java.io.FileInputStream
 
 android {
     namespace = "com.bravebrain"
@@ -18,6 +20,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            try {
+                val keystoreProperties = Properties()
+                keystoreProperties.load(FileInputStream(file("../keystore.properties")))
+                storeFile = file("bravebrain-release-key.keystore") // Direct reference to keystore in app directory
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            } catch (ex: Exception) {
+                println("Keystore properties file not found, using placeholder values")
+                storeFile = file("bravebrain-release-key.keystore")
+                storePassword = "bravebrain2025"
+                keyAlias = "bravebrain_key"
+                keyPassword = "bravebrain2025"
+            }
+        }
+    }
+    
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -25,6 +46,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     

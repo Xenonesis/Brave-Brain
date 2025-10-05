@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "96136112843",
+    "firebase_url": "https://bravebrain-59cdc-default-rtdb.firebaseio.com",
     "project_id": "bravebrain-59cdc",
     "storage_bucket": "bravebrain-59cdc.firebasestorage.app"
   },
@@ -12,7 +13,28 @@
           "package_name": "com.bravebrain"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "96136112843-6ebnnve3fem9g0hmq05mkkovep3qs2h3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bravebrain",
+            "certificate_hash": "49ae0cee2215cea56d75845ee870c4a3724729c3"
+          }
+        },
+        {
+          "client_id": "96136112843-9amis6k1d88cknjmpn9q8oajab5m5vn7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bravebrain",
+            "certificate_hash": "32fc49fed836eb79bb06425539effb3919a16416"
+          }
+        },
+        {
+          "client_id": "96136112843-gpsa2aj97qkphgim9n8plnjl9kemim6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBc4HKleZITdt161mjf-vOpJyqEhWAqSF4"
@@ -20,7 +42,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96136112843-gpsa2aj97qkphgim9n8plnjl9kemim6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

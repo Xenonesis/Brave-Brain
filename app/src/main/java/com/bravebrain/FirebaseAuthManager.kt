@@ -17,10 +17,10 @@ class FirebaseAuthManager(private val context: Context) {
     
     init {
         // Initialize Google Sign In options
-        // Using the server client ID from google-services.json
+        // Using the default web client ID from google-services.json
         // Note: For this to work properly, you need to add your SHA-1 fingerprint to Firebase Console
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("96136112843-7v4m2qf74h279j0g3r7k5q8q4g4.apps.googleusercontent.com") // This should match the web client ID in Firebase Console
+            .requestIdToken(context.getString(R.string.default_web_client_id)) // Automatically reads from google-services.json
             .requestEmail()
             .build()
         
