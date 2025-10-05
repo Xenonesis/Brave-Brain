@@ -60,6 +60,8 @@
 - **Custom Challenge Types**: Word puzzles, memory games, physical exercises
 - **Motivational Messaging**: Personalized encouragement and reminders
 - **Visual Themes**: Customizable blocking screens and UI themes
+- **Dark/Light Theme Variants**: More theme customization options
+- **Dashboard Widgets**: Home screen widgets for quick access
 
 ### 3. **Advanced Notification System**
 - **Smart Warnings**: Predictive alerts before reaching limits

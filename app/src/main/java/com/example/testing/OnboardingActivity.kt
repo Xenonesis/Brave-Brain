@@ -67,6 +67,9 @@ class OnboardingActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply saved theme before setting content view
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
+        
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
 

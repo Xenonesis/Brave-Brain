@@ -31,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Apply saved theme before setting content view
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
+        
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -153,6 +156,12 @@ class MainActivity : AppCompatActivity() {
         val viewGamificationButton = findViewById<MaterialButton>(R.id.viewGamificationButton)
         viewGamificationButton?.setOnClickListener {
             startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
+        }
+
+        // Theme Settings button
+        val themeSettingsButton = findViewById<MaterialButton>(R.id.themeSettingsButton)
+        themeSettingsButton?.setOnClickListener {
+            startActivity(Intent(this@MainActivity, ThemeSettingsActivity::class.java))
         }
 
         // Notification Preferences button - this is added dynamically in addTestButton()

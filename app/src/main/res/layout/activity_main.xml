@@ -366,7 +366,67 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Settings Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/settingsCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/cardBackground"
+            app:strokeColor="@color/cardBorder"
+            app:strokeWidth="1dp"
+            app:layout_constraintTop_toBottomOf="@id/gamificationCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customization"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    android:textColor="@color/textSecondary"
+                    android:fontFamily="sans-serif"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.1"
+                    android:layout_marginBottom="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/themeSettingsButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🎨 THEME SETTINGS"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/colorSecondary"
+                    app:strokeWidth="1dp"
+                    android:textColor="@color/colorSecondary"
+                    android:layout_marginBottom="12dp"
+                    app:rippleColor="@color/colorHover" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Tip: Add the Dashboard Widget to your home screen for quick access to your screen time stats!"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary"
+                    android:padding="12dp"
+                    android:background="@drawable/stats_card_background" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
