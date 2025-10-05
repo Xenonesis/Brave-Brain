@@ -415,6 +415,19 @@
                     android:layout_marginBottom="12dp"
                     app:rippleColor="@color/colorHover" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logoutButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="🚪 LOGOUT"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    android:textColor="@color/colorError"
+                    android:layout_marginBottom="12dp"
+                    app:rippleColor="@color/colorHover" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

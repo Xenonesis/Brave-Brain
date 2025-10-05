@@ -71,6 +71,13 @@ class OnboardingActivity : AppCompatActivity() {
         ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         
         super.onCreate(savedInstanceState)
+        
+        // Check authentication first
+        if (!isUserAuthenticated()) {
+            redirectToLogin()
+            return
+        }
+        
         setContentView(R.layout.activity_onboarding)
 
         // Check if onboarding is already complete
@@ -313,6 +320,20 @@ class OnboardingActivity : AppCompatActivity() {
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
+    private fun isUserAuthenticated(): Boolean {
+        val prefs = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+        val authManager = FirebaseAuthManager(this)
+        return isLoggedIn && authManager.isSignedIn()
+    }
+    
+    private fun redirectToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+    
     data class OnboardingPage(
         val title: String,
         val description: String,

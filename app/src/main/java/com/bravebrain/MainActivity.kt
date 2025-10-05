@@ -35,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         
         super.onCreate(savedInstanceState)
+        
+        // Check authentication
+        if (!isUserAuthenticated()) {
+            redirectToLogin()
+            return
+        }
+        
         setContentView(R.layout.activity_main)
 
         try {
@@ -57,6 +64,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        
+        // Check authentication
+        if (!isUserAuthenticated()) {
+            redirectToLogin()
+            return
+        }
+        
         // Update UI and stats when returning from other activities
         setupUI()
         updateStatsDisplay()
@@ -162,6 +176,12 @@ class MainActivity : AppCompatActivity() {
         val themeSettingsButton = findViewById<MaterialButton>(R.id.themeSettingsButton)
         themeSettingsButton?.setOnClickListener {
             startActivity(Intent(this@MainActivity, ThemeSettingsActivity::class.java))
+        }
+
+        // Logout button
+        val logoutButton = findViewById<MaterialButton>(R.id.logoutButton)
+        logoutButton?.setOnClickListener {
+            showLogoutConfirmation()
         }
 
         // Notification Preferences button - this is added dynamically in addTestButton()
@@ -1175,5 +1195,55 @@ class MainActivity : AppCompatActivity() {
                 android.util.Log.e("MainActivity", "Error tracking notification click: ${e.message}")
             }
         }
+    }
+    
+    private fun isUserAuthenticated(): Boolean {
+        val prefs = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+        val authManager = FirebaseAuthManager(this)
+        return isLoggedIn && authManager.isSignedIn()
+    }
+    
+    private fun redirectToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+    
+    private fun showLogoutConfirmation() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun performLogout() {
+        // Clear auth state
+        getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("is_logged_in", false)
+            .apply()
+        
+        // Sign out from Firebase
+        val authManager = FirebaseAuthManager(this)
+        authManager.signOut()
+        
+        // Stop services
+        try {
+            stopService(Intent(this, BlockerService::class.java))
+            stopService(Intent(this, ImprovedBlockerService::class.java))
+        } catch (e: Exception) {
+            // Ignore errors
+        }
+        
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+        
+        // Redirect to login
+        redirectToLogin()
     }
 }

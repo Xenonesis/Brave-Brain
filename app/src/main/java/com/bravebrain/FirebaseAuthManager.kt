@@ -20,7 +20,7 @@ class FirebaseAuthManager(private val context: Context) {
         // Using the server client ID from google-services.json
         // Note: For this to work properly, you need to add your SHA-1 fingerprint to Firebase Console
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("96136112843-7v4m2qf74h279j0g3r7k5q8q4g4q4g4.apps.googleusercontent.com") // Using project number based client ID
+            .requestIdToken("96136112843-7v4m2qf74h279j0g3r7k5q8q4g4.apps.googleusercontent.com") // This should match the web client ID in Firebase Console
             .requestEmail()
             .build()
         
@@ -45,6 +45,8 @@ class FirebaseAuthManager(private val context: Context) {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             result.user?.let { Result.success(it) } ?: Result.failure(Exception("Sign in failed"))
         } catch (e: Exception) {
+            // Log the exception for debugging
+            android.util.Log.e("FirebaseAuthManager", "Sign in error: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -54,6 +56,8 @@ class FirebaseAuthManager(private val context: Context) {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             result.user?.let { Result.success(it) } ?: Result.failure(Exception("User creation failed"))
         } catch (e: Exception) {
+            // Log the exception for debugging
+            android.util.Log.e("FirebaseAuthManager", "Create user error: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -64,6 +68,8 @@ class FirebaseAuthManager(private val context: Context) {
             val result = auth.signInWithCredential(credential).await()
             result.user?.let { Result.success(it) } ?: Result.failure(Exception("Google sign in failed"))
         } catch (e: Exception) {
+            // Log the exception for debugging
+            android.util.Log.e("FirebaseAuthManager", "Google sign in error: ${e.message}", e)
             Result.failure(e)
         }
     }
