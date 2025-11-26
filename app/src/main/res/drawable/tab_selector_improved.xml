@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected state - larger, fully opaque -->
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:gravity="center">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/colorOnPrimary" />
+                    <corners android:radius="4dp" />
+                    <size
+                        android:width="24dp"
+                        android:height="8dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    
+    <!-- Unselected state - smaller dot, semi-transparent -->
+    <item>
+        <layer-list>
+            <item android:gravity="center">
+                <shape android:shape="oval">
+                    <solid android:color="#80FFFFFF" />
+                    <size
+                        android:width="8dp"
+                        android:height="8dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

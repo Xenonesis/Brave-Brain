@@ -3,14 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/onboarding_gradient_background">
-
-    <!-- Status Bar Spacer -->
-    <View
-        android:id="@+id/statusBarSpacer"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@drawable/onboarding_gradient_background"
+    android:fitsSystemWindows="true">
 
     <!-- App Logo/Brand Section -->
     <LinearLayout
@@ -19,28 +13,31 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/statusBarSpacer"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/brandLogo"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/logo_no_bg"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="Brave Brain Logo" />
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/brandName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/colorOnPrimary"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.02" />
 
     </LinearLayout>
 
@@ -50,8 +47,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="28dp"
         app:layout_constraintTop_toBottomOf="@id/brandSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -62,37 +59,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1 of 5"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/colorOnPrimary"
-            android:alpha="0.8"
+            android:fontFamily="sans-serif-medium"
             android:layout_gravity="end"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="10dp" />
 
-        <!-- Progress Bar -->
+        <!-- Custom Progress Bar with proper styling -->
         <ProgressBar
             android:id="@+id/progressBar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
+            android:layout_height="6dp"
             android:max="100"
             android:progress="20"
-            android:progressTint="@color/colorOnPrimary"
-            android:progressBackgroundTint="@color/colorOnPrimary"
-            android:alpha="0.3" />
+            android:progressDrawable="@drawable/onboarding_progress_bar" />
 
     </LinearLayout>
 
     <!-- Main Content Container -->
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/contentCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="12dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="8dp"
         app:cardBackgroundColor="@color/colorSurface"
+        app:strokeWidth="0dp"
         app:layout_constraintTop_toBottomOf="@id/progressSection"
         app:layout_constraintBottom_toTopOf="@id/navigationSection"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,9 +99,10 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp" />
+            android:clipToPadding="false"
+            android:clipChildren="false" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Navigation Section -->
     <LinearLayout
@@ -114,24 +111,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Tab indicators -->
+        <!-- Tab indicators with improved styling -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            app:tabBackground="@drawable/tab_selector"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/transparent"
+            app:tabBackground="@drawable/tab_selector_improved"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"
-            app:tabMinWidth="20dp"
-            app:tabPaddingStart="8dp"
-            app:tabPaddingEnd="8dp" />
+            app:tabMinWidth="16dp"
+            app:tabMaxWidth="16dp"
+            app:tabPaddingStart="6dp"
+            app:tabPaddingEnd="6dp" />
 
         <!-- Button container -->
         <LinearLayout
@@ -144,55 +143,64 @@
             <!-- Skip Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/skipButton"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="54dp"
                 android:layout_weight="1"
                 android:text="@string/skip_button"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/colorOnPrimary"
-                android:layout_marginEnd="12dp"
-                android:alpha="0.8"
+                android:textAllCaps="false"
+                android:layout_marginEnd="10dp"
                 android:visibility="visible"
-                app:cornerRadius="16dp"
+                app:cornerRadius="14dp"
                 app:strokeColor="@color/colorOnPrimary"
-                app:strokeWidth="1dp" />
+                app:strokeWidth="1.5dp"
+                app:rippleColor="#40FFFFFF" />
 
             <!-- Continue/Next Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/nextButton"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="54dp"
                 android:layout_weight="2"
                 android:text="@string/continue_button"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:layout_marginStart="12dp"
-                app:cornerRadius="16dp"
+                android:textAllCaps="false"
+                android:layout_marginStart="10dp"
+                app:cornerRadius="14dp"
                 app:backgroundTint="@color/colorOnPrimary"
                 android:textColor="@color/colorPrimary"
-                android:elevation="8dp"
+                android:elevation="4dp"
                 android:visibility="visible"
                 app:icon="@drawable/ic_arrow_forward"
-                app:iconGravity="end" />
+                app:iconGravity="end"
+                app:iconTint="@color/colorPrimary"
+                app:iconPadding="8dp"
+                app:rippleColor="@color/colorPrimary" />
 
             <!-- Get Started Button (shown only on last page) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/getStartedButton"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="54dp"
                 android:text="@string/get_started_button"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
+                android:textAllCaps="false"
                 android:visibility="gone"
-                app:cornerRadius="16dp"
+                app:cornerRadius="14dp"
                 app:backgroundTint="@color/colorOnPrimary"
                 android:textColor="@color/colorPrimary"
-                android:elevation="8dp"
+                android:elevation="4dp"
                 app:icon="@drawable/ic_check_circle"
-                app:iconGravity="end" />
+                app:iconGravity="end"
+                app:iconTint="@color/colorPrimary"
+                app:iconPadding="8dp"
+                app:rippleColor="@color/colorPrimary" />
 
         </LinearLayout>
 

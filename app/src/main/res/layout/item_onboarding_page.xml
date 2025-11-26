@@ -3,186 +3,123 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:padding="20dp">
 
-    <!-- Main Content Container -->
-    <LinearLayout
-        android:id="@+id/contentContainer"
+    <!-- Scrollable Content Container -->
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Icon Container -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/iconContainer"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginBottom="32dp"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="16dp"
-            app:cardBackgroundColor="@color/colorPrimary">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@drawable/icon_gradient_background">
-
-                <ImageView
-                    android:id="@+id/onboardingIcon"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/logo_no_bg"
-                    android:contentDescription="Onboarding Icon"
-                    android:scaleType="centerInside"
-                    app:tint="@color/colorOnPrimary" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Title Section -->
         <LinearLayout
+            android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginBottom="24dp">
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
-            <TextView
-                android:id="@+id/onboardingTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:textColor="@color/textPrimary"
-                android:gravity="center"
-                android:fontFamily="sans-serif-black"
-                android:layout_marginBottom="8dp" />
+            <!-- Icon Container with improved styling -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/iconContainer"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginBottom="28dp"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="12dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
 
-            <!-- Subtitle/accent line -->
-            <View
-                android:layout_width="40dp"
-                android:layout_height="4dp"
-                android:background="@drawable/accent_line_gradient"
-                android:layout_marginBottom="8dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@drawable/icon_gradient_background">
 
-        </LinearLayout>
+                    <ImageView
+                        android:id="@+id/onboardingIcon"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:src="@drawable/logo_no_bg"
+                        android:contentDescription="@null"
+                        android:scaleType="centerInside"
+                        app:tint="@color/colorOnPrimary" />
 
-        <!-- Description Container -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/colorBackground"
-            android:layout_marginHorizontal="8dp">
+                </LinearLayout>
 
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Title Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
 
                 <TextView
-                    android:id="@+id/onboardingDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Description goes here"
-                    android:textSize="16sp"
-                    android:textColor="@color/textSecondary"
-                    android:gravity="center"
-                    android:lineSpacingExtra="4dp"
-                    android:lineSpacingMultiplier="1.3"
-                    android:fontFamily="sans-serif"
-                    android:maxLines="8" />
-
-                <!-- Feature highlight dots -->
-                <LinearLayout
-                    android:id="@+id/featureHighlights"
+                    android:id="@+id/onboardingTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone">
+                    android:text="Welcome"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.01"
+                    android:layout_marginBottom="12dp" />
 
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:background="@drawable/feature_dot"
-                        android:layout_marginEnd="8dp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:background="@drawable/feature_dot"
-                        android:layout_marginEnd="8dp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:background="@drawable/feature_dot" />
-
-                </LinearLayout>
+                <!-- Accent line -->
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    android:background="@drawable/accent_line_rounded" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+            <!-- Description Container with theme-aware background -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/cardBorder"
+                app:cardBackgroundColor="?attr/colorSurface"
+                android:layout_marginHorizontal="4dp">
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-    <!-- Floating Action Elements (for last page) -->
-    <LinearLayout
-        android:id="@+id/floatingElements"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp">
+                    <TextView
+                        android:id="@+id/onboardingDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description goes here"
+                        android:textSize="15sp"
+                        android:textColor="?attr/colorOnSurface"
+                        android:gravity="center"
+                        android:lineSpacingExtra="6dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:fontFamily="sans-serif"
+                        android:alpha="0.87" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorSecondary"
-            android:layout_marginEnd="8dp">
+                </LinearLayout>
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_check_circle"
-                app:tint="@color/colorOnSecondary" />
+            </com.google.android.material.card.MaterialCardView>
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/colorWarning">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_star"
-                app:tint="@color/colorOnPrimary" />
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout> 
