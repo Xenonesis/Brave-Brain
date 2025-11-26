@@ -23,4 +23,23 @@
     <string name="skip_button">Skip</string>
     <string name="get_started_button">Get Started</string>
     <string name="widget_description">Quick view of your daily screen time</string>
+    
+    
+    <!-- Color resources for themes -->
+    <string name="text_primary">#212121</string>
+    <string name="text_secondary">#757575</string>
+    <string name="text_tertiary">#BDBDBD</string>
+    <string name="text_highlight">#FF5722</string>
+    <string name="background_light">#FAFAFA</string>
+    <string name="white">#FFFFFF</string>
+    <string name="primary_blue">#2196F3</string>
+    <string name="error_red">#F44336</string>
+    <string name="success_green">#4CAF50</string>
+    <string name="warning_orange">#FF9800</string>
+    <string name="colorPrimary">#6366F1</string>
+    <string name="colorSecondary">#EC4899</string>
+    <string name="colorPrimaryVariant">#4F46E5</string>
+    
+    <!-- Firebase configuration -->
+    <string name="default_web_client_id">96136112843-gpsa2aj97qkphgim9n8plnjl9kemim6e.apps.googleusercontent.com</string>
 </resources>

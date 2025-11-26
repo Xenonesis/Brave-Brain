@@ -315,17 +315,76 @@ class InsightsActivity : AppCompatActivity() {
         return kotlin.random.Random.nextFloat() * 20 - 10 // Random between -10 and +10
     }
     
-    private fun getPeakUsageHour(): Int = 14 // Placeholder: 2 PM
+    private fun getPeakUsageHour(): Int {
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        return prefs.getInt("peak_usage_hour", -1)
+    }
     private fun getWeeklyScreenTimeGoal(): Long = 7 * 60 * 60 * 1000 // 7 hours per week
-    private fun getCurrentWeeklyUsage(): Long = 5 * 60 * 60 * 1000 // 5 hours this week
-    private fun getTodayScreenTime(): Long = UsageUtils.getUsage(this).values.sum().toLong() * 60 * 1000
+    private fun getCurrentWeeklyUsage(): Long {
+        // Sum the current week's daily totals from analytics storage
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        val cal = java.util.Calendar.getInstance()
+        val weekStart = java.util.Calendar.getInstance().apply {
+            timeInMillis = cal.timeInMillis
+            set(java.util.Calendar.DAY_OF_WEEK, java.util.Calendar.MONDAY)
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }
+        var sum = 0L
+        for (i in 0..6) {
+            val day = (weekStart.clone() as java.util.Calendar).apply { add(java.util.Calendar.DAY_OF_YEAR, i) }
+            val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(day.time)
+            val raw = prefs.getString("daily_stats-$date", null) ?: continue
+            val parts = raw.split(",")
+            if (parts.size >= 9) {
+                sum += parts[1].toLongOrNull() ?: 0L
+            }
+        }
+        return sum
+    }
+    private fun getTodayScreenTime(): Long = UsageUtils.getUsage(this).values.sum().toLong()
     private fun getAppsUsedToday(): Int = UsageUtils.getUsage(this).size
-    private fun getBlockedAttemptsToday(): Int = 3 // Placeholder
-    private fun getChallengesCompletedToday(): Int = 2 // Placeholder
+    private fun getBlockedAttemptsToday(): Int {
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+        return prefs.getInt("blocked_attempts_$today", 0)
+    }
+    private fun getChallengesCompletedToday(): Int {
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+        return prefs.getInt("challenges_completed_$today", 0)
+    }
     private fun getWeeklyAverageScreenTime(): Long = 4 * 60 * 60 * 1000 // 4 hours average
-    private fun getMostUsedAppThisWeek(): String = "Social Media" // Placeholder
-    private fun getBestDayThisWeek(): String = "Tuesday" // Placeholder
-    private fun getProductivityStreak(): Int = 5 // Placeholder
+    private fun getMostUsedAppThisWeek(): String {
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        val cal = java.util.Calendar.getInstance()
+        val weekKey = java.text.SimpleDateFormat("yyyy-'W'ww", java.util.Locale.US).format(cal.time)
+        val raw = prefs.getString("weekly_stats-$weekKey", null)
+        return if (raw != null) raw.split(",").getOrNull(4) ?: "" else ""
+    }
+    private fun getBestDayThisWeek(): String {
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        val cal = java.util.Calendar.getInstance()
+        val weekKey = java.text.SimpleDateFormat("yyyy-'W'ww", java.util.Locale.US).format(cal.time)
+        val raw = prefs.getString("weekly_stats-$weekKey", null)
+        return if (raw != null) raw.split(",").getOrNull(5) ?: "" else ""
+    }
+    private fun getProductivityStreak(): Int {
+        // Simple streak: count consecutive days with productivity score >= 60
+        val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+        var streak = 0
+        val cal = java.util.Calendar.getInstance()
+        for (i in 0 until 30) {
+            val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(cal.time)
+            val raw = prefs.getString("daily_stats-$date", null)
+            val score = raw?.split(",")?.getOrNull(6)?.toIntOrNull() ?: -1
+            if (score >= 60) streak++ else break
+            cal.add(java.util.Calendar.DAY_OF_YEAR, -1)
+        }
+        return streak
+    }
     private fun getProductivityScore(): Int {
         val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
         return prefs.getInt("productivity_score", 50)

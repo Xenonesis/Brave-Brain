@@ -82,15 +82,47 @@ object UsageUtils {
             System.currentTimeMillis() - 1000 * 10, // Last 10 seconds
             System.currentTimeMillis()
         )
-        return appList != null
+        return appList != null && appList.isNotEmpty()
     }
 
     /**
-     * Gets app usage time in minutes for a specific app
+     * Gets app usage time in minutes for a specific app TODAY (from midnight)
      */
     fun getAppUsageMinutes(context: Context, packageName: String): Int {
-        val usageTime = getAppUsage(context, packageName)
-        return (usageTime / (1000 * 60)).toInt() // Convert milliseconds to minutes
+        val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        
+        // Get today's start time (midnight - 12:00 AM)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startTime = calendar.timeInMillis
+        
+        // Current time
+        val endTime = System.currentTimeMillis()
+        
+        val usageStatsList = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_BEST,
+            startTime,
+            endTime
+        )
+        
+        // Find the usage for the specific package and add any tracked usage from preferences
+        val systemUsage = usageStatsList.find { it.packageName == packageName }?.totalTimeInForeground ?: 0L
+        
+        // Add any manually tracked usage from preferences (for testing and incremental tracking)
+        val prefs = context.getSharedPreferences("app_usage_tracking", Context.MODE_PRIVATE)
+        val trackedSeconds = prefs.getInt(packageName, 0)
+        val trackedMillis = trackedSeconds * 1000L
+        
+        val totalUsageMillis = systemUsage + trackedMillis
+        val usageMinutes = (totalUsageMillis / (1000 * 60)).toInt()
+        
+        // Log for debugging
+        android.util.Log.d("UsageUtils", "Usage for $packageName: system=${systemUsage/1000/60}m, tracked=${trackedSeconds/60}m, total=${usageMinutes}m")
+        
+        return usageMinutes
     }
 
     /**

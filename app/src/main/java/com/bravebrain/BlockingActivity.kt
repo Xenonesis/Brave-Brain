@@ -42,29 +42,35 @@ class BlockingActivity : AppCompatActivity() {
             }
         })
         
-        // Make the activity full screen and always on top
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN or 
+        // Keep screen on and show when locked with modern APIs when available
+        window.addFlags(
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN or 
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
-            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         )
-        
-        // Hide system UI
-        window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        )
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true)
+            setTurnScreenOn(true)
+        }
+        // Hide system UI using WindowInsets on API 30+, fallback for older devices
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            val controller = window.insetsController
+            controller?.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
+            controller?.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        } else {
+            @Suppress("DEPRECATION")
+            run {
+                window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
+            }
+        }
         
         // Create a simple blocking layout
         setContentView(createBlockingLayout())
@@ -85,26 +91,14 @@ class BlockingActivity : AppCompatActivity() {
     
     override fun onPause() {
         super.onPause()
-        android.util.Log.d("BlockingActivity", "Activity paused - bringing back to front")
-        // If we get paused, try to bring ourselves back
-        handler.postDelayed({
-            if (!isFinishing) {
-                val intent = Intent(this, BlockingActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
-            }
-        }, 500)
+        android.util.Log.d("BlockingActivity", "Activity paused")
+        // Don't try to restart - let overlay and service handle persistence
     }
     
     override fun onStop() {
         super.onStop()
-        android.util.Log.d("BlockingActivity", "Activity stopped - attempting to restart")
-        // If we get stopped, try to restart
-        if (!isFinishing) {
-            val intent = Intent(this, BlockingActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-        }
+        android.util.Log.d("BlockingActivity", "Activity stopped")
+        // Don't try to restart - causes issues with task management
     }
     
     private fun startCountdown() {

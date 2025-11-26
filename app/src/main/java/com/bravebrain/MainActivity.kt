@@ -50,6 +50,17 @@ class MainActivity : AppCompatActivity() {
             addTestButton() // Add test functionality
             startBlockerServiceIfNeeded()
             startPeriodicStatsUpdate()
+
+            // Proactively request runtime capabilities
+            requestNotificationPermission()
+            requestOverlayPermission()
+
+            // Start analytics collection service in background
+            try {
+                startService(Intent(this, AnalyticsService::class.java))
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Failed to start AnalyticsService: ${e.message}")
+            }
             
             // Check if this activity was opened from a notification and track engagement
             handleNotificationClick()

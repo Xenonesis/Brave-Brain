@@ -214,10 +214,17 @@ class AnalyticsService : Service() {
         
         // Generate insights and recommendations
         generateInsights()
-        
+
+        // Store peak hour for UI consumers
+        try {
+            val peakHour = getPeakUsageHour()
+            prefs.edit().putInt("peak_usage_hour", peakHour).apply()
+        } catch (e: Exception) { }
         
         // Sync analytics to Firestore
-        DataSyncManager(this).syncAllData()        // Trigger notifications based on insights
+        DataSyncManager(this).syncAllData()
+        
+        // Trigger notifications based on insights
         triggerAnalyticsNotifications(currentScore)
     }
     
@@ -298,7 +305,14 @@ class AnalyticsService : Service() {
     
     // Helper methods for data retrieval
     private fun getTotalScreenTimeToday(): Long {
-        return UsageUtils.getUsage(this).values.sum().toLong() * 60 * 1000 // Convert minutes to milliseconds
+        // Sum of totalTimeInForeground across apps for the last 24h (approx today)
+        return try {
+            val totalMs = UsageUtils.getUsage(this).values.sum()
+            totalMs
+        } catch (e: Exception) {
+            android.util.Log.e("AnalyticsService", "Error computing total screen time: ${e.message}")
+            0L
+        }
     }
     
     private fun getBlockedAppsUsageToday(): Long {
@@ -321,38 +335,131 @@ class AnalyticsService : Service() {
     }
     
     private fun getAverageScreenTimeThisWeek(): Long {
-        // Implementation for weekly average calculation
-        return 0L // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val dates = getCurrentWeekDates()
+        var sum = 0L
+        var count = 0
+        dates.forEach { date ->
+            val raw = prefs.getString("$DAILY_STATS_KEY-$date", null) ?: return@forEach
+            val parts = raw.split(",")
+            if (parts.size >= 9) {
+                val total = parts[1].toLongOrNull() ?: 0L
+                sum += total
+                count++
+            }
+        }
+        return if (count > 0) sum / count else 0L
     }
     
     private fun getTotalBlockedAttemptsThisWeek(): Int {
-        // Implementation for weekly blocked attempts
-        return 0 // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val dates = getCurrentWeekDates()
+        var total = 0
+        dates.forEach { date ->
+            total += prefs.getInt("blocked_attempts_$date", 0)
+        }
+        return total
     }
     
     private fun getAverageProductivityScoreThisWeek(): Int {
-        // Implementation for weekly productivity score average
-        return 50 // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val dates = getCurrentWeekDates()
+        var sum = 0
+        var count = 0
+        dates.forEach { date ->
+            val raw = prefs.getString("$DAILY_STATS_KEY-$date", null) ?: return@forEach
+            val parts = raw.split(",")
+            if (parts.size >= 9) {
+                val score = parts[6].toIntOrNull() ?: 0
+                sum += score
+                count++
+            }
+        }
+        return if (count > 0) sum / count else 0
     }
     
     private fun getMostProblematicAppThisWeek(): String {
-        // Implementation to find most problematic app
-        return "" // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val dates = getCurrentWeekDates()
+        val freq = mutableMapOf<String, Int>()
+        dates.forEach { date ->
+            val raw = prefs.getString("$DAILY_STATS_KEY-$date", null) ?: return@forEach
+            val parts = raw.split(",")
+            if (parts.size >= 9) {
+                val app = parts[5]
+                if (app.isNotBlank()) freq[app] = (freq[app] ?: 0) + 1
+            }
+        }
+        return freq.maxByOrNull { it.value }?.key ?: ""
     }
     
     private fun getBestDayThisWeek(): String {
-        // Implementation to find best day
-        return "" // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val dates = getCurrentWeekDates()
+        var bestDate = ""
+        var bestScore = Int.MIN_VALUE
+        dates.forEach { date ->
+            val raw = prefs.getString("$DAILY_STATS_KEY-$date", null) ?: return@forEach
+            val parts = raw.split(",")
+            if (parts.size >= 9) {
+                val score = parts[6].toIntOrNull() ?: 0
+                if (score > bestScore) {
+                    bestScore = score
+                    bestDate = date
+                }
+            }
+        }
+        return bestDate
     }
     
     private fun getWeeklyImprovement(): Float {
-        // Implementation to calculate improvement percentage
-        return 0.0f // Placeholder
+        val currentAvg = getAverageProductivityScoreThisWeek()
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        // Previous week key
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.WEEK_OF_YEAR, -1)
+        val prevWeekKey = SimpleDateFormat("yyyy-'W'ww", Locale.US).format(getWeekStart(cal).time)
+        val prevRaw = prefs.getString("$WEEKLY_STATS_KEY-$prevWeekKey", null)
+        val prevAvg = if (prevRaw != null) {
+            val parts = prevRaw.split(",")
+            if (parts.size >= 7) parts[3].toIntOrNull() ?: 0 else 0
+        } else 0
+        return if (prevAvg == 0) 0f else ((currentAvg - prevAvg).toFloat() / prevAvg.toFloat()) * 100f
     }
     
     private fun getPeakUsageHour(): Int {
-        // Implementation to find peak usage hour
-        return -1 // Placeholder
+        val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val hourCounts = IntArray(24)
+        // Look back up to 7 days of hourly buckets
+        val cal = Calendar.getInstance()
+        for (d in 0 until 7) {
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.time)
+            for (h in 0..23) {
+                val key = "$USAGE_EVENTS_KEY-$date-${String.format("%02d", h)}"
+                val raw = prefs.getString(key, null) ?: continue
+                // Count resumed events as a proxy for activity frequency
+                val events = raw.split("|")
+                events.forEach { e ->
+                    val parts = e.split(",")
+                    if (parts.size >= 3) {
+                        val type = parts[2].toIntOrNull() ?: -1
+                        if (type == android.app.usage.UsageEvents.Event.ACTIVITY_RESUMED) {
+                            hourCounts[h]++
+                        }
+                    }
+                }
+            }
+            cal.add(Calendar.DAY_OF_YEAR, -1)
+        }
+        var bestHour = -1
+        var bestCount = -1
+        for (h in 0..23) {
+            if (hourCounts[h] > bestCount) {
+                bestCount = hourCounts[h]
+                bestHour = h
+            }
+        }
+        return bestHour
     }
     
     private fun getWeekStart(calendar: Calendar): Calendar {
@@ -363,6 +470,18 @@ class AnalyticsService : Service() {
         weekStart.set(Calendar.SECOND, 0)
         weekStart.set(Calendar.MILLISECOND, 0)
         return weekStart
+    }
+    
+    private fun getCurrentWeekDates(): List<String> {
+        val dates = mutableListOf<String>()
+        val cal = Calendar.getInstance()
+        val weekStart = getWeekStart(cal)
+        for (i in 0..6) {
+            val tmp = weekStart.clone() as Calendar
+            tmp.add(Calendar.DAY_OF_YEAR, i)
+            dates.add(SimpleDateFormat("yyyy-MM-dd", Locale.US).format(tmp.time))
+        }
+        return dates
     }
     
     // Data classes for analytics

@@ -21,6 +21,7 @@ class OverlayBlockingService : Service() {
     private var overlayView: View? = null
     private val handler = Handler(Looper.getMainLooper())
     private var countdownSeconds = 8
+    private var lastBlockedPackage: String? = null
     
     override fun onCreate() {
         super.onCreate()
@@ -29,6 +30,9 @@ class OverlayBlockingService : Service() {
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         android.util.Log.d("OverlayBlockingService", "Starting overlay blocking service")
+        
+        // Capture blocked package if provided
+        lastBlockedPackage = intent?.getStringExtra("blocked_package")
         
         // Show the overlay immediately
         showBlockingOverlay()
@@ -51,22 +55,34 @@ class OverlayBlockingService : Service() {
             // Create the overlay view
             overlayView = createOverlayView()
             
-            // Set up window parameters for overlay
+            // Set up window parameters for overlay - MOST AGGRESSIVE SETTINGS
             val params = WindowManager.LayoutParams().apply {
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
                 type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 } else {
+                    @Suppress("DEPRECATION")
                     WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
                 }
+                // More aggressive flags to prevent dismissal
                 flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                 format = PixelFormat.TRANSLUCENT
                 gravity = Gravity.TOP or Gravity.START
+                // Set high priority to stay on top
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Use highest importance for overlay windows
+                    x = 0
+                    y = 0
+                }
             }
             
             // Add the overlay to the window
@@ -121,6 +137,35 @@ class OverlayBlockingService : Service() {
         countdownTextView.setTypeface(null, android.graphics.Typeface.BOLD)
         layout.addView(countdownTextView)
         
+        // CTA: Continue with challenge
+        val challengeButton = Button(this)
+        challengeButton.text = "🧠 Continue with Challenge"
+        challengeButton.textSize = 18f
+        challengeButton.setTextColor(0xFF6366F1.toInt())
+        challengeButton.setBackgroundColor(0xFFFFFFFF.toInt())
+        challengeButton.setPadding(32, 16, 32, 16)
+        challengeButton.setOnClickListener {
+            try {
+                val pkg = (lastBlockedPackage ?: "")
+                val engine = SmartBlockingEngine(this@OverlayBlockingService)
+                val limit = 0 // we don't have the exact limit here; challenge type selection can still proceed based on context
+                val decision = engine.shouldBlockApp(pkg, UsageUtils.getAppUsageMinutes(this@OverlayBlockingService, pkg), limit)
+                val activityIntent = Intent(this@OverlayBlockingService, AdvancedChallengeActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra(AdvancedChallengeActivity.EXTRA_CHALLENGE_TYPE, decision.challengeType.name)
+                    putExtra(AdvancedChallengeActivity.EXTRA_PACKAGE_NAME, pkg)
+                    putExtra(AdvancedChallengeActivity.EXTRA_COOLING_OFF_PERIOD, decision.coolingOffPeriod)
+                    putExtra(AdvancedChallengeActivity.EXTRA_REASON, decision.reason.ifBlank { "Time limit reached" })
+                }
+                startActivity(activityIntent)
+                hideBlockingOverlay()
+            } catch (e: Exception) {
+                android.util.Log.e("OverlayBlockingService", "Failed to launch challenge: ${e.message}")
+                goToHome()
+            }
+        }
+        layout.addView(challengeButton)
+
         // Home button
         val homeButton = Button(this)
         homeButton.text = "🏠 Go to Home"
