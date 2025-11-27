@@ -209,6 +209,16 @@ class ImprovedBlockerService : Service() {
                 val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
                 val attempts = analyticsPrefs.getInt("blocked_attempts_$today", 0)
                 analyticsPrefs.edit().putInt("blocked_attempts_$today", attempts + 1).apply()
+                
+                // Also sync to Firestore
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        DataSyncManager(this@ImprovedBlockerService).syncAllData()
+                        android.util.Log.d("ImprovedBlockerService", "Synced blocked attempt to Firestore")
+                    } catch (e: Exception) {
+                        android.util.Log.w("ImprovedBlockerService", "Failed to sync blocked attempt: ${e.message}")
+                    }
+                }
             } catch (e: Exception) {
                 android.util.Log.w("ImprovedBlockerService", "Failed to record blocked attempt: ${e.message}")
             }

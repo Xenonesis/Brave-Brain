@@ -179,6 +179,9 @@ class AppSelectionActivity : AppCompatActivity() {
         val timeLimitsStr = existingMap.entries.joinToString("|") { "${it.key},${it.value}" }
         editor.putString("time_limits", timeLimitsStr)
         editor.apply()
+        
+        // Sync to Firestore in background
+        DataSyncManager(this).syncAllData()
     }
 }
 

@@ -203,7 +203,17 @@ class LoginActivity : AppCompatActivity() {
             .apply()
         
         // Sync all local data to Firestore after login
-        DataSyncManager(this).syncAllData()
+        val syncManager = DataSyncManager(this)
+        syncManager.syncAllData()
+        
+        // Also try to restore data from cloud if this is a returning user
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                syncManager.restoreFromCloud()
+            } catch (e: Exception) {
+                android.util.Log.e("LoginActivity", "Error restoring from cloud: ${e.message}")
+            }
+        }
     }
     
     private fun isUserLoggedIn(): Boolean {

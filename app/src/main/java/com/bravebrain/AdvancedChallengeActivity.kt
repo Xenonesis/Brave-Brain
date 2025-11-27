@@ -391,6 +391,7 @@ class AdvancedChallengeActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
         val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
         val completedToday = prefs.getInt("challenges_completed_$today", 0)
+        val failedToday = prefs.getInt("challenges_failed_$today", 0)
         
         if (success) {
             prefs.edit().putInt("challenges_completed_$today", completedToday + 1).apply()
@@ -398,6 +399,14 @@ class AdvancedChallengeActivity : AppCompatActivity() {
             // Record challenge duration
             val duration = System.currentTimeMillis() - challengeStartTime
             prefs.edit().putLong("last_challenge_duration", duration).apply()
+            
+            // Award XP and update streaks for gamification
+            GamificationUtils.awardXP(this, 10, "Challenge completed!")
+            GamificationUtils.incrementStreak(this, "challenge_streak")
+            GamificationUtils.checkAndAwardBadges(this)
+            
+            // Sync data to Firestore
+            DataSyncManager(this).syncAllData()
             
             // Challenge completed successfully - now show time increase options
             if (packageName.isNotEmpty()) {
@@ -410,6 +419,15 @@ class AdvancedChallengeActivity : AppCompatActivity() {
                     android.util.Log.e("AdvancedChallengeActivity", "Failed to show time increase options: ${e.message}")
                 }
             }
+        } else {
+            // Track failed challenge
+            prefs.edit().putInt("challenges_failed_$today", failedToday + 1).apply()
+            
+            // Reset challenge streak on failure
+            GamificationUtils.resetStreak(this, "challenge_streak")
+            
+            // Sync data to Firestore
+            DataSyncManager(this).syncAllData()
         }
         
         val resultIntent = Intent().apply {
@@ -515,6 +533,9 @@ class AdvancedChallengeActivity : AppCompatActivity() {
             // Save updated time limits
             val timeLimitsString = timeLimits.map { "${it.key},${it.value}" }.joinToString("|")
             prefs.edit().putString("time_limits", timeLimitsString).apply()
+            
+            // Sync to Firestore
+            DataSyncManager(this).syncAllData()
             
             val appName = getAppNameFromPackage(packageName)
             Toast.makeText(this, "✅ $appName time limit increased by $minutes minutes!", Toast.LENGTH_LONG).show()

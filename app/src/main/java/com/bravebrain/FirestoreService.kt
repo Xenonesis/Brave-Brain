@@ -1,21 +1,36 @@
 package com.bravebrain
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * FirestoreService handles all Firestore database operations.
+ * This is the central service for cloud data persistence.
+ */
 class FirestoreService(private val context: Context) {
     private val db = FirebaseFirestore.getInstance()
     private val authManager = FirebaseAuthManager(context)
     
+    companion object {
+        private const val TAG = "FirestoreService"
+    }
+    
     init {
-        db.firestoreSettings = com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-            .setPersistenceEnabled(true)
-            .build()
+        try {
+            db.firestoreSettings = com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build()
+            Log.d(TAG, "Firestore initialized with offline persistence enabled")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error initializing Firestore settings: ${e.message}")
+        }
     }
     
     private fun getUserId(): String? = authManager.getCurrentUserId()
@@ -30,9 +45,11 @@ class FirestoreService(private val context: Context) {
                 displayName = displayName,
                 lastSyncAt = Timestamp.now()
             )
-            db.collection("users").document(userId).set(profile).await()
+            db.collection("users").document(userId).set(profile, SetOptions.merge()).await()
+            Log.d(TAG, "User profile saved for $email")
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Error saving user profile: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -63,9 +80,13 @@ class FirestoreService(private val context: Context) {
                 category = category,
                 date = today
             )
-            db.collection("appUsage").add(usageData).await()
+            // Use document ID based on user+package+date to allow upserts
+            val docId = "${userId}_${packageName}_$today"
+            db.collection("appUsage").document(docId).set(usageData, SetOptions.merge()).await()
+            Log.d(TAG, "App usage saved for $appName")
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Error saving app usage: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -155,9 +176,11 @@ class FirestoreService(private val context: Context) {
                 badges = badges,
                 challenges = challenges
             )
-            db.collection("gamification").document(userId).set(gamification).await()
+            db.collection("gamification").document(userId).set(gamification, SetOptions.merge()).await()
+            Log.d(TAG, "Gamification data saved - Level: $level, Points: $points")
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Error saving gamification data: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -166,8 +189,11 @@ class FirestoreService(private val context: Context) {
         val userId = getUserId() ?: return Result.failure(Exception("User not authenticated"))
         return try {
             val doc = db.collection("gamification").document(userId).get().await()
-            Result.success(doc.toObject(GamificationData::class.java))
+            val data = doc.toObject(GamificationData::class.java)
+            Log.d(TAG, "Gamification data retrieved: ${data?.level ?: "null"}")
+            Result.success(data)
         } catch (e: Exception) {
+            Log.e(TAG, "Error getting gamification data: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -188,9 +214,13 @@ class FirestoreService(private val context: Context) {
                 challengesFailed = challengesFailed,
                 usagePatterns = usagePatterns
             )
-            db.collection("analytics").add(analytics).await()
+            // Use document ID based on user+date to allow upserts and avoid duplicates
+            val docId = "${userId}_$date"
+            db.collection("analytics").document(docId).set(analytics, SetOptions.merge()).await()
+            Log.d(TAG, "Analytics saved for date $date")
             Result.success(Unit)
         } catch (e: Exception) {
+            Log.e(TAG, "Error saving analytics: ${e.message}", e)
             Result.failure(e)
         }
     }

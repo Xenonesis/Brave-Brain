@@ -34,6 +34,9 @@ object GamificationUtils {
             
             // Trigger level up notification
             triggerLevelUpNotification(context, newLevel)
+            
+            // Sync to Firestore
+            syncGamificationData(context)
         } else {
             prefs.edit().apply {
                 putInt("user_xp", newXP)
@@ -46,6 +49,9 @@ object GamificationUtils {
             
             // Trigger XP notification
             triggerXPNotification(context, amount, reason)
+            
+            // Sync to Firestore
+            syncGamificationData(context)
         }
     }
     
@@ -70,6 +76,9 @@ object GamificationUtils {
         if ((currentStreak + 1) % 7 == 0 || (currentStreak + 1) == 1) {
             triggerStreakNotification(context, streakType, currentStreak + 1)
         }
+        
+        // Sync to Firestore
+        syncGamificationData(context)
     }
     
     /**
@@ -81,6 +90,9 @@ object GamificationUtils {
             putInt(streakType, 0)
             apply()
         }
+        
+        // Sync to Firestore
+        syncGamificationData(context)
     }
     
     /**
@@ -88,7 +100,7 @@ object GamificationUtils {
      */
     fun awardBadge(context: Context, badgeName: String) {
         val prefs = context.getSharedPreferences("gamification_data", Context.MODE_PRIVATE)
-        val badges = prefs.getStringSet("earned_badges", mutableSetOf()) ?: mutableSetOf()
+        val badges = prefs.getStringSet("earned_badges", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
         
         if (!badges.contains(badgeName)) {
             badges.add(badgeName)
@@ -128,6 +140,27 @@ object GamificationUtils {
         
         if (level >= 10) {
             awardBadge(context, "Productivity Pro")
+        }
+        
+        if (level >= 5) {
+            awardBadge(context, "Rising Star")
+        }
+        
+        if (challengeStreak >= 10) {
+            awardBadge(context, "Challenge Enthusiast")
+        }
+    }
+    
+    /**
+     * Sync gamification data to Firestore in background
+     */
+    private fun syncGamificationData(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                DataSyncManager(context).syncAllData()
+            } catch (e: Exception) {
+                android.util.Log.e("GamificationUtils", "Error syncing gamification data: ${e.message}")
+            }
         }
     }
     

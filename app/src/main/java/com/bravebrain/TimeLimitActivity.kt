@@ -90,6 +90,9 @@ class TimeLimitActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
         val str = limits.entries.joinToString("|") { "${it.key},${it.value}" }
         prefs.edit().putString("time_limits", str).apply()
+        
+        // Sync to Firestore in background
+        DataSyncManager(this).syncAllData()
     }
 
     private fun loadSpecificApp(packageName: String): List<AppInfo> {

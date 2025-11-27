@@ -261,10 +261,18 @@ class AnalyticsService : Service() {
     
     private fun updateInsights() {
         val prefs = getSharedPreferences(ANALYTICS_PREFS, Context.MODE_PRIVATE)
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
         
-        // Store current productivity score
+        // Store current productivity score - save with BOTH keys for compatibility
         val currentScore = calculateProductivityScore()
-        prefs.edit().putInt(PRODUCTIVITY_SCORE_KEY, currentScore).apply()
+        prefs.edit()
+            .putInt(PRODUCTIVITY_SCORE_KEY, currentScore)
+            .putInt("productivity_score_$today", currentScore)
+            .apply()
+        
+        // Store total screen time for today
+        val totalScreenTimeMs = getTotalScreenTimeToday()
+        prefs.edit().putLong("total_screen_time_$today", totalScreenTimeMs).apply()
         
         // Update weekly aggregates
         updateWeeklyStats()

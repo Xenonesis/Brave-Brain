@@ -262,6 +262,9 @@ class InsightsActivity : AppCompatActivity() {
             android.util.Log.e("InsightsActivity", "Failed to start AnalyticsService: ${e.message}")
         }
         
+        // Sync data to Firestore
+        DataSyncManager(this).syncAllData()
+        
         // Reload data after a short delay
         findViewById<Button>(R.id.refreshButton).postDelayed({
             loadAnalyticsData()
