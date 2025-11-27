@@ -29,11 +29,12 @@ All code has been integrated. Follow this checklist to complete the setup:
 - [ ] Verify rules are active
 
 ### Step 4: Create Firestore Indexes
-- [ ] Create index for `appUsage` (userId + date)
-- [ ] Create index for `notifications` (userId + sentAt)
-- [ ] Create index for `analytics` (userId + date)
-- [ ] Create index for `feedback` (userId + timestamp)
-- [ ] Or wait for Firebase to suggest indexes automatically
+- [x] Create index for `appUsage` (userId + date)
+- [x] Create index for `notifications` (userId + sentAt)
+- [x] Create index for `analytics` (userId + date)
+- [x] Create index for `feedback` (userId + timestamp)
+- [x] Indexes defined in `firestore.indexes.json`
+- [x] Deploy indexes using Firebase CLI: `firebase deploy --only firestore:indexes`
 
 ### Step 5: Build Configuration
 - [ ] Sync Gradle files

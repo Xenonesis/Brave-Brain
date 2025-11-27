@@ -124,7 +124,7 @@
             android:theme="@style/Theme.Testing" />
 
         <activity android:name=".FirebaseTestActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.Testing" />
 
         <receiver android:name=".DashboardWidgetProvider"
