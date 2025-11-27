@@ -1,0 +1,10 @@
+{
+  "users": {
+    "init_test_user": {
+      "userId": "init_test_user",
+      "email": "test@bravebrain.app",
+      "displayName": "Test User",
+      "createdAt": {"_seconds": 1732752000, "_nanoseconds": 0}
+    }
+  }
+}

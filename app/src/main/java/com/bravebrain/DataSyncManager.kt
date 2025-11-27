@@ -2,9 +2,12 @@ package com.bravebrain
 
 import android.content.Context
 import android.util.Log
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,9 +19,144 @@ import java.util.*
 class DataSyncManager(private val context: Context) {
     private val firestoreService = FirestoreService(context)
     private val authManager = FirebaseAuthManager(context)
+    private val db = FirebaseFirestore.getInstance()
     
     companion object {
         private const val TAG = "DataSyncManager"
+        private const val PREFS_NAME = "data_sync_prefs"
+        private const val KEY_COLLECTIONS_INITIALIZED = "collections_initialized"
+    }
+    
+    /**
+     * Initializes all Firestore collections with initial data for a new user.
+     * This ensures collections are visible in Firebase Console and the database is ready for use.
+     * Should be called after successful login/signup.
+     */
+    suspend fun initializeCollections(): Boolean {
+        val userId = authManager.getCurrentUserId()
+        if (userId == null) {
+            Log.e(TAG, "Cannot initialize collections: User not authenticated")
+            return false
+        }
+        
+        // Check if already initialized
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (prefs.getBoolean("${KEY_COLLECTIONS_INITIALIZED}_$userId", false)) {
+            Log.d(TAG, "Collections already initialized for user $userId")
+            return true
+        }
+        
+        Log.d(TAG, "Initializing Firestore collections for user $userId...")
+        
+        return withContext(Dispatchers.IO) {
+            try {
+                val user = authManager.getCurrentUser()
+                val email = user?.email ?: ""
+                val displayName = user?.displayName ?: "Brave Brain User"
+                val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                
+                // 1. Create user profile in 'users' collection
+                val userProfile = hashMapOf(
+                    "userId" to userId,
+                    "email" to email,
+                    "displayName" to displayName,
+                    "createdAt" to Timestamp.now(),
+                    "lastSyncAt" to Timestamp.now(),
+                    "preferences" to mapOf(
+                        "theme" to "system",
+                        "notifications" to true
+                    )
+                )
+                db.collection("users").document(userId).set(userProfile).await()
+                Log.d(TAG, "✓ Created 'users' collection with profile")
+                
+                // 2. Create initial analytics entry in 'analytics' collection
+                val analyticsData = hashMapOf(
+                    "userId" to userId,
+                    "date" to today,
+                    "totalScreenTimeMs" to 0L,
+                    "productivityScore" to 0,
+                    "blockedAttempts" to 0,
+                    "challengesCompleted" to 0,
+                    "challengesFailed" to 0,
+                    "usagePatterns" to mapOf(
+                        "initialized" to true,
+                        "lastSyncTime" to System.currentTimeMillis()
+                    ),
+                    "timestamp" to Timestamp.now()
+                )
+                db.collection("analytics").document("${userId}_$today").set(analyticsData).await()
+                Log.d(TAG, "✓ Created 'analytics' collection with initial entry")
+                
+                // 3. Create initial gamification entry in 'gamification' collection
+                val gamificationData = hashMapOf(
+                    "userId" to userId,
+                    "points" to 0,
+                    "level" to 1,
+                    "badges" to listOf<String>(),
+                    "challenges" to mapOf(
+                        "dailyStreak" to 0,
+                        "challengeStreak" to 0,
+                        "productivityStreak" to 0,
+                        "initialized" to true
+                    ),
+                    "achievements" to listOf<Map<String, Any>>(),
+                    "lastUpdated" to Timestamp.now()
+                )
+                db.collection("gamification").document(userId).set(gamificationData).await()
+                Log.d(TAG, "✓ Created 'gamification' collection with initial entry")
+                
+                // 4. Create initial notification entry in 'notifications' collection
+                val notificationData = hashMapOf(
+                    "userId" to userId,
+                    "type" to "welcome",
+                    "title" to "Welcome to Brave Brain!",
+                    "message" to "Your account has been set up successfully. Start tracking your app usage!",
+                    "sentAt" to Timestamp.now(),
+                    "wasClicked" to false,
+                    "wasDismissed" to false,
+                    "effectiveness" to 0.0,
+                    "context" to mapOf("source" to "account_creation")
+                )
+                db.collection("notifications").add(notificationData).await()
+                Log.d(TAG, "✓ Created 'notifications' collection with welcome notification")
+                
+                // 5. Create initial appUsage entry in 'appUsage' collection
+                val appUsageData = hashMapOf(
+                    "userId" to userId,
+                    "packageName" to "com.bravebrain",
+                    "appName" to "Brave Brain",
+                    "usageTimeMs" to 0L,
+                    "dailyLimitMs" to 0L,
+                    "category" to "productivity",
+                    "date" to today,
+                    "timestamp" to Timestamp.now()
+                )
+                db.collection("appUsage").document("${userId}_com.bravebrain_$today").set(appUsageData).await()
+                Log.d(TAG, "✓ Created 'appUsage' collection with initial entry")
+                
+                // 6. Create initial feedback entry in 'feedback' collection (optional - for structure)
+                val feedbackData = hashMapOf(
+                    "userId" to userId,
+                    "feedbackType" to "account_created",
+                    "rating" to 5,
+                    "comment" to "Account initialized",
+                    "context" to mapOf("source" to "auto_init"),
+                    "timestamp" to Timestamp.now()
+                )
+                db.collection("feedback").add(feedbackData).await()
+                Log.d(TAG, "✓ Created 'feedback' collection with initial entry")
+                
+                // Mark as initialized
+                prefs.edit().putBoolean("${KEY_COLLECTIONS_INITIALIZED}_$userId", true).apply()
+                
+                Log.d(TAG, "✅ All Firestore collections initialized successfully!")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "❌ Error initializing collections: ${e.message}", e)
+                false
+            }
+        }
     }
     
     /**
@@ -38,6 +176,9 @@ class DataSyncManager(private val context: Context) {
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Ensure collections are initialized first
+                initializeCollections()
+                
                 syncAppSettings()
                 syncAnalytics()
                 syncGamification()

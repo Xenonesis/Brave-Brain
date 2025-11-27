@@ -202,16 +202,26 @@ class LoginActivity : AppCompatActivity() {
             .putBoolean(KEY_IS_LOGGED_IN, true)
             .apply()
         
-        // Sync all local data to Firestore after login
         val syncManager = DataSyncManager(this)
-        syncManager.syncAllData()
         
-        // Also try to restore data from cloud if this is a returning user
+        // Initialize Firestore collections first, then sync data
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // First, initialize all Firestore collections to ensure they exist
+                val initialized = syncManager.initializeCollections()
+                if (initialized) {
+                    android.util.Log.d("LoginActivity", "Firestore collections initialized successfully")
+                } else {
+                    android.util.Log.w("LoginActivity", "Firestore collections initialization returned false")
+                }
+                
+                // Sync all local data to Firestore after login
+                syncManager.syncAllData()
+                
+                // Also try to restore data from cloud if this is a returning user
                 syncManager.restoreFromCloud()
             } catch (e: Exception) {
-                android.util.Log.e("LoginActivity", "Error restoring from cloud: ${e.message}")
+                android.util.Log.e("LoginActivity", "Error during post-login sync: ${e.message}")
             }
         }
     }

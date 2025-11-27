@@ -53,6 +53,7 @@ class FirebaseTestActivity : AppCompatActivity() {
         
         // Create test buttons
         addButton(container, "🔍 Run Database Connectivity Tests") { runDatabaseTests() }
+        addButton(container, "🗄️ Initialize Database Collections") { initializeDatabase() }
         addButton(container, "✓ Check Auth Status") { testCheckAuthStatus() }
         addButton(container, "🔑 Sign In Anonymously") { testSignInAnonymously() }
         addButton(container, "🌐 Sign In with Google") { testSignInWithGoogle() }
@@ -546,6 +547,55 @@ class FirebaseTestActivity : AppCompatActivity() {
         firebaseHelper.signOut()
         Toast.makeText(this@FirebaseTestActivity, "✓ Signed out", Toast.LENGTH_SHORT).show()
         updateStatus()
+    }
+    
+    private fun initializeDatabase() {
+        scope.launch {
+            try {
+                val auth = FirebaseAuth.getInstance()
+                val currentUser = auth.currentUser
+                if (currentUser == null) {
+                    Toast.makeText(this@FirebaseTestActivity, "Please sign in first", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+                
+                statusTextView.text = "🔄 Initializing Firestore database collections...\n\nThis will create:\n• users\n• analytics\n• gamification\n• notifications\n• appUsage\n• feedback"
+                
+                val syncManager = DataSyncManager(this@FirebaseTestActivity)
+                
+                // Force reset the initialization flag to re-create collections
+                val prefs = getSharedPreferences("data_sync_prefs", MODE_PRIVATE)
+                prefs.edit().remove("collections_initialized_${currentUser.uid}").apply()
+                
+                val success = syncManager.initializeCollections()
+                
+                if (success) {
+                    statusTextView.text = """
+                        ✅ DATABASE INITIALIZED SUCCESSFULLY!
+                        
+                        Created collections:
+                        ✓ users - User profile
+                        ✓ analytics - Usage analytics
+                        ✓ gamification - Points & badges
+                        ✓ notifications - Notification history
+                        ✓ appUsage - App usage data
+                        ✓ feedback - User feedback
+                        
+                        👉 Check Firebase Console to verify:
+                        https://console.firebase.google.com
+                    """.trimIndent()
+                    Toast.makeText(this@FirebaseTestActivity, "✓ Database initialized!", Toast.LENGTH_SHORT).show()
+                } else {
+                    statusTextView.text = "❌ Database initialization failed.\n\nMake sure:\n1. You are signed in\n2. Firebase is properly configured\n3. Security rules allow writes"
+                    Toast.makeText(this@FirebaseTestActivity, "Database initialization failed", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                val error = "❌ Error initializing database:\n${e.message}"
+                statusTextView.text = error
+                Toast.makeText(this@FirebaseTestActivity, error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Database initialization failed", e)
+            }
+        }
     }
     
     private fun testCheckAuthStatus() {
