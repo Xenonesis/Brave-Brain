@@ -7,7 +7,7 @@ import android.widget.TextView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.button.MaterialButton
+import android.widget.ImageButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +31,7 @@ class GamificationActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        findViewById<MaterialButton>(R.id.backButton)?.setOnClickListener {
+        findViewById<ImageButton>(R.id.backButton)?.setOnClickListener {
             finish()
         }
     }

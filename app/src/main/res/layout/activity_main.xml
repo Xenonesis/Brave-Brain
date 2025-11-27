@@ -249,57 +249,36 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/selectAppsButton"
+                        style="@style/Widget.App.Button.Large"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="wrap_content"
                         android:text="Select Apps to Block"
-                        android:textSize="15sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/colorPrimary"
-                        android:textColor="@color/colorOnPrimary"
-                        android:fontFamily="sans-serif-medium"
                         android:layout_marginBottom="12dp"
-                        app:rippleColor="@color/colorRipple"
                         app:icon="@drawable/ic_apps"
                         app:iconGravity="start"
-                        app:iconPadding="12dp"
+                        app:iconPadding="14dp"
                         app:iconTint="@color/colorOnPrimary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/setTimeLimitsButton"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.App.Button.Outlined.Large"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="wrap_content"
                         android:text="Update Time Limits"
-                        android:textSize="15sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        app:strokeColor="@color/colorPrimary"
-                        app:strokeWidth="1.5dp"
-                        android:textColor="@color/colorPrimary"
-                        android:fontFamily="sans-serif-medium"
                         android:layout_marginBottom="12dp"
-                        app:rippleColor="@color/colorRipple"
                         app:icon="@drawable/ic_timer"
                         app:iconGravity="start"
-                        app:iconPadding="12dp"
-                        app:iconTint="@color/colorPrimary" />
+                        app:iconPadding="14dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/accessButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        style="@style/Widget.App.Button.Text"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:text="Grant Usage Access"
-                        android:textSize="14sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        android:textColor="@color/colorPrimary"
-                        app:rippleColor="@color/colorRipple"
                         app:icon="@drawable/ic_settings"
                         app:iconGravity="start"
-                        app:iconPadding="8dp"
-                        app:iconTint="@color/colorPrimary" />
+                        app:iconPadding="8dp" />
 
                 </LinearLayout>
 
@@ -336,20 +315,13 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/viewGamificationButton"
+                        style="@style/Widget.App.Button.Success.Large"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="wrap_content"
                         android:text="View Achievements &amp; Streaks"
-                        android:textSize="15sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/colorSuccess"
-                        android:textColor="@color/colorOnPrimary"
-                        android:fontFamily="sans-serif-medium"
-                        app:rippleColor="@color/colorRipple"
                         app:icon="@drawable/ic_trending_up"
                         app:iconGravity="start"
-                        app:iconPadding="12dp"
-                        app:iconTint="@color/colorOnPrimary" />
+                        app:iconPadding="14dp" />
 
                 </LinearLayout>
 
@@ -386,39 +358,24 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/themeSettingsButton"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.App.Button.Outlined"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="wrap_content"
                         android:text="Theme Settings"
-                        android:textSize="15sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        app:strokeColor="@color/colorPrimary"
-                        app:strokeWidth="1.5dp"
-                        android:textColor="@color/colorPrimary"
-                        android:fontFamily="sans-serif-medium"
                         android:layout_marginBottom="12dp"
-                        app:rippleColor="@color/colorRipple"
                         app:icon="@drawable/ic_palette"
                         app:iconGravity="start"
-                        app:iconPadding="12dp"
-                        app:iconTint="@color/colorPrimary" />
+                        app:iconPadding="12dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/logoutButton"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        style="@style/Widget.App.Button.Danger.Outlined"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="wrap_content"
                         android:text="Log Out"
-                        android:textSize="14sp"
-                        android:textAllCaps="false"
-                        app:cornerRadius="14dp"
-                        android:textColor="@color/colorError"
-                        app:rippleColor="@color/colorErrorLight"
                         app:icon="@drawable/ic_logout"
                         app:iconGravity="start"
-                        app:iconPadding="8dp"
-                        app:iconTint="@color/colorError" />
+                        app:iconPadding="8dp" />
 
                     <View
                         android:layout_width="match_parent"

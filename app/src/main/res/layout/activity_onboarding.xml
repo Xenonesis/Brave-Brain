@@ -143,17 +143,14 @@
             <!-- Skip Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/skipButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.App.Button.Ghost"
                 android:layout_width="0dp"
-                android:layout_height="54dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/skip_button"
-                android:textSize="15sp"
                 android:textColor="@color/colorOnPrimary"
-                android:textAllCaps="false"
                 android:layout_marginEnd="10dp"
                 android:visibility="visible"
-                app:cornerRadius="14dp"
                 app:strokeColor="@color/colorOnPrimary"
                 app:strokeWidth="1.5dp"
                 app:rippleColor="#40FFFFFF" />
@@ -161,45 +158,35 @@
             <!-- Continue/Next Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/nextButton"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.App.Button.Large"
                 android:layout_width="0dp"
-                android:layout_height="54dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/continue_button"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textAllCaps="false"
                 android:layout_marginStart="10dp"
-                app:cornerRadius="14dp"
                 app:backgroundTint="@color/colorOnPrimary"
                 android:textColor="@color/colorPrimary"
-                android:elevation="4dp"
                 android:visibility="visible"
                 app:icon="@drawable/ic_arrow_forward"
                 app:iconGravity="end"
                 app:iconTint="@color/colorPrimary"
-                app:iconPadding="8dp"
+                app:iconPadding="10dp"
                 app:rippleColor="@color/colorPrimary" />
 
             <!-- Get Started Button (shown only on last page) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/getStartedButton"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.App.Button.Large"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="wrap_content"
                 android:text="@string/get_started_button"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textAllCaps="false"
                 android:visibility="gone"
-                app:cornerRadius="14dp"
                 app:backgroundTint="@color/colorOnPrimary"
                 android:textColor="@color/colorPrimary"
-                android:elevation="4dp"
                 app:icon="@drawable/ic_check_circle"
                 app:iconGravity="end"
                 app:iconTint="@color/colorPrimary"
-                app:iconPadding="8dp"
+                app:iconPadding="10dp"
                 app:rippleColor="@color/colorPrimary" />
 
         </LinearLayout>

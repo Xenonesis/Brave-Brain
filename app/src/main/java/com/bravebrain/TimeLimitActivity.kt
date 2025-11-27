@@ -3,7 +3,7 @@ package com.bravebrain
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,10 +14,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.content.Intent
+import com.google.android.material.button.MaterialButton
 
 class TimeLimitActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var saveButton: Button
+    private lateinit var saveButton: MaterialButton
     private lateinit var adapter: TimeLimitAdapter
     private lateinit var appList: List<AppInfo>
 
@@ -26,6 +27,11 @@ class TimeLimitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val root = LayoutInflater.from(this).inflate(R.layout.activity_time_limit, null)
         setContentView(root)
+
+        // Setup back button
+        root.findViewById<ImageButton>(R.id.backButton)?.setOnClickListener {
+            finish()
+        }
 
         recyclerView = root.findViewById(R.id.recyclerView)
         saveButton = root.findViewById(R.id.saveButton)

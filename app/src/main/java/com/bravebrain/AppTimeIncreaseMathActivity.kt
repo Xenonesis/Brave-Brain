@@ -3,19 +3,20 @@ package com.bravebrain
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import kotlin.random.Random
 
 class AppTimeIncreaseMathActivity : AppCompatActivity() {
     private lateinit var problemText: TextView
     private lateinit var problemNumberText: TextView
     private lateinit var answerInput: EditText
-    private lateinit var submitButton: Button
-    private lateinit var newProblemButton: Button
+    private lateinit var submitButton: MaterialButton
+    private lateinit var newProblemButton: MaterialButton
     private var currentAnswer: Int = 0
     private var problemsSolved: Int = 0
     private val requiredProblems = 2 // User must solve 2 problems to increase app time
@@ -26,6 +27,10 @@ class AppTimeIncreaseMathActivity : AppCompatActivity() {
         ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_time_increase_math)
+
+        // Setup toolbar navigation
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener { finish() }
 
         problemText = findViewById(R.id.problemText)
         problemNumberText = findViewById(R.id.problemNumberText)
@@ -118,26 +123,22 @@ class AppTimeIncreaseMathActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.problemNumberText).visibility = android.view.View.GONE
         findViewById<TextView>(R.id.problemText).visibility = android.view.View.GONE
         findViewById<EditText>(R.id.answerInput).visibility = android.view.View.GONE
-        findViewById<Button>(R.id.submitButton).visibility = android.view.View.GONE
-        findViewById<Button>(R.id.newProblemButton).visibility = android.view.View.GONE
+        findViewById<MaterialButton>(R.id.submitButton).visibility = android.view.View.GONE
+        findViewById<MaterialButton>(R.id.newProblemButton).visibility = android.view.View.GONE
         
         // Show time increase options
-        findViewById<TextView>(R.id.timeIncreaseTitle).visibility = android.view.View.VISIBLE
-        findViewById<TextView>(R.id.timeIncreaseMessage).visibility = android.view.View.VISIBLE
-        findViewById<Button>(R.id.fiveMinButton).visibility = android.view.View.VISIBLE
-        findViewById<Button>(R.id.tenMinButton).visibility = android.view.View.VISIBLE
-        findViewById<Button>(R.id.fifteenMinButton).visibility = android.view.View.VISIBLE
+        findViewById<com.google.android.material.card.MaterialCardView>(R.id.timeOptionsCard).visibility = android.view.View.VISIBLE
         
         // Set up button listeners
-        findViewById<Button>(R.id.fiveMinButton).setOnClickListener {
+        findViewById<MaterialButton>(R.id.fiveMinButton).setOnClickListener {
             increaseTimeLimit(5)
         }
         
-        findViewById<Button>(R.id.tenMinButton).setOnClickListener {
+        findViewById<MaterialButton>(R.id.tenMinButton).setOnClickListener {
             increaseTimeLimit(10)
         }
         
-        findViewById<Button>(R.id.fifteenMinButton).setOnClickListener {
+        findViewById<MaterialButton>(R.id.fifteenMinButton).setOnClickListener {
             increaseTimeLimit(15)
         }
     }

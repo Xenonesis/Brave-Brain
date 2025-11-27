@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Outlined button with state-based styling -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorRipple">
+    
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white"/>
+            <corners android:radius="14dp"/>
+        </shape>
+    </item>
+    
+    <item>
+        <selector>
+            <!-- Disabled state -->
+            <item android:state_enabled="false">
+                <shape android:shape="rectangle">
+                    <stroke android:width="1.5dp" android:color="@color/textTertiary"/>
+                    <corners android:radius="14dp"/>
+                    <solid android:color="@android:color/transparent"/>
+                </shape>
+            </item>
+            <!-- Pressed state -->
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <stroke android:width="1.5dp" android:color="@color/colorPrimary"/>
+                    <solid android:color="@color/colorAccentLight"/>
+                    <corners android:radius="14dp"/>
+                </shape>
+            </item>
+            <!-- Focused state -->
+            <item android:state_focused="true">
+                <shape android:shape="rectangle">
+                    <stroke android:width="2dp" android:color="@color/colorPrimary"/>
+                    <solid android:color="@color/colorFocused"/>
+                    <corners android:radius="14dp"/>
+                </shape>
+            </item>
+            <!-- Default state -->
+            <item>
+                <shape android:shape="rectangle">
+                    <stroke android:width="1.5dp" android:color="@color/colorPrimary"/>
+                    <corners android:radius="14dp"/>
+                    <solid android:color="@android:color/transparent"/>
+                </shape>
+            </item>
+        </selector>
+    </item>
+    
+</ripple>

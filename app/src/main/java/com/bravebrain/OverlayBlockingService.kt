@@ -12,10 +12,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import android.graphics.drawable.GradientDrawable
+import android.util.TypedValue
 
 /**
  * OverlayBlockingService - Shows a persistent full-screen overlay when an app is blocked.
@@ -187,45 +189,75 @@ class OverlayBlockingService : Service() {
         layout.addView(countdownTextView)
         
         // CTA: Solve quiz to get more time (Primary action)
-        val challengeButton = Button(this)
-        challengeButton.text = "🧠 Solve Quiz to Get More Time"
-        challengeButton.textSize = 16f
-        challengeButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
-        challengeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
-        challengeButton.setPadding(32, 20, 32, 20)
-        val challengeParams = android.widget.LinearLayout.LayoutParams(
-            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        challengeParams.setMargins(0, 0, 0, 16)
-        challengeButton.layoutParams = challengeParams
-        challengeButton.setOnClickListener {
-            try {
-                val pkg = lastBlockedPackage ?: ""
-                // Launch AppTimeIncreaseMathActivity which REQUIRES solving quiz before time increase
-                val activityIntent = Intent(this@OverlayBlockingService, AppTimeIncreaseMathActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    putExtra("package_name", pkg)
-                    putExtra("app_name", blockedAppName)
+        val challengeButton = MaterialButton(this).apply {
+            text = "🧠 Solve Quiz to Get More Time"
+            textSize = 16f
+            setTextColor(ContextCompat.getColor(this@OverlayBlockingService, R.color.colorPrimary))
+            isAllCaps = false
+            cornerRadius = dpToPx(16)
+            elevation = 0f
+            
+            // Create rounded background
+            val bgDrawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = dpToPx(16).toFloat()
+                setColor(ContextCompat.getColor(this@OverlayBlockingService, R.color.colorOnPrimary))
+            }
+            background = bgDrawable
+            
+            setPadding(dpToPx(32), dpToPx(18), dpToPx(32), dpToPx(18))
+            minimumHeight = dpToPx(56)
+            
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(0, 0, 0, dpToPx(16))
+            layoutParams = params
+            
+            setOnClickListener {
+                try {
+                    val pkg = lastBlockedPackage ?: ""
+                    // Launch AppTimeIncreaseMathActivity which REQUIRES solving quiz before time increase
+                    val activityIntent = Intent(this@OverlayBlockingService, AppTimeIncreaseMathActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        putExtra("package_name", pkg)
+                        putExtra("app_name", blockedAppName)
+                    }
+                    startActivity(activityIntent)
+                    hideBlockingOverlay()
+                } catch (e: Exception) {
+                    android.util.Log.e("OverlayBlockingService", "Failed to launch quiz: ${e.message}")
+                    Toast.makeText(this@OverlayBlockingService, "Error launching quiz", Toast.LENGTH_SHORT).show()
                 }
-                startActivity(activityIntent)
-                hideBlockingOverlay()
-            } catch (e: Exception) {
-                android.util.Log.e("OverlayBlockingService", "Failed to launch quiz: ${e.message}")
-                Toast.makeText(this, "Error launching quiz", Toast.LENGTH_SHORT).show()
             }
         }
         layout.addView(challengeButton)
 
         // Home button (Secondary action)
-        val homeButton = Button(this)
-        homeButton.text = "🏠 Accept Limit & Go Home"
-        homeButton.textSize = 14f
-        homeButton.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
-        homeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.overlayLight))
-        homeButton.setPadding(32, 16, 32, 16)
-        homeButton.setOnClickListener {
-            goToHome()
+        val homeButton = MaterialButton(this).apply {
+            text = "🏠 Accept Limit & Go Home"
+            textSize = 15f
+            setTextColor(ContextCompat.getColor(this@OverlayBlockingService, R.color.colorOnPrimary))
+            isAllCaps = false
+            cornerRadius = dpToPx(14)
+            elevation = 0f
+            
+            // Create outlined style background
+            val bgDrawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = dpToPx(14).toFloat()
+                setColor(android.graphics.Color.TRANSPARENT)
+                setStroke(dpToPx(2), ContextCompat.getColor(this@OverlayBlockingService, R.color.colorOnPrimary))
+            }
+            background = bgDrawable
+            
+            setPadding(dpToPx(32), dpToPx(14), dpToPx(32), dpToPx(14))
+            minimumHeight = dpToPx(52)
+            
+            setOnClickListener {
+                goToHome()
+            }
         }
         layout.addView(homeButton)
         
@@ -286,6 +318,17 @@ class OverlayBlockingService : Service() {
     }
     
     override fun onBind(intent: Intent?): IBinder? = null
+    
+    /**
+     * Convert dp to pixels for programmatic UI sizing
+     */
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics
+        ).toInt()
+    }
     
     override fun onDestroy() {
         hideBlockingOverlay()

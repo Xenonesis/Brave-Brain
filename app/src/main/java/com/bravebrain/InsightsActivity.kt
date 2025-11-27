@@ -3,9 +3,11 @@ package com.bravebrain
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,13 +43,18 @@ class InsightsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         
         // Setup refresh button
-        findViewById<Button>(R.id.refreshButton).setOnClickListener {
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.refreshButton).setOnClickListener {
             refreshAnalytics()
         }
         
         // Setup export button
-        findViewById<Button>(R.id.exportButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.exportButton).setOnClickListener {
             exportAnalytics()
+        }
+        
+        // Setup back button
+        findViewById<ImageButton>(R.id.backButton).setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
     
@@ -266,7 +273,7 @@ class InsightsActivity : AppCompatActivity() {
         DataSyncManager(this).syncAllData()
         
         // Reload data after a short delay
-        findViewById<Button>(R.id.refreshButton).postDelayed({
+        findViewById<MaterialButton>(R.id.refreshButton).postDelayed({
             loadAnalyticsData()
             FeedbackManager.showStatsRefreshed(this)
         }, 1000)

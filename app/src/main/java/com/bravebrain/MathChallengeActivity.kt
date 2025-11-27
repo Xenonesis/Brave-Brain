@@ -3,18 +3,18 @@ package com.bravebrain
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import kotlin.random.Random
 
 class MathChallengeActivity : AppCompatActivity() {
     private lateinit var problemText: TextView
     private lateinit var problemNumberText: TextView
     private lateinit var answerInput: EditText
-    private lateinit var submitButton: Button
-    private lateinit var newProblemButton: Button
+    private lateinit var submitButton: MaterialButton
+    private lateinit var newProblemButton: MaterialButton
     private var currentAnswer: Int = 0
     private var problemsSolved: Int = 0
     private val requiredProblems = 3 // User must solve 3 problems to access time limits

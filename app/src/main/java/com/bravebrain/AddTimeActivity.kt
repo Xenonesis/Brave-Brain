@@ -4,21 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import kotlin.random.Random
 
 class AddTimeActivity : AppCompatActivity() {
     private lateinit var problemText: TextView
     private lateinit var answerInput: EditText
-    private lateinit var submitButton: Button
-    private lateinit var newProblemButton: Button
+    private lateinit var submitButton: MaterialButton
+    private lateinit var newProblemButton: MaterialButton
     private lateinit var appNameText: TextView
-    private lateinit var add5Button: Button
-    private lateinit var add10Button: Button
-    private lateinit var add15Button: Button
+    private lateinit var add5Button: MaterialButton
+    private lateinit var add10Button: MaterialButton
+    private lateinit var add15Button: MaterialButton
     private var currentAnswer: Int = 0
     private var problemsSolved: Int = 0
     private val requiredProblems = 2 // User must solve 2 problems to add time
@@ -29,6 +30,10 @@ class AddTimeActivity : AppCompatActivity() {
         ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_time)
+
+        // Setup toolbar navigation
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener { finish() }
 
         blockedAppPackage = intent.getStringExtra("blocked_app_package") ?: ""
         val appName = intent.getStringExtra("app_name") ?: "App"

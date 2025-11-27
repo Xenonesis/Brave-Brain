@@ -7,10 +7,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 
 /**
  * This activity is deprecated in favor of TimeLimitBlockingActivity.
@@ -84,14 +84,14 @@ class TimeIncreaseActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.questionText).text = "Time limit reached for $appName.\n\nSolve a quiz to get more time!"
             
             // Set up buttons - Rename "Yes" to indicate quiz requirement
-            val yesButton = findViewById<Button>(R.id.yesButton)
+            val yesButton = findViewById<MaterialButton>(R.id.yesButton)
             yesButton.text = "🧠 Solve Quiz for More Time"
             yesButton.setOnClickListener {
                 onYesClicked()
             }
             
             // Rename "No" button
-            val noButton = findViewById<Button>(R.id.noButton)
+            val noButton = findViewById<MaterialButton>(R.id.noButton)
             noButton.text = "Go to Home"
             noButton.setOnClickListener {
                 onNoClicked()

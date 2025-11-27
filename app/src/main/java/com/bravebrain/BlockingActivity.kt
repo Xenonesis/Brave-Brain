@@ -6,11 +6,13 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
+import android.graphics.drawable.GradientDrawable
+import android.util.TypedValue
 
 class BlockingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
@@ -172,27 +174,64 @@ class BlockingActivity : AppCompatActivity() {
         buttonLayout.gravity = android.view.Gravity.CENTER
         
         // Unlock with Challenge button (primary action - requires quiz)
-        val unlockButton = Button(this)
-        unlockButton.text = "🧠 Unlock with Challenge"
-        unlockButton.textSize = 16f
-        unlockButton.setPadding(48, 24, 48, 24)
-        unlockButton.setOnClickListener {
-            launchQuizForTimeIncrease()
+        val unlockButton = MaterialButton(this).apply {
+            text = "🧠 Unlock with Challenge"
+            textSize = 16f
+            setTextColor(ContextCompat.getColor(this@BlockingActivity, R.color.colorPrimary))
+            isAllCaps = false
+            cornerRadius = dpToPx(16)
+            elevation = 0f
+            
+            // Create rounded white background
+            val bgDrawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = dpToPx(16).toFloat()
+                setColor(ContextCompat.getColor(this@BlockingActivity, R.color.colorOnPrimary))
+            }
+            background = bgDrawable
+            
+            setPadding(dpToPx(32), dpToPx(18), dpToPx(32), dpToPx(18))
+            minimumHeight = dpToPx(56)
+            minimumWidth = dpToPx(240)
+            
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(0, 0, 0, dpToPx(16))
+            layoutParams = params
+            
+            setOnClickListener {
+                launchQuizForTimeIncrease()
+            }
         }
-        val unlockParams = android.widget.LinearLayout.LayoutParams(
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        unlockParams.setMargins(0, 0, 0, 24)
-        unlockButton.layoutParams = unlockParams
         buttonLayout.addView(unlockButton)
         
         // Home button (secondary action - just goes home, no time increase)
-        val homeButton = Button(this)
-        homeButton.text = "Go to Home"
-        homeButton.textSize = 14f
-        homeButton.setOnClickListener {
-            goToHome()
+        val homeButton = MaterialButton(this).apply {
+            text = "🏠 Go to Home"
+            textSize = 15f
+            setTextColor(ContextCompat.getColor(this@BlockingActivity, R.color.colorOnPrimary))
+            isAllCaps = false
+            cornerRadius = dpToPx(14)
+            elevation = 0f
+            
+            // Create outlined style background
+            val bgDrawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = dpToPx(14).toFloat()
+                setColor(android.graphics.Color.TRANSPARENT)
+                setStroke(dpToPx(2), ContextCompat.getColor(this@BlockingActivity, R.color.colorOnPrimary))
+            }
+            background = bgDrawable
+            
+            setPadding(dpToPx(32), dpToPx(14), dpToPx(32), dpToPx(14))
+            minimumHeight = dpToPx(52)
+            minimumWidth = dpToPx(200)
+            
+            setOnClickListener {
+                goToHome()
+            }
         }
         buttonLayout.addView(homeButton)
         
@@ -238,6 +277,17 @@ class BlockingActivity : AppCompatActivity() {
             FeedbackManager.showGenericError(this, "Error going to home")
             finish()
         }
+    }
+    
+    /**
+     * Convert dp to pixels for programmatic UI sizing
+     */
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics
+        ).toInt()
     }
     
     

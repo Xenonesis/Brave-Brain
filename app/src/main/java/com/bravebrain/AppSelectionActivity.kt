@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -39,6 +39,11 @@ class AppSelectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val root = LayoutInflater.from(this).inflate(R.layout.activity_app_selection, null)
         setContentView(root)
+
+        // Setup back button
+        root.findViewById<ImageButton>(R.id.backButton)?.setOnClickListener {
+            finish()
+        }
 
         // Initialize UI components
         recyclerView = root.findViewById(R.id.recyclerView)
