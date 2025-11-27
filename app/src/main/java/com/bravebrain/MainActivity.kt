@@ -81,6 +81,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
         
+        // Check and update daily streak (once per day)
+        GamificationUtils.checkDailyStreak(this)
+        
+        // Check for newly earned badges
+        GamificationUtils.checkAndAwardBadges(this)
+        
         // Sync data to Firestore
         DataSyncManager(this).syncAllData()        
         // Update UI and stats when returning from other activities

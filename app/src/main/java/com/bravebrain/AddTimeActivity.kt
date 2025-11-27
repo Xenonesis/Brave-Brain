@@ -157,6 +157,9 @@ class AddTimeActivity : AppCompatActivity() {
         // Save updated time limits
         val newTimeLimitsStr = timeLimits.entries.joinToString("|") { "${it.key},${it.value}" }
         prefs.edit().putString("time_limits", newTimeLimitsStr).apply()
+        
+        // Sync all data to Firebase database
+        DataSyncManager(this).syncAllData()
 
         FeedbackManager.showTimeExtended(this, minutes)
         redirectToApp(blockedAppPackage)

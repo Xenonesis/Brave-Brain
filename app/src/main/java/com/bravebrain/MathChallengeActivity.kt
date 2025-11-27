@@ -102,6 +102,21 @@ class MathChallengeActivity : AppCompatActivity() {
             
             if (problemsSolved >= requiredProblems) {
                 FeedbackManager.showChallengeCompleted(this)
+                
+                // Award XP for completing the challenge
+                GamificationUtils.awardXP(this, 10, "Challenge completed!")
+                GamificationUtils.incrementStreak(this, "challenge_streak")
+                GamificationUtils.checkAndAwardBadges(this)
+                
+                // Track challenge completion in analytics
+                val analyticsPrefs = getSharedPreferences("analytics_data", Context.MODE_PRIVATE)
+                val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                val currentCompleted = analyticsPrefs.getInt("challenges_completed_$today", 0)
+                analyticsPrefs.edit().putInt("challenges_completed_$today", currentCompleted + 1).apply()
+                
+                // Sync all data to Firebase database
+                DataSyncManager(this).syncAllData()
+                
                 // Check if this is for time limit access or app time increase
                 if (isTimeLimitAccess) {
                     // Allow access to time limit activity

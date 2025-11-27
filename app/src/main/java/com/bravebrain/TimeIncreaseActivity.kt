@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
@@ -49,28 +48,11 @@ class TimeIncreaseActivity : AppCompatActivity() {
             
             android.util.Log.d("TimeIncreaseActivity", "App: $appName, Package: $packageName")
             
-            // Modern full-screen handling
+            // Keep screen on
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
                 setShowWhenLocked(true)
                 setTurnScreenOn(true)
-            }
-            if (android.os.Build.VERSION.SDK_INT >= 30) {
-                val controller = window.insetsController
-                controller?.hide(android.view.WindowInsets.Type.statusBars() or android.view.WindowInsets.Type.navigationBars())
-                controller?.systemBarsBehavior = android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            } else {
-                @Suppress("DEPRECATION")
-                run {
-                    window.decorView.systemUiVisibility = (
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    )
-                }
             }
             
             setContentView(R.layout.activity_time_increase)
@@ -98,6 +80,9 @@ class TimeIncreaseActivity : AppCompatActivity() {
             }
             
             android.util.Log.d("TimeIncreaseActivity", "Buttons set up successfully")
+            
+            // Mark activity as active before starting countdown
+            isActivityActive = true
             
             // Start countdown (for display only - goes to home, not back to app)
             startCountdown()

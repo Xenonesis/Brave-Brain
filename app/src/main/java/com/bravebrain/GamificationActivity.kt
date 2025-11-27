@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ProgressBar
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import android.widget.ImageButton
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +27,9 @@ class GamificationActivity : AppCompatActivity() {
 
         setupUI()
         loadGamificationData()
+        
+        // Check for new badges
+        GamificationUtils.checkAndAwardBadges(this)
         
         // Sync data with Firestore in background
         syncWithFirestore()
@@ -62,6 +67,8 @@ class GamificationActivity : AppCompatActivity() {
         val currentXP = prefs.getInt("user_xp", 0)
         val xpForNextLevel = calculateXPForNextLevel(currentLevel)
         
+        // Update level badge number
+        findViewById<TextView>(R.id.levelBadge)?.text = currentLevel.toString()
         findViewById<TextView>(R.id.levelText)?.text = "Level $currentLevel"
         findViewById<TextView>(R.id.xpText)?.text = "$currentXP / $xpForNextLevel XP"
         
@@ -76,29 +83,41 @@ class GamificationActivity : AppCompatActivity() {
         val challengeStreak = prefs.getInt("challenge_streak", 0)
         val productivityStreak = prefs.getInt("productivity_streak", 0)
         
-        findViewById<TextView>(R.id.dailyStreakValue)?.text = "$dailyStreak days"
-        findViewById<TextView>(R.id.challengeStreakValue)?.text = "$challengeStreak in a row"
-        findViewById<TextView>(R.id.productivityStreakValue)?.text = "$productivityStreak days"
+        // Format streak values nicely
+        findViewById<TextView>(R.id.dailyStreakValue)?.text = dailyStreak.toString()
+        findViewById<TextView>(R.id.challengeStreakValue)?.text = challengeStreak.toString()
+        findViewById<TextView>(R.id.productivityStreakValue)?.text = productivityStreak.toString()
         
         // Load badges
-        val totalBadges = prefs.getInt("total_badges", 0)
         val earnedBadges = prefs.getStringSet("earned_badges", emptySet()) ?: emptySet()
-        findViewById<TextView>(R.id.badgesEarnedText)?.text = "${earnedBadges.size} badges earned"
+        findViewById<TextView>(R.id.badgesEarnedText)?.text = "${earnedBadges.size} earned"
         
-        // Display motivational message
-        displayMotivationalMessage(dailyStreak, currentLevel)
+        // Display motivational message based on progress
+        displayMotivationalMessage(dailyStreak, challengeStreak, currentLevel, earnedBadges.size)
+        
+        // Calculate and display total XP earned
+        val totalXP = (currentLevel - 1) * 100 + currentXP
+        android.util.Log.d("GamificationActivity", "Stats - Level: $currentLevel, XP: $currentXP, Total XP: $totalXP")
     }
 
     private fun calculateXPForNextLevel(level: Int): Int {
         return level * 100 // Simple formula: 100 XP per level
     }
 
-    private fun displayMotivationalMessage(streak: Int, level: Int) {
+    private fun displayMotivationalMessage(dailyStreak: Int, challengeStreak: Int, level: Int, badgeCount: Int) {
         val message = when {
-            streak >= 7 -> "🔥 Amazing! You're on fire with a $streak day streak!"
-            streak >= 3 -> "💪 Great job! Keep that $streak day streak going!"
-            level >= 10 -> "⭐ You're becoming a digital wellness expert!"
+            dailyStreak >= 30 -> "🏆 Incredible! A $dailyStreak day streak! You're a true champion!"
+            dailyStreak >= 14 -> "🔥 Unstoppable! $dailyStreak day streak! Keep crushing it!"
+            dailyStreak >= 7 -> "🔥 Amazing! You're on fire with a $dailyStreak day streak!"
+            challengeStreak >= 10 -> "🧠 Brain master! $challengeStreak challenges in a row!"
+            dailyStreak >= 3 -> "💪 Great job! Keep that $dailyStreak day streak going!"
+            badgeCount >= 15 -> "🎖️ Badge collector extraordinaire! $badgeCount badges earned!"
+            badgeCount >= 10 -> "🏅 Impressive badge collection! $badgeCount badges and counting!"
+            level >= 25 -> "👑 You've mastered digital wellness! Level $level!"
+            level >= 15 -> "🌟 Digital wellness expert at Level $level!"
+            level >= 10 -> "⭐ You're becoming a digital wellness pro!"
             level >= 5 -> "🌟 You're making great progress! Keep it up!"
+            badgeCount >= 5 -> "🎯 Nice work! You've earned $badgeCount badges!"
             else -> "🌟 Every journey starts with a single step. You've got this!"
         }
         
