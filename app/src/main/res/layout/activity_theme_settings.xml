@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?android:colorBackground">
+    android:background="@color/colorBackground">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIconTint="?attr/colorOnPrimary" />
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground"
+        app:elevation="0dp">
 
-    <ScrollView
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Theme Settings"
+            app:titleTextColor="@color/textPrimary"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/textPrimary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,13 +34,70 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <!-- Header Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/cardBackground"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1E000000">
+                app:strokeColor="@color/divider">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:gravity="center_horizontal">
+
+                    <FrameLayout
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/icon_circle_background">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_palette"
+                            app:tint="@color/colorPrimary" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Appearance"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Customize how the app looks"
+                        android:textSize="14sp"
+                        android:textColor="@color/textSecondary"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Theme Selection Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/cardBackground"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -43,28 +108,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="APPEARANCE"
+                        android:text="CHOOSE THEME"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.1"
-                        android:textColor="?android:textColorSecondary"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Choose Theme"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?android:textColorPrimary"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select your preferred theme for the app"
-                        android:textSize="14sp"
-                        android:textColor="?android:textColorSecondary"
+                        android:textColor="@color/colorPrimary"
                         android:layout_marginBottom="20dp" />
 
                     <RadioGroup
@@ -72,32 +120,172 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <RadioButton
-                            android:id="@+id/radioLight"
+                        <!-- Light Theme Option -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="☀️ Light Theme"
-                            android:textSize="16sp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
                             android:padding="12dp"
-                            android:textColor="?android:textColorPrimary" />
+                            android:background="@drawable/ripple_background"
+                            android:layout_marginBottom="8dp">
 
-                        <RadioButton
-                            android:id="@+id/radioDark"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="🌙 Dark Theme"
-                            android:textSize="16sp"
-                            android:padding="12dp"
-                            android:textColor="?android:textColorPrimary" />
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_marginEnd="16dp"
+                                android:background="@drawable/icon_circle_background">
 
-                        <RadioButton
-                            android:id="@+id/radioSystem"
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_light_mode"
+                                    app:tint="@color/colorPrimary" />
+
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Light Theme"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/textPrimary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Bright and clean appearance"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/textSecondary" />
+
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/radioLight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="@color/colorPrimary" />
+
+                        </LinearLayout>
+
+                        <!-- Dark Theme Option -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="⚙️ System Default"
-                            android:textSize="16sp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
                             android:padding="12dp"
-                            android:textColor="?android:textColorPrimary" />
+                            android:background="@drawable/ripple_background"
+                            android:layout_marginBottom="8dp">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_marginEnd="16dp"
+                                android:background="@drawable/icon_circle_background">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_dark_mode"
+                                    app:tint="@color/colorPrimary" />
+
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Dark Theme"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/textPrimary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Easy on the eyes, saves battery"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/textSecondary" />
+
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/radioDark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="@color/colorPrimary" />
+
+                        </LinearLayout>
+
+                        <!-- System Default Option -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:background="@drawable/ripple_background">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_marginEnd="16dp"
+                                android:background="@drawable/icon_circle_background">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_settings"
+                                    app:tint="@color/colorPrimary" />
+
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="System Default"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/textPrimary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Follow device theme settings"
+                                    android:textSize="13sp"
+                                    android:textColor="@color/textSecondary" />
+
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/radioSystem"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="@color/colorPrimary" />
+
+                        </LinearLayout>
 
                     </RadioGroup>
 
@@ -105,18 +293,43 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Tip Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="💡 Tip: System Default will automatically switch between light and dark themes based on your device settings."
-                android:textSize="13sp"
-                android:textColor="?android:textColorSecondary"
-                android:layout_marginTop="16dp"
-                android:padding="12dp"
-                android:background="@drawable/stats_card_background" />
+                app:cardBackgroundColor="@color/primaryLight"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_info"
+                        app:tint="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="System Default will automatically switch between light and dark themes based on your device settings."
+                        android:textSize="13sp"
+                        android:textColor="@color/colorPrimary"
+                        android:lineSpacingExtra="2dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

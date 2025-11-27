@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background">
+    android:background="@color/colorBackground">
 
     <!-- Main Content Container -->
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/mainCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        app:cardBackgroundColor="?attr/colorSurface"
+        android:layout_marginHorizontal="24dp"
+        app:cardBackgroundColor="@color/cardBackground"
         app:cardCornerRadius="24dp"
-        app:cardElevation="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/divider"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,58 +29,54 @@
             android:padding="32dp"
             android:gravity="center_horizontal">
 
-            <!-- Icon Container - Stop sign for blocking -->
-            <androidx.cardview.widget.CardView
+            <!-- Icon Container -->
+            <FrameLayout
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/error_red"
-                app:cardCornerRadius="40dp"
-                app:cardElevation="8dp">
+                android:background="@drawable/icon_circle_error_background">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="⏰"
-                    android:textSize="40sp"
-                    android:gravity="center"/>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_timer"
+                    app:tint="@color/error_red" />
 
-            </androidx.cardview.widget.CardView>
+            </FrameLayout>
 
-            <!-- Title - Shows blocked app name -->
+            <!-- Title -->
             <TextView
                 android:id="@+id/appNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏰ Time limit reached!"
+                android:text="Time Limit Reached"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnBackground"
+                android:textColor="@color/textPrimary"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="sans-serif-medium"/>
+                android:layout_marginBottom="12dp"/>
 
-            <!-- Message - Explains the situation -->
+            <!-- Message -->
             <TextView
                 android:id="@+id/messageText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="You've used up your allotted time for this app.\n\nTo get more time, you must complete a short quiz."
-                android:textSize="16sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="15sp"
+                android:textColor="@color/textSecondary"
                 android:gravity="center"
-                android:layout_marginBottom="32dp"
-                android:fontFamily="sans-serif"
+                android:layout_marginBottom="28dp"
                 android:lineSpacingExtra="4dp"/>
 
             <!-- Countdown Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="28dp"
                 app:cardBackgroundColor="@color/warning_amber_light"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -107,11 +104,10 @@
                             android:id="@+id/countdownText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Auto-redirecting to home in 10 seconds..."
+                            android:text="Auto-redirecting in 10 seconds..."
                             android:textSize="14sp"
                             android:textColor="@color/warning_amber_dark"
-                            android:gravity="center"
-                            android:fontFamily="sans-serif-medium"/>
+                            android:gravity="center"/>
 
                     </LinearLayout>
 
@@ -128,7 +124,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Action Buttons -->
             <LinearLayout
@@ -138,111 +134,134 @@
                 android:gravity="center"
                 android:layout_marginBottom="24dp">
 
-                <!-- Continue Button (Primary Action - requires quiz) -->
+                <!-- Continue Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/continueButton"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="🧠 Solve Quiz to Get More Time"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="@color/success_green"
-                    app:cornerRadius="16dp"
-                    app:elevation="6dp"/>
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="Solve Quiz to Get More Time"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/colorPrimary"
+                    app:icon="@drawable/ic_calculate"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:cornerRadius="16dp"/>
 
-                <!-- Cancel Button (Secondary Action) -->
+                <!-- Cancel Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/cancelButton"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="🏠 Accept Limit &amp; Go Home"
+                    android:layout_height="52dp"
+                    android:text="Accept Limit &amp; Go Home"
                     android:textSize="14sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    app:strokeColor="?attr/colorOnSurfaceVariant"
+                    android:textAllCaps="false"
+                    android:textColor="@color/textSecondary"
+                    app:icon="@drawable/ic_home"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@color/textSecondary"
+                    app:strokeColor="@color/divider"
                     app:strokeWidth="1dp"
                     app:cornerRadius="14dp"/>
 
             </LinearLayout>
 
             <!-- Info Section -->
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@drawable/modern_card_background">
+                app:cardBackgroundColor="@color/primaryLight"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="8dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/colorPrimary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Why a quiz?"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorPrimary"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🧠"
-                        android:textSize="16sp"
-                        android:layout_marginEnd="8dp"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Why a quiz?"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnBackground"/>
+                        android:text="The quiz helps you pause and think mindfully about your screen time. It's quick and ensures you're making an intentional choice to continue."
+                        android:textSize="13sp"
+                        android:textColor="@color/colorPrimary"
+                        android:lineSpacingExtra="2dp"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="The quiz helps you pause and think mindfully about your screen time. It's quick (just 2 math problems) and ensures you're making an intentional choice to continue."
-                    android:textSize="13sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:lineSpacingExtra="2dp"/>
-
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Security Badge -->
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/badge_background"
-        android:elevation="4dp"
+        app:cardBackgroundColor="@color/cardBackground"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/divider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🛡️"
-            android:textSize="14sp"
-            android:layout_marginEnd="6dp"/>
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Screen Time Protection Active"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSecondary"/>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_shield"
+                app:tint="@color/success_green" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Screen Time Protection Active"
+                android:textSize="12sp"
+                android:textColor="@color/textSecondary"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

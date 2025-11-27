@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:padding="20dp">
 
     <!-- Scrollable Content Container -->
@@ -22,38 +23,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+            android:paddingTop="40dp"
+            android:paddingBottom="24dp">
 
             <!-- Icon Container with improved styling -->
-            <com.google.android.material.card.MaterialCardView
+            <FrameLayout
                 android:id="@+id/iconContainer"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_marginBottom="28dp"
-                app:cardCornerRadius="28dp"
-                app:cardElevation="12dp"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@android:color/transparent">
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/icon_circle_background">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:background="@drawable/icon_gradient_background">
+                <ImageView
+                    android:id="@+id/onboardingIcon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/logo_no_bg"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside"
+                    app:tint="@color/colorPrimary" />
 
-                    <ImageView
-                        android:id="@+id/onboardingIcon"
-                        android:layout_width="72dp"
-                        android:layout_height="72dp"
-                        android:src="@drawable/logo_no_bg"
-                        android:contentDescription="@null"
-                        android:scaleType="centerInside"
-                        app:tint="@color/colorOnPrimary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
 
             <!-- Title Section -->
             <LinearLayout
@@ -61,58 +52,55 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="24dp">
 
                 <TextView
                     android:id="@+id/onboardingTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Welcome"
-                    android:textSize="26sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurface"
+                    android:textColor="@color/textPrimary"
                     android:gravity="center"
-                    android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.01"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="16dp" />
 
                 <!-- Accent line -->
                 <View
                     android:layout_width="48dp"
                     android:layout_height="4dp"
-                    android:background="@drawable/accent_line_rounded" />
+                    android:background="@color/colorPrimary" />
 
             </LinearLayout>
 
-            <!-- Description Container with theme-aware background -->
+            <!-- Description Container -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/cardBorder"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="@color/divider"
+                app:cardBackgroundColor="@color/cardBackground"
                 android:layout_marginHorizontal="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="24dp">
 
                     <TextView
                         android:id="@+id/onboardingDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Description goes here"
-                        android:textSize="15sp"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:textColor="@color/textSecondary"
                         android:gravity="center"
                         android:lineSpacingExtra="6dp"
-                        android:lineSpacingMultiplier="1.2"
-                        android:fontFamily="sans-serif"
-                        android:alpha="0.87" />
+                        android:lineSpacingMultiplier="1.2" />
 
                 </LinearLayout>
 

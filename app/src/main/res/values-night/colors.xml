@@ -1,116 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Primary Colors - Dark Theme -->
-    <color name="colorPrimary">#3B82F6</color>
-    <color name="colorPrimaryVariant">#1E40AF</color>
-    <color name="colorSecondary">#60A5FA</color>
-    <color name="colorSecondaryVariant">#2563EB</color>
-    <color name="colorTertiary">#94A3B8</color>
-    <color name="colorTertiaryVariant">#64748B</color>
+    <color name="colorPrimary">#818CF8</color>
+    <color name="colorPrimaryVariant">#6366F1</color>
+    <color name="colorPrimaryLight">#A5B4FC</color>
+    <color name="colorSecondary">#38BDF8</color>
+    <color name="colorSecondaryVariant">#0EA5E9</color>
+    <color name="colorTertiary">#A5B4FC</color>
+    <color name="colorTertiaryVariant">#818CF8</color>
     
     <!-- On Colors -->
-    <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorOnSecondary">#FFFFFF</color>
-    <color name="colorOnTertiary">#FFFFFF</color>
+    <color name="colorOnPrimary">#0F172A</color>
+    <color name="colorOnSecondary">#0F172A</color>
+    <color name="colorOnTertiary">#0F172A</color>
     
-    <!-- Background Colors - Dark Theme -->
+    <!-- Background Colors - Deep Dark -->
     <color name="colorBackground">#0F172A</color>
     <color name="colorBackgroundSecondary">#1E293B</color>
     <color name="colorSurface">#1E293B</color>
     <color name="colorSurfaceVariant">#334155</color>
+    <color name="colorSurfaceContainer">#1E293B</color>
     <color name="colorOnBackground">#F1F5F9</color>
     <color name="colorOnSurface">#E2E8F0</color>
+    <color name="colorOnSurfaceVariant">#94A3B8</color>
     
     <!-- Status Colors -->
-    <color name="colorError">#EF4444</color>
-    <color name="colorErrorLight">#7F1D1D</color>
-    <color name="colorWarning">#F59E0B</color>
-    <color name="colorWarningLight">#78350F</color>
+    <color name="colorError">#F87171</color>
+    <color name="colorErrorLight">#450A0A</color>
+    <color name="colorErrorContainer">#7F1D1D</color>
+    <color name="colorWarning">#FBBF24</color>
+    <color name="colorWarningLight">#451A03</color>
     <color name="warning_orange">#FB923C</color>
     <color name="warning_amber">#FBBF24</color>
-    <color name="warning_amber_light">#78350F</color>
+    <color name="warning_amber_light">#451A03</color>
     <color name="warning_amber_dark">#FCD34D</color>
-    <color name="colorSuccess">#10B981</color>
-    <color name="colorSuccessLight">#064E3B</color>
-    <color name="colorInfo">#3B82F6</color>
-    <color name="colorInfoLight">#1E3A5F</color>
+    <color name="colorSuccess">#34D399</color>
+    <color name="colorSuccessLight">#022C22</color>
+    <color name="colorSuccessContainer">#065F46</color>
+    <color name="colorInfo">#60A5FA</color>
+    <color name="colorInfoLight">#172554</color>
     
     <!-- Gradient Colors -->
-    <color name="gradientStart">#3B82F6</color>
-    <color name="gradientMid">#2563EB</color>
-    <color name="gradientEnd">#1E40AF</color>
-    <color name="gradientScreenTime">#475569</color>
-    <color name="gradientScreenTimeEnd">#334155</color>
-    <color name="gradientSuccess">#10B981</color>
-    <color name="gradientSuccessEnd">#059669</color>
-    <color name="gradientWarning">#F59E0B</color>
-    <color name="gradientWarningEnd">#D97706</color>
+    <color name="gradientStart">#6366F1</color>
+    <color name="gradientMid">#818CF8</color>
+    <color name="gradientEnd">#A5B4FC</color>
+    <color name="gradientScreenTime">#4F46E5</color>
+    <color name="gradientScreenTimeEnd">#6366F1</color>
+    <color name="gradientSuccess">#34D399</color>
+    <color name="gradientSuccessEnd">#10B981</color>
+    <color name="gradientWarning">#FBBF24</color>
+    <color name="gradientWarningEnd">#F59E0B</color>
+    <color name="gradientSecondary">#38BDF8</color>
+    <color name="gradientSecondaryEnd">#22D3EE</color>
     
-    <!-- Enhanced Card Colors -->
+    <!-- Card Colors -->
     <color name="cardBackground">#1E293B</color>
     <color name="cardBackgroundSecondary">#334155</color>
     <color name="cardBorder">#475569</color>
+    <color name="cardBorderLight">#334155</color>
     <color name="cardShadow">#000000</color>
     <color name="cardElevated">#334155</color>
     <color name="cardStroke">#475569</color>
     
-    <!-- Enhanced Text Colors -->
+    <!-- Text Colors -->
     <color name="textPrimary">#F1F5F9</color>
     <color name="textSecondary">#94A3B8</color>
     <color name="textTertiary">#64748B</color>
     <color name="textQuaternary">#475569</color>
     <color name="textOnGradient">#FFFFFF</color>
-    <color name="textHighlight">#818CF8</color>
+    <color name="textHighlight">#A5B4FC</color>
+    <color name="textLink">#818CF8</color>
     
-    <!-- Selection and Interactive States -->
+    <!-- Interactive States -->
     <color name="colorSelectedBackground">#312E81</color>
     <color name="colorSelectedBorder">#818CF8</color>
-    <color name="colorSelectedText">#A5B4FC</color>
+    <color name="colorSelectedText">#C7D2FE</color>
     <color name="colorHover">#334155</color>
     <color name="colorPressed">#475569</color>
     <color name="colorRipple">#4338CA</color>
     <color name="colorDivider">#475569</color>
-    <color name="colorSearchBackground">#1E293B</color>
+    <color name="colorSearchBackground">#334155</color>
+    <color name="colorFocused">#312E81</color>
     
-    <!-- Progress and Chart Colors -->
+    <!-- Progress Colors -->
     <color name="progressBarBackground">#475569</color>
-    <color name="progressBarFill">#3B82F6</color>
-    <color name="progressBarSecondary">#60A5FA</color>
-    <color name="progressBarWarning">#F59E0B</color>
-    <color name="progressBarDanger">#EF4444</color>
+    <color name="progressBarFill">#818CF8</color>
+    <color name="progressBarSecondary">#38BDF8</color>
+    <color name="progressBarWarning">#FBBF24</color>
+    <color name="progressBarDanger">#F87171</color>
+    <color name="progressTrack">#334155</color>
     
     <!-- Chart Colors -->
-    <color name="chartColor1">#3B82F6</color>
-    <color name="chartColor2">#60A5FA</color>
-    <color name="chartColor3">#94A3B8</color>
-    <color name="chartColor4">#64748B</color>
-    <color name="chartColor5">#2563EB</color>
-    <color name="chartColor6">#818CF8</color>
-    <color name="chartColor7">#1E40AF</color>
-    <color name="chartColor8">#475569</color>
+    <color name="chartColor1">#818CF8</color>
+    <color name="chartColor2">#38BDF8</color>
+    <color name="chartColor3">#34D399</color>
+    <color name="chartColor4">#FBBF24</color>
+    <color name="chartColor5">#A5B4FC</color>
+    <color name="chartColor6">#22D3EE</color>
+    <color name="chartColor7">#A78BFA</color>
+    <color name="chartColor8">#F472B6</color>
     
-    <!-- Badge and Label Colors -->
+    <!-- Badge Colors -->
     <color name="badgeDefault">#334155</color>
     <color name="badgeDefaultText">#94A3B8</color>
     <color name="badgePrimary">#312E81</color>
-    <color name="badgePrimaryText">#A5B4FC</color>
-    <color name="badgeSuccess">#064E3B</color>
+    <color name="badgePrimaryText">#C7D2FE</color>
+    <color name="badgeSuccess">#022C22</color>
     <color name="badgeSuccessText">#6EE7B7</color>
-    <color name="badgeWarning">#78350F</color>
+    <color name="badgeWarning">#451A03</color>
     <color name="badgeWarningText">#FCD34D</color>
-    <color name="badgeError">#7F1D1D</color>
+    <color name="badgeError">#450A0A</color>
     <color name="badgeErrorText">#FCA5A5</color>
+    <color name="badgeInfo">#172554</color>
+    <color name="badgeInfoText">#93C5FD</color>
     
-    <!-- Enhanced Accent Colors -->
+    <!-- Accent Colors -->
     <color name="colorAccentLight">#312E81</color>
     <color name="colorAccentMedium">#4338CA</color>
     <color name="colorAccentDark">#6366F1</color>
     <color name="colorAccentVibrant">#8B5CF6</color>
     
     <!-- Overlay Colors -->
-    <color name="overlayLight">#40FFFFFF</color>
-    <color name="overlayDark">#B3000000</color>
-    <color name="overlayBlur">#E0000000</color>
+    <color name="overlayLight">#33FFFFFF</color>
+    <color name="overlayDark">#CC000000</color>
+    <color name="overlayBlur">#E6000000</color>
+    <color name="overlayScrim">#CC0F172A</color>
     
     <!-- System Colors -->
     <color name="statusBarColor">#0F172A</color>
@@ -119,13 +133,22 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     
-    <!-- Time-based Colors -->
-    <color name="morningGradient">#78350F</color>
-    <color name="afternoonGradient">#1E3A5F</color>
-    <color name="eveningGradient">#312E81</color>
-    <color name="nightGradient">#581C87</color>
+    <!-- Icon Colors -->
+    <color name="iconPrimary">#F1F5F9</color>
+    <color name="iconSecondary">#94A3B8</color>
+    <color name="iconTertiary">#64748B</color>
+    <color name="iconAccent">#818CF8</color>
     
-    <!-- Aliases for layout compatibility -->
+    <!-- Divider -->
+    <color name="divider">#475569</color>
+    
+    <!-- Time-based Colors -->
+    <color name="morningGradient">#451A03</color>
+    <color name="afternoonGradient">#172554</color>
+    <color name="eveningGradient">#312E81</color>
+    <color name="nightGradient">#4C1D95</color>
+    
+    <!-- Compatibility Aliases -->
     <color name="background_light">@color/colorBackground</color>
     <color name="primary_blue">@color/colorPrimary</color>
     <color name="error_red">@color/colorError</color>
@@ -133,4 +156,5 @@
     <color name="text_primary">@color/textPrimary</color>
     <color name="text_secondary">@color/textSecondary</color>
     <color name="card_background">@color/cardBackground</color>
+    <color name="primaryLight">@color/colorPrimaryLight</color>
 </resources>

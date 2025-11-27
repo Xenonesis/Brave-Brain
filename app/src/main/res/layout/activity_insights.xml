@@ -1,194 +1,428 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:colorBackground"
-    android:fillViewport="true">
+    android:background="@color/colorBackground">
 
-    <LinearLayout
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:background="@color/colorBackground"
+        app:elevation="0dp">
 
-        <!-- Header Section -->
-        <com.google.android.material.card.MaterialCardView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="16dp">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back"
+                app:tint="@color/textPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Insights"
+                android:textSize="18sp"
+                android:textColor="@color/textPrimary"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintStart_toEndOf="@id/backButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="4dp" />
+
+            <ImageButton
+                android:id="@+id/exportButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_share"
+                android:contentDescription="Export"
+                app:tint="@color/textSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="6dp"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:strokeWidth="0dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <LinearLayout
+            <!-- Productivity Score Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📊 Analytics Dashboard"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Track your digital wellness journey"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="14sp"
-                    android:alpha="0.9" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Productivity Score Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/cardBorder">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎯 Productivity Score"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurface"
-                    android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/colorPrimary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/productivityScoreText"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Productivity Score"
+                                android:textSize="13sp"
+                                android:textColor="@color/colorOnPrimary"
+                                android:alpha="0.8"
+                                android:fontFamily="sans-serif-medium"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/productivityScoreText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="75"
+                                android:textSize="40sp"
+                                android:textColor="@color/colorOnPrimary"
+                                android:fontFamily="sans-serif-medium" />
+
+                        </LinearLayout>
+
+                        <!-- Score Ring -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            app:cardCornerRadius="36dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@color/colorOnPrimary"
+                            android:alpha="0.2">
+
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:id="@+id/productivityProgressBar"
+                                android:layout_width="72dp"
+                                android:layout_height="72dp"
+                                android:layout_gravity="center"
+                                app:indicatorSize="64dp"
+                                app:trackThickness="6dp"
+                                app:indicatorColor="@color/colorOnPrimary"
+                                app:trackColor="@android:color/transparent"
+                                android:progress="75"
+                                android:max="100" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <!-- Trend Badge -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="75/100"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorSuccess"
-                        android:layout_marginEnd="16dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/badge_background"
+                        android:backgroundTint="@color/colorOnPrimary"
+                        android:alpha="0.9"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp">
 
-                    <ProgressBar
-                        android:id="@+id/productivityProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="8dp"
-                        android:layout_weight="1"
-                        android:max="100"
-                        android:progress="75"
-                        android:progressTint="@color/colorSuccess"
-                        android:progressBackgroundTint="@color/progressBarBackground" />
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_trending_up"
+                            app:tint="@color/colorPrimary"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/weeklyTrendText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Improving +12%"
+                            android:textSize="12sp"
+                            android:textColor="@color/colorPrimary"
+                            android:fontFamily="sans-serif-medium" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/weeklyTrendText"
-                    android:layout_width="wrap_content"
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quick Stats Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quick Stats"
+                android:textSize="12sp"
+                android:textColor="@color/textSecondary"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="4dp" />
+
+            <LinearLayout
+                android:id="@+id/statsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+
+                <!-- Stats Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📈 Improving (+12%)"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorSuccess"
-                    android:layout_marginTop="8dp" />
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
+
+                    <!-- Total Screen Time -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/cardBackground"
+                        app:strokeColor="@color/cardBorder"
+                        app:strokeWidth="1dp"
+                        android:layout_marginEnd="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                app:cardCornerRadius="10dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="@color/colorPrimaryLight"
+                                android:layout_marginBottom="10dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_timer"
+                                    app:tint="@color/colorPrimary" />
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:id="@+id/totalTimeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3h 24m"
+                                android:textSize="18sp"
+                                android:textColor="@color/textPrimary"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Today"
+                                android:textSize="12sp"
+                                android:textColor="@color/textTertiary" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Apps Blocked -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/cardBackground"
+                        app:strokeColor="@color/cardBorder"
+                        app:strokeWidth="1dp"
+                        android:layout_marginStart="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                app:cardCornerRadius="10dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="@color/colorSuccessLight"
+                                android:layout_marginBottom="10dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_shield"
+                                    app:tint="@color/colorSuccess" />
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:id="@+id/appsBlockedText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5"
+                                android:textSize="18sp"
+                                android:textColor="@color/textPrimary"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Blocked"
+                                android:textSize="12sp"
+                                android:textColor="@color/textTertiary" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+            <!-- Insights Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Personalized Insights"
+                android:textSize="12sp"
+                android:textColor="@color/textSecondary"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="4dp" />
 
-        <!-- Quick Stats Grid -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📊 Quick Stats"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnBackground"
-            android:layout_marginBottom="12dp" />
+            <LinearLayout
+                android:id="@+id/insightsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
 
-        <LinearLayout
-            android:id="@+id/statsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp" />
+                <!-- Insight Card Example -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/cardBackground"
+                    app:strokeColor="@color/cardBorder"
+                    app:strokeWidth="1dp"
+                    android:layout_marginBottom="10dp">
 
-        <!-- Insights Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="💡 Personalized Insights"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnBackground"
-            android:layout_marginBottom="12dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
 
-        <LinearLayout
-            android:id="@+id/insightsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp" />
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@color/colorSuccessLight"
+                            android:layout_marginEnd="14dp">
 
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_check_circle"
+                                app:tint="@color/colorSuccess" />
 
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Great Progress!"
+                                android:textSize="14sp"
+                                android:textColor="@color/textPrimary"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="You reduced screen time by 20% this week"
+                                android:textSize="12sp"
+                                android:textColor="@color/textTertiary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Refresh Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/refreshButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="🔄 Refresh"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Refresh Data"
                 android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
                 android:textAllCaps="false"
-                app:cornerRadius="14dp"
-                app:strokeColor="?attr/colorSecondary"
-                android:textColor="?attr/colorSecondary" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/exportButton"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="📤 Export"
-                android:textSize="14sp"
-                android:textAllCaps="false"
-                app:cornerRadius="14dp"
-                app:backgroundTint="?attr/colorPrimary"
-                android:textColor="?attr/colorOnPrimary" />
+                android:fontFamily="sans-serif-medium"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/cardBorder"
+                app:strokeWidth="1dp"
+                app:rippleColor="@color/colorRipple" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
