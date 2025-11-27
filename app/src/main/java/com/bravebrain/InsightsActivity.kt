@@ -21,6 +21,7 @@ class InsightsActivity : AppCompatActivity() {
     private lateinit var statsContainer: LinearLayout
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insights)
         
@@ -255,7 +256,11 @@ class InsightsActivity : AppCompatActivity() {
     
     private fun refreshAnalytics() {
         // Start analytics service to refresh data
-        startService(Intent(this, AnalyticsService::class.java))
+        try {
+            androidx.core.content.ContextCompat.startForegroundService(this, Intent(this, AnalyticsService::class.java))
+        } catch (e: Exception) {
+            android.util.Log.e("InsightsActivity", "Failed to start AnalyticsService: ${e.message}")
+        }
         
         // Reload data after a short delay
         findViewById<Button>(R.id.refreshButton).postDelayed({

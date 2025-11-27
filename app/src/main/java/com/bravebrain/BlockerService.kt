@@ -234,51 +234,55 @@ class BlockerService : Service() {
         val currentApp = getForegroundAppPackageName() ?: return
         val appName = getAppName(currentApp)
         
-        android.util.Log.d("BlockerService", "Attempting to show time increase screen for $currentApp ($appName)")
+        android.util.Log.d("BlockerService", "TIME LIMIT REACHED! Blocking app: $currentApp ($appName)")
         
-        // First try to kill the blocked app to ensure our activity shows
+        // First try to kill the blocked app to ensure our blocking shows
         tryKillBlockedApp(currentApp)
         
-        // Add a small delay to ensure the app is killed before launching our activity
+        // Add a small delay to ensure the app is killed before launching our blocking screen
         handler.postDelayed({
             try {
-                android.util.Log.d("BlockerService", "About to launch TimeIncreaseActivity...")
+                android.util.Log.d("BlockerService", "About to launch TimeLimitBlockingActivity...")
                 
-                // Show time increase confirmation screen instead of directly going to home
-                val intent = Intent(this, TimeIncreaseActivity::class.java)
+                // IMPORTANT: Launch the blocking activity that REQUIRES quiz to increase time
+                // This ensures users cannot bypass the quiz requirement
+                val intent = Intent(this, TimeLimitBlockingActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 intent.putExtra("package_name", currentApp)
                 intent.putExtra("app_name", appName)
                 
-                android.util.Log.d("BlockerService", "Intent created with flags: ${intent.flags}")
+                android.util.Log.d("BlockerService", "Intent created for TimeLimitBlockingActivity")
                 android.util.Log.d("BlockerService", "Intent extras: package_name=${intent.getStringExtra("package_name")}, app_name=${intent.getStringExtra("app_name")}")
                 
                 // Use application context to avoid service context issues
                 applicationContext.startActivity(intent)
                 
-                android.util.Log.d("BlockerService", "Successfully launched TimeIncreaseActivity for $currentApp")
+                android.util.Log.d("BlockerService", "Successfully launched TimeLimitBlockingActivity for $currentApp")
                 
-                // Show a notification to confirm the activity was launched
+                // Show a notification about the block
                 handler.post {
-                    Toast.makeText(this, "Time increase screen launched for $appName", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "⏰ Time limit reached for $appName! Complete a quiz to continue.", Toast.LENGTH_LONG).show()
                 }
                 
             } catch (e: Exception) {
-                android.util.Log.e("BlockerService", "Failed to launch TimeIncreaseActivity: ${e.message}")
+                android.util.Log.e("BlockerService", "Failed to launch TimeLimitBlockingActivity: ${e.message}")
                 e.printStackTrace()
                 
-                // Fallback: go directly to home
+                // Fallback: go directly to home (blocking still achieved)
                 try {
                     val homeIntent = Intent(Intent.ACTION_MAIN)
                     homeIntent.addCategory(Intent.CATEGORY_HOME)
                     homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     startActivity(homeIntent)
                     android.util.Log.d("BlockerService", "Fallback: Redirected to home")
+                    handler.post {
+                        Toast.makeText(this, "⏰ Time limit reached! App blocked.", Toast.LENGTH_LONG).show()
+                    }
                 } catch (e2: Exception) {
                     android.util.Log.e("BlockerService", "Failed to redirect to home: ${e2.message}")
                 }
             }
-        }, 1000) // 1 second delay
+        }, 500) // Reduced delay for faster blocking
     }
 
     private fun getAppName(packageName: String): String {

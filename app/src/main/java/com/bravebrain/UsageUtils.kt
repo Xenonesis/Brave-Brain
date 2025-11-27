@@ -127,14 +127,24 @@ object UsageUtils {
 
     /**
      * Resets usage data if needed (e.g., if it's a new day)
+     * Uses full date format to handle year changes correctly
      */
     fun resetIfNeeded(context: Context) {
         val prefs = context.getSharedPreferences("usage_data", Context.MODE_PRIVATE)
+        val trackingPrefs = context.getSharedPreferences("app_usage_tracking", Context.MODE_PRIVATE)
         val lastResetDate = prefs.getString("last_reset_date", "")
-        val currentDate = Calendar.getInstance().get(Calendar.DAY_OF_YEAR).toString()
+        
+        // Use full date format (YYYY-MM-DD) to handle year changes
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        val currentDate = dateFormat.format(Date())
         
         if (lastResetDate != currentDate) {
-            // Reset any daily counters if needed
+            android.util.Log.d("UsageUtils", "New day detected ($lastResetDate -> $currentDate), resetting tracked usage")
+            
+            // Clear all tracked usage for the new day
+            trackingPrefs.edit().clear().apply()
+            
+            // Update last reset date
             prefs.edit().putString("last_reset_date", currentDate).apply()
         }
     }

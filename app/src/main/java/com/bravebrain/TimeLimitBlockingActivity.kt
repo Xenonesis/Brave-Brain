@@ -17,34 +17,51 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
+/**
+ * TimeLimitBlockingActivity - A blocking screen shown when a user reaches their time limit.
+ * 
+ * IMPORTANT: This activity enforces that users MUST complete a quiz/challenge
+ * before they can increase their time limit. There is NO way to bypass this requirement.
+ */
 class TimeLimitBlockingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var countdownTextView: TextView? = null
+    private var appNameTextView: TextView? = null
+    private var messageTextView: TextView? = null
     private var progressBar: ProgressBar? = null
     private var countdownProgress: ProgressBar? = null
     private var continueButton: MaterialButton? = null
     private var cancelButton: MaterialButton? = null
-    private var countdownSeconds = 8
+    private var countdownSeconds = 10  // Slightly longer countdown to give user time to read
     private var isActivityActive = false
     
+    // Track which app was blocked (for time increase)
+    private var blockedPackageName: String = ""
+    private var blockedAppName: String = ""
+    
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         
-        // Setup modern back press handling
+        // Setup modern back press handling - CANNOT be bypassed
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Prevent back button from closing the screen
-                Toast.makeText(this@TimeLimitBlockingActivity, "Please make a choice or wait for the timer.", Toast.LENGTH_SHORT).show()
+                // Prevent back button from closing the screen - user MUST make a choice
+                Toast.makeText(this@TimeLimitBlockingActivity, "⛔ You must choose an option. Complete quiz to get more time.", Toast.LENGTH_SHORT).show()
             }
         })
         
         android.util.Log.d("TimeLimitBlockingActivity", "onCreate started - Intent: ${intent?.action}")
         android.util.Log.d("TimeLimitBlockingActivity", "onCreate - Intent extras: ${intent?.extras}")
         
+        // Get blocked app info from intent
+        blockedPackageName = intent.getStringExtra("package_name") ?: ""
+        blockedAppName = intent.getStringExtra("app_name") ?: "This app"
+        
+        android.util.Log.d("TimeLimitBlockingActivity", "Blocking app: $blockedAppName ($blockedPackageName)")
+        
         try {
-            android.util.Log.d("TimeLimitBlockingActivity", "onCreate started")
-            
-            // Modern full-screen handling
+            // Modern full-screen handling - make this a truly blocking experience
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
                 setShowWhenLocked(true)
@@ -73,10 +90,18 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
             
             // Initialize views
             countdownTextView = findViewById(R.id.countdownText)
+            appNameTextView = findViewById(R.id.appNameText)
+            messageTextView = findViewById(R.id.messageText)
             progressBar = findViewById(R.id.progressBar)
             countdownProgress = findViewById(R.id.countdownProgress)
             continueButton = findViewById(R.id.continueButton)
             cancelButton = findViewById(R.id.cancelButton)
+            
+            // Update UI with blocked app info
+            appNameTextView?.text = "⏰ Time limit reached for $blockedAppName"
+            messageTextView?.text = "You've used up your allotted time for this app.\n\nTo get more time, you must complete a short quiz.\nThis helps you stay mindful of your screen time."
+            continueButton?.text = "🧠 Solve Quiz to Get More Time"
+            cancelButton?.text = "🏠 Accept Limit & Go Home"
             
             // Initialize progress bar
             progressBar?.max = countdownSeconds
@@ -84,7 +109,7 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
             
             android.util.Log.d("TimeLimitBlockingActivity", "Views initialized")
             
-            // Set up buttons
+            // Set up buttons - the continue button ALWAYS requires quiz
             continueButton?.setOnClickListener {
                 onContinueClicked()
             }
@@ -101,23 +126,21 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
             // Start countdown
             startCountdown()
             
-            // Automatically redirect to home after countdown
+            // Automatically redirect to home after countdown (NOT to the app)
             handler.postDelayed({
                 if (isActivityActive) {
+                    android.util.Log.d("TimeLimitBlockingActivity", "Countdown finished - going to home (app stays blocked)")
                     goToHome()
                 }
             }, (countdownSeconds * 1000).toLong())
             
             android.util.Log.d("TimeLimitBlockingActivity", "onCreate completed successfully")
             
-            // Show a toast to confirm the activity is working
-            Toast.makeText(this, "Time limit blocking screen shown", Toast.LENGTH_SHORT).show()
-            
         } catch (e: Exception) {
             android.util.Log.e("TimeLimitBlockingActivity", "Error in onCreate: ${e.message}")
             e.printStackTrace()
             
-            // Emergency fallback: go to home
+            // Emergency fallback: go to home (keeps app blocked)
             try {
                 val homeIntent = Intent(Intent.ACTION_MAIN)
                 homeIntent.addCategory(Intent.CATEGORY_HOME)
@@ -171,7 +194,7 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
                 if (countdownSeconds > 0) {
                     handler.postDelayed(this, 1000)
                 } else {
-                    // Countdown finished, redirect
+                    // Countdown finished, redirect to HOME (not app)
                     onCountdownFinished()
                 }
             }
@@ -181,9 +204,9 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
     
     private fun updateCountdownUI() {
         countdownTextView?.text = when {
-            countdownSeconds > 1 -> getString(R.string.redirecting_in_seconds, countdownSeconds)
-            countdownSeconds == 1 -> getString(R.string.redirecting_in_second)
-            else -> getString(R.string.redirecting_now)
+            countdownSeconds > 1 -> "Auto-redirecting to home in $countdownSeconds seconds..."
+            countdownSeconds == 1 -> "Redirecting to home in 1 second..."
+            else -> "Redirecting now..."
         }
     }
     
@@ -205,44 +228,55 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
     
     private fun onCountdownFinished() {
         // Show final message briefly
-        countdownTextView?.text = "Redirecting to home..."
+        countdownTextView?.text = "Redirecting to home... (app stays blocked)"
         handler.postDelayed({
             goToHome()
         }, 500)
     }
     
+    /**
+     * When user clicks "Continue" button, they MUST complete a quiz to increase time.
+     * This is the ONLY way to get more time for the blocked app.
+     */
     private fun onContinueClicked() {
-        android.util.Log.d("TimeLimitBlockingActivity", "Continue button clicked")
+        android.util.Log.d("TimeLimitBlockingActivity", "Continue button clicked - starting quiz for $blockedAppName")
         
         // Stop the countdown
         handler.removeCallbacksAndMessages(null)
         
         try {
-            // Start math challenge activity instead of directly going to time limit activity
-            val intent = Intent(this, MathChallengeActivity::class.java)
-            intent.putExtra("package_name", "time_limit_access")
-            intent.putExtra("app_name", "Time Limit Access")
-            intent.putExtra("is_time_limit_access", true)
+            // IMPORTANT: User must complete AppTimeIncreaseMathActivity to increase time
+            // This activity requires solving math problems before showing time increase options
+            val intent = Intent(this, AppTimeIncreaseMathActivity::class.java)
+            intent.putExtra("package_name", blockedPackageName)
+            intent.putExtra("app_name", blockedAppName)
+            // Note: We don't need "is_time_limit_access" - AppTimeIncreaseMathActivity
+            // always requires quiz completion before allowing time increase
             startActivity(intent)
             finish()
         } catch (e: Exception) {
-            android.util.Log.e("TimeLimitBlockingActivity", "Failed to start MathChallengeActivity: ${e.message}")
-            goToHome()
+            android.util.Log.e("TimeLimitBlockingActivity", "Failed to start AppTimeIncreaseMathActivity: ${e.message}")
+            Toast.makeText(this, "Error starting quiz. Please try again.", Toast.LENGTH_SHORT).show()
+            // Don't go home - keep blocking screen up so user can try again
         }
     }
     
+    /**
+     * User accepts the time limit and goes home. App stays blocked.
+     */
     private fun onCancelClicked() {
-        android.util.Log.d("TimeLimitBlockingActivity", "Cancel button clicked")
+        android.util.Log.d("TimeLimitBlockingActivity", "Cancel button clicked - accepting limit, going to home")
         
         // Stop the countdown
         handler.removeCallbacksAndMessages(null)
         
-        // Go to home screen
+        // Go to home screen - app stays blocked
         goToHome()
     }
     
     private fun goToHome() {
         try {
+            Toast.makeText(this, "App remains blocked. Take a healthy break! 😊", Toast.LENGTH_SHORT).show()
             val homeIntent = Intent(Intent.ACTION_MAIN)
             homeIntent.addCategory(Intent.CATEGORY_HOME)
             homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -260,7 +294,7 @@ class TimeLimitBlockingActivity : AppCompatActivity() {
         isActivityActive = true
         android.util.Log.d("TimeLimitBlockingActivity", "onResume called")
         
-        // Ensure we stay in foreground
+        // Ensure we stay in foreground - this is a blocking experience
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)

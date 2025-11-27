@@ -106,7 +106,7 @@ class SmartNotificationService : Service() {
                     kotlinx.coroutines.delay(60 * 60 * 1000)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in analytics processing", e)
-                    kotlinx.coroutines.delay(10 * 60 * 100) // Wait 10 minutes on error
+                    kotlinx.coroutines.delay(10 * 60 * 1000L) // Wait 10 minutes on error
                 }
             }
         }

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        app:cardBackgroundColor="@color/colorSurface"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="24dp"
         app:cardElevation="16dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,56 +28,56 @@
             android:padding="32dp"
             android:gravity="center_horizontal">
 
-            <!-- Icon Container -->
+            <!-- Icon Container - Stop sign for blocking -->
             <androidx.cardview.widget.CardView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardBackgroundColor="@color/error_red"
                 app:cardCornerRadius="40dp"
                 app:cardElevation="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="⚙️"
+                    android:text="⏰"
                     android:textSize="40sp"
                     android:gravity="center"/>
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Title -->
+            <!-- Title - Shows blocked app name -->
             <TextView
-                android:id="@+id/titleText"
+                android:id="@+id/appNameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/time_limit_access_title"
-                android:textSize="28sp"
+                android:text="⏰ Time limit reached!"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/textPrimary"
+                android:textColor="?attr/colorOnBackground"
                 android:gravity="center"
                 android:layout_marginBottom="16dp"
-                android:fontFamily="sans-serif-medium"
-                android:contentDescription="@string/time_limit_access_title"/>
+                android:fontFamily="sans-serif-medium"/>
 
-            <!-- Subtitle -->
+            <!-- Message - Explains the situation -->
             <TextView
-                android:id="@+id/subtitleText"
+                android:id="@+id/messageText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/time_limit_access_subtitle"
+                android:text="You've used up your allotted time for this app.\n\nTo get more time, you must complete a short quiz."
                 android:textSize="16sp"
-                android:textColor="@color/textSecondary"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:gravity="center"
                 android:layout_marginBottom="32dp"
-                android:fontFamily="sans-serif"/>
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="4dp"/>
 
-            <!-- Question Card -->
+            <!-- Countdown Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                app:cardBackgroundColor="@color/colorAccentLight"
+                app:cardBackgroundColor="@color/warning_amber_light"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp">
 
@@ -85,19 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <TextView
-                        android:id="@+id/questionText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_limit_access_question"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorAccentDark"
-                        android:gravity="center"
-                        android:layout_marginBottom="16dp"
-                        android:lineSpacingExtra="4dp"/>
+                    android:padding="20dp">
 
                     <!-- Progress Indicator -->
                     <LinearLayout
@@ -109,19 +97,19 @@
 
                         <ProgressBar
                             android:id="@+id/countdownProgress"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_marginEnd="12dp"
-                            android:indeterminateTint="@color/colorPrimary"
+                            android:indeterminateTint="@color/warning_amber"
                             style="?android:attr/progressBarStyleSmall"/>
 
                         <TextView
                             android:id="@+id/countdownText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Redirecting in 4 seconds..."
+                            android:text="Auto-redirecting to home in 10 seconds..."
                             android:textSize="14sp"
-                            android:textColor="@color/textSecondary"
+                            android:textColor="@color/warning_amber_dark"
                             android:gravity="center"
                             android:fontFamily="sans-serif-medium"/>
 
@@ -132,10 +120,10 @@
                         android:id="@+id/progressBar"
                         android:layout_width="match_parent"
                         android:layout_height="6dp"
-                        android:max="8"
-                        android:progress="4"
-                        android:progressTint="@color/colorPrimary"
-                        android:progressBackgroundTint="@color/colorDivider"
+                        android:max="10"
+                        android:progress="10"
+                        android:progressTint="@color/warning_amber"
+                        android:progressBackgroundTint="@color/warning_amber_light"
                         style="?android:attr/progressBarStyleHorizontal"/>
 
                 </LinearLayout>
@@ -150,20 +138,19 @@
                 android:gravity="center"
                 android:layout_marginBottom="24dp">
 
-                <!-- Continue Button (Primary Action) -->
+                <!-- Continue Button (Primary Action - requires quiz) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/continueButton"
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:layout_marginBottom="16dp"
-                    android:text="✓ Continue to Settings"
-                    android:textSize="18sp"
+                    android:text="🧠 Solve Quiz to Get More Time"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorOnPrimary"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/success_green"
                     app:cornerRadius="16dp"
-                    app:elevation="6dp"
-                    android:contentDescription="Continue to access time limit settings"/>
+                    app:elevation="6dp"/>
 
                 <!-- Cancel Button (Secondary Action) -->
                 <com.google.android.material.button.MaterialButton
@@ -171,13 +158,12 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="← Return to Home"
-                    android:textSize="16sp"
-                    android:textColor="@color/textSecondary"
-                    app:strokeColor="@color/textSecondary"
+                    android:text="🏠 Accept Limit &amp; Go Home"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    app:strokeColor="?attr/colorOnSurfaceVariant"
                     app:strokeWidth="1dp"
-                    app:cornerRadius="14dp"
-                    android:contentDescription="Cancel and return to home screen"/>
+                    app:cornerRadius="14dp"/>
 
             </LinearLayout>
 
@@ -199,7 +185,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ℹ️"
+                        android:text="🧠"
                         android:textSize="16sp"
                         android:layout_marginEnd="8dp"/>
 
@@ -207,19 +193,19 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="What happens next?"
+                        android:text="Why a quiz?"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="@color/textPrimary"/>
+                        android:textColor="?attr/colorOnBackground"/>
 
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="This will allow you to modify time limits for your selected apps. You'll need to complete a quick verification challenge for security."
+                    android:text="The quiz helps you pause and think mindfully about your screen time. It's quick (just 2 math problems) and ensures you're making an intentional choice to continue."
                     android:textSize="13sp"
-                    android:textColor="@color/textSecondary"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:lineSpacingExtra="2dp"/>
 
             </LinearLayout>
@@ -245,17 +231,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🔒"
+            android:text="🛡️"
             android:textSize="14sp"
             android:layout_marginEnd="6dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Secure Access Control"
+            android:text="Screen Time Protection Active"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="@color/colorOnSecondary"/>
+            android:textColor="?attr/colorOnSecondary"/>
 
     </LinearLayout>
 

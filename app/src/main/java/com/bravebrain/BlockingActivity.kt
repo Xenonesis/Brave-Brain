@@ -11,11 +11,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 
 class BlockingActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var countdownTextView: TextView? = null
-    private var countdownSeconds = 8
+    private var blockedPackage: String = ""
+    private var countdownSeconds = 30 // Increased countdown time
     private val monitoringRunnable = object : Runnable {
         override fun run() {
             // Check if we're still in foreground, if not bring ourselves back
@@ -23,6 +25,7 @@ class BlockingActivity : AppCompatActivity() {
                 android.util.Log.d("BlockingActivity", "Not task root, bringing to front")
                 val intent = Intent(this@BlockingActivity, BlockingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.putExtra("blocked_package", blockedPackage)
                 startActivity(intent)
             }
             
@@ -32,13 +35,17 @@ class BlockingActivity : AppCompatActivity() {
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
+        
+        // Get the blocked package name
+        blockedPackage = intent.getStringExtra("blocked_package") ?: ""
         
         // Setup modern back press handling
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Prevent back button from closing the blocking screen
-                Toast.makeText(this@BlockingActivity, "App is blocked. Please wait or tap 'Go to Home'.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@BlockingActivity, "App is blocked. Solve a quiz to get more time.", Toast.LENGTH_SHORT).show()
             }
         })
         
@@ -75,7 +82,7 @@ class BlockingActivity : AppCompatActivity() {
         // Create a simple blocking layout
         setContentView(createBlockingLayout())
         
-        android.util.Log.d("BlockingActivity", "Blocking screen shown")
+        android.util.Log.d("BlockingActivity", "Blocking screen shown for package: $blockedPackage")
         
         // Start countdown
         startCountdown()
@@ -83,7 +90,7 @@ class BlockingActivity : AppCompatActivity() {
         // Start monitoring to prevent dismissal
         handler.post(monitoringRunnable)
         
-        // Automatically go to home after countdown
+        // Automatically go to home after countdown (not to the app!)
         handler.postDelayed({
             goToHome()
         }, (countdownSeconds * 1000).toLong())
@@ -105,7 +112,7 @@ class BlockingActivity : AppCompatActivity() {
         val countdownRunnable = object : Runnable {
             override fun run() {
                 countdownSeconds--
-                countdownTextView?.text = "Redirecting in $countdownSeconds seconds..."
+                countdownTextView?.text = "Redirecting to home in $countdownSeconds seconds..."
                 
                 if (countdownSeconds > 0) {
                     handler.postDelayed(this, 1000)
@@ -119,46 +126,106 @@ class BlockingActivity : AppCompatActivity() {
         val layout = android.widget.LinearLayout(this)
         layout.orientation = android.widget.LinearLayout.VERTICAL
         layout.gravity = android.view.Gravity.CENTER
-        layout.setBackgroundColor(0xFF1976D2.toInt()) // Blue background
+        layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
         layout.setPadding(64, 64, 64, 64)
         
         // Title
         val title = TextView(this)
         title.text = "🚫 App Blocked!"
         title.textSize = 32f
-        title.setTextColor(0xFFFFFFFF.toInt())
+        title.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         title.gravity = android.view.Gravity.CENTER
         title.setPadding(0, 0, 0, 32)
         layout.addView(title)
         
+        // App name if available
+        if (blockedPackage.isNotEmpty()) {
+            val appNameView = TextView(this)
+            appNameView.text = getAppName(blockedPackage)
+            appNameView.textSize = 20f
+            appNameView.setTextColor(ContextCompat.getColor(this, R.color.textSecondary))
+            appNameView.gravity = android.view.Gravity.CENTER
+            appNameView.setPadding(0, 0, 0, 16)
+            layout.addView(appNameView)
+        }
+        
         // Message
         val message = TextView(this)
-        message.text = "🚫 APP BLOCKED! 🚫\n\nYou've reached your daily time limit.\nTaking a break is good for you! 😊"
+        message.text = "You've reached your daily time limit.\nTaking a break is good for you! 😊\n\nSolve a quiz to get more time."
         message.textSize = 18f
-        message.setTextColor(0xFFFFFFFF.toInt())
+        message.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         message.gravity = android.view.Gravity.CENTER
         message.setPadding(0, 0, 0, 32)
         layout.addView(message)
         
         // Countdown text
         countdownTextView = TextView(this)
-        countdownTextView?.text = "Redirecting in $countdownSeconds seconds..."
+        countdownTextView?.text = "Redirecting to home in $countdownSeconds seconds..."
         countdownTextView?.textSize = 16f
-        countdownTextView?.setTextColor(0xFFFFFFFF.toInt())
+        countdownTextView?.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         countdownTextView?.gravity = android.view.Gravity.CENTER
         countdownTextView?.setPadding(0, 0, 0, 64)
         layout.addView(countdownTextView)
         
-        // Home button
+        // Button container
+        val buttonLayout = android.widget.LinearLayout(this)
+        buttonLayout.orientation = android.widget.LinearLayout.VERTICAL
+        buttonLayout.gravity = android.view.Gravity.CENTER
+        
+        // Unlock with Challenge button (primary action - requires quiz)
+        val unlockButton = Button(this)
+        unlockButton.text = "🧠 Unlock with Challenge"
+        unlockButton.textSize = 16f
+        unlockButton.setPadding(48, 24, 48, 24)
+        unlockButton.setOnClickListener {
+            launchQuizForTimeIncrease()
+        }
+        val unlockParams = android.widget.LinearLayout.LayoutParams(
+            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        unlockParams.setMargins(0, 0, 0, 24)
+        unlockButton.layoutParams = unlockParams
+        buttonLayout.addView(unlockButton)
+        
+        // Home button (secondary action - just goes home, no time increase)
         val homeButton = Button(this)
         homeButton.text = "Go to Home"
-        homeButton.textSize = 18f
+        homeButton.textSize = 14f
         homeButton.setOnClickListener {
             goToHome()
         }
-        layout.addView(homeButton)
+        buttonLayout.addView(homeButton)
+        
+        layout.addView(buttonLayout)
         
         return layout
+    }
+    
+    private fun getAppName(packageName: String): String {
+        return try {
+            val pm = packageManager
+            val appInfo = pm.getApplicationInfo(packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (e: Exception) {
+            packageName
+        }
+    }
+    
+    private fun launchQuizForTimeIncrease() {
+        try {
+            // User must solve quiz to get more time
+            val intent = Intent(this, AppTimeIncreaseMathActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("package_name", blockedPackage)
+                putExtra("app_name", getAppName(blockedPackage))
+            }
+            startActivity(intent)
+            finish()
+        } catch (e: Exception) {
+            android.util.Log.e("BlockingActivity", "Failed to launch quiz: ${e.message}")
+            Toast.makeText(this, "Error launching challenge", Toast.LENGTH_SHORT).show()
+        }
     }
     
     private fun goToHome() {

@@ -74,10 +74,12 @@ class DataSyncManager(private val context: Context) {
     }
     
     private fun extractTimeLimit(timeLimits: String, packageName: String): Long {
-        timeLimits.split(",").forEach { entry ->
-            val parts = entry.split(":")
+        // Time limits are stored as "package,limit|package,limit" format
+        timeLimits.split("|").forEach { entry ->
+            val parts = entry.split(",")
             if (parts.size == 2 && parts[0] == packageName) {
-                return parts[1].toLongOrNull() ?: 0L
+                // Convert minutes to milliseconds
+                return (parts[1].toLongOrNull() ?: 0L) * 60 * 1000
             }
         }
         return 0L

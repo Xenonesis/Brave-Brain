@@ -398,6 +398,18 @@ class AdvancedChallengeActivity : AppCompatActivity() {
             // Record challenge duration
             val duration = System.currentTimeMillis() - challengeStartTime
             prefs.edit().putLong("last_challenge_duration", duration).apply()
+            
+            // Challenge completed successfully - now show time increase options
+            if (packageName.isNotEmpty()) {
+                try {
+                    // Navigate to AppTimeIncreaseMathActivity to show time increase options
+                    // The math part was already completed, so we show the time increase part directly
+                    showTimeIncreaseDialog()
+                    return
+                } catch (e: Exception) {
+                    android.util.Log.e("AdvancedChallengeActivity", "Failed to show time increase options: ${e.message}")
+                }
+            }
         }
         
         val resultIntent = Intent().apply {
@@ -408,7 +420,148 @@ class AdvancedChallengeActivity : AppCompatActivity() {
         finish()
     }
     
+    /**
+     * Show time increase dialog after successfully completing a challenge.
+     * This is the ONLY way to increase time - by first completing a challenge.
+     */
+    private fun showTimeIncreaseDialog() {
+        // Clear the challenge container
+        challengeContainer.removeAllViews()
+        
+        titleText.text = "🎉 Challenge Complete!"
+        descriptionText.text = "Great job! You can now choose to add more time."
+        
+        // Success message
+        val successText = TextView(this).apply {
+            text = "You've demonstrated mindfulness by completing the challenge.\n\nWould you like to add more time for ${getAppNameFromPackage(packageName)}?"
+            textSize = 16f
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, 20, 0, 30)
+            setTextColor(ContextCompat.getColor(this@AdvancedChallengeActivity, R.color.text_primary))
+        }
+        challengeContainer.addView(successText)
+        
+        // 5 minute button
+        val fiveMinButton = MaterialButton(this).apply {
+            text = "+5 Minutes"
+            setOnClickListener {
+                increaseTimeLimit(5)
+            }
+        }
+        val buttonParams = android.widget.LinearLayout.LayoutParams(
+            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        buttonParams.setMargins(0, 0, 0, 16)
+        fiveMinButton.layoutParams = buttonParams
+        challengeContainer.addView(fiveMinButton)
+        
+        // 10 minute button
+        val tenMinButton = MaterialButton(this).apply {
+            text = "+10 Minutes"
+            setOnClickListener {
+                increaseTimeLimit(10)
+            }
+        }
+        tenMinButton.layoutParams = buttonParams
+        challengeContainer.addView(tenMinButton)
+        
+        // 15 minute button
+        val fifteenMinButton = MaterialButton(this).apply {
+            text = "+15 Minutes"
+            setOnClickListener {
+                increaseTimeLimit(15)
+            }
+        }
+        fifteenMinButton.layoutParams = buttonParams
+        challengeContainer.addView(fifteenMinButton)
+        
+        // No thanks button
+        val noThanksButton = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            text = "No thanks, go to home"
+            setOnClickListener {
+                goToHome()
+            }
+        }
+        noThanksButton.layoutParams = buttonParams
+        challengeContainer.addView(noThanksButton)
+    }
+    
+    private fun getAppNameFromPackage(packageName: String): String {
+        return try {
+            val pm = this.packageManager
+            val appInfo = pm.getApplicationInfo(packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (e: Exception) {
+            packageName
+        }
+    }
+    
+    private fun increaseTimeLimit(minutes: Int) {
+        if (packageName.isNotEmpty()) {
+            val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
+            val timeLimits = prefs.getString("time_limits", null)
+                ?.split("|")
+                ?.mapNotNull {
+                    val parts = it.split(",")
+                    if (parts.size == 2) parts[0] to (parts[1].toIntOrNull() ?: 0) else null
+                }?.toMap()?.toMutableMap() ?: mutableMapOf()
+            
+            // Increase time limit by specified minutes
+            val currentLimit = timeLimits[packageName] ?: 0
+            val newLimit = currentLimit + minutes
+            timeLimits[packageName] = newLimit
+            
+            // Save updated time limits
+            val timeLimitsString = timeLimits.map { "${it.key},${it.value}" }.joinToString("|")
+            prefs.edit().putString("time_limits", timeLimitsString).apply()
+            
+            val appName = getAppNameFromPackage(packageName)
+            Toast.makeText(this, "✅ $appName time limit increased by $minutes minutes!", Toast.LENGTH_LONG).show()
+            
+            // Redirect to the target app
+            redirectToTargetApp()
+        } else {
+            goToHome()
+        }
+    }
+    
+    private fun redirectToTargetApp() {
+        try {
+            if (packageName.isNotEmpty()) {
+                val intent = this.packageManager.getLaunchIntentForPackage(packageName)
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                    android.util.Log.d("AdvancedChallengeActivity", "Redirected to target app: $packageName")
+                } else {
+                    android.util.Log.e("AdvancedChallengeActivity", "Could not get launch intent for: $packageName")
+                    goToHome()
+                }
+            } else {
+                goToHome()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AdvancedChallengeActivity", "Failed to redirect to target app: ${e.message}")
+            goToHome()
+        }
+        finish()
+    }
+    
+    private fun goToHome() {
+        try {
+            val homeIntent = Intent(Intent.ACTION_MAIN)
+            homeIntent.addCategory(Intent.CATEGORY_HOME)
+            homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(homeIntent)
+        } catch (e: Exception) {
+            android.util.Log.e("AdvancedChallengeActivity", "Failed to go to home: ${e.message}")
+        }
+        finish()
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advanced_challenge)
         

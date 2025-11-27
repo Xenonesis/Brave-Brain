@@ -15,13 +15,23 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
+/**
+ * OverlayBlockingService - Shows a persistent full-screen overlay when an app is blocked.
+ * 
+ * IMPORTANT: This overlay enforces app blocking by:
+ * 1. Showing a persistent full-screen overlay that cannot be easily dismissed
+ * 2. Requiring the user to either complete a quiz OR go to home
+ * 3. There is NO way to return to the blocked app without completing the quiz
+ */
 class OverlayBlockingService : Service() {
     private lateinit var windowManager: WindowManager
     private var overlayView: View? = null
     private val handler = Handler(Looper.getMainLooper())
-    private var countdownSeconds = 8
+    private var countdownSeconds = 15  // Longer countdown for user to read and decide
     private var lastBlockedPackage: String? = null
+    private var blockedAppName: String = ""
     
     override fun onCreate() {
         super.onCreate()
@@ -31,18 +41,48 @@ class OverlayBlockingService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         android.util.Log.d("OverlayBlockingService", "Starting overlay blocking service")
         
+        // Check if we have overlay permission first
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !android.provider.Settings.canDrawOverlays(this)) {
+            android.util.Log.w("OverlayBlockingService", "Overlay permission not granted, falling back to blocking activity")
+            
+            // Fallback: Launch blocking activity instead
+            try {
+                val activityIntent = Intent(this, TimeLimitBlockingActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    putExtra("package_name", intent?.getStringExtra("blocked_package") ?: "")
+                    putExtra("app_name", intent?.getStringExtra("blocked_app_name") ?: "")
+                }
+                startActivity(activityIntent)
+            } catch (e: Exception) {
+                android.util.Log.e("OverlayBlockingService", "Failed to launch fallback activity: ${e.message}")
+            }
+            stopSelf()
+            return START_NOT_STICKY
+        }
+        
         // Capture blocked package if provided
         lastBlockedPackage = intent?.getStringExtra("blocked_package")
+        blockedAppName = intent?.getStringExtra("blocked_app_name") ?: getAppName(lastBlockedPackage ?: "")
         
         // Show the overlay immediately
         showBlockingOverlay()
         
-        // Auto-hide after countdown
+        // Auto-hide after countdown and go to HOME (not back to app)
         handler.postDelayed({
-            hideBlockingOverlay()
+            goToHome()
         }, (countdownSeconds * 1000).toLong())
         
         return START_NOT_STICKY
+    }
+    
+    private fun getAppName(packageName: String): String {
+        return try {
+            val pm = packageManager
+            val appInfo = pm.getApplicationInfo(packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (e: Exception) {
+            packageName
+        }
     }
     
     private fun showBlockingOverlay() {
@@ -104,24 +144,33 @@ class OverlayBlockingService : Service() {
         val layout = android.widget.LinearLayout(this)
         layout.orientation = android.widget.LinearLayout.VERTICAL
         layout.gravity = android.view.Gravity.CENTER
-        layout.setBackgroundColor(0xFF6366F1.toInt()) // Updated primary color
+        layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
         layout.setPadding(64, 64, 64, 64)
         
         // Title
         val title = TextView(this)
         title.text = "🚫 App Blocked!"
         title.textSize = 36f
-        title.setTextColor(0xFFFFFFFF.toInt())
+        title.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         title.gravity = android.view.Gravity.CENTER
-        title.setPadding(0, 0, 0, 32)
+        title.setPadding(0, 0, 0, 24)
         title.setTypeface(null, android.graphics.Typeface.BOLD)
         layout.addView(title)
         
+        // App name
+        val appNameView = TextView(this)
+        appNameView.text = if (blockedAppName.isNotEmpty()) "⏰ Time limit reached for $blockedAppName" else "⏰ You've reached your daily time limit"
+        appNameView.textSize = 18f
+        appNameView.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
+        appNameView.gravity = android.view.Gravity.CENTER
+        appNameView.setPadding(0, 0, 0, 32)
+        layout.addView(appNameView)
+        
         // Message
         val message = TextView(this)
-        message.text = "You've reached your daily time limit.\n\nTaking a break is good for you! 😊\n\nTime to focus on what really matters."
-        message.textSize = 18f
-        message.setTextColor(0xFFFFFFFF.toInt())
+        message.text = "Taking a break is good for you! 😊\n\nTo get more time, you'll need to complete a quick quiz.\nThis helps you stay mindful of your screen time."
+        message.textSize = 16f
+        message.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         message.gravity = android.view.Gravity.CENTER
         message.setPadding(0, 0, 0, 32)
         message.setLineSpacing(8f, 1.2f)
@@ -129,49 +178,51 @@ class OverlayBlockingService : Service() {
         
         // Countdown text
         val countdownTextView = TextView(this)
-        countdownTextView.text = "Redirecting in $countdownSeconds seconds..."
-        countdownTextView.textSize = 20f
-        countdownTextView.setTextColor(0xFFFFFFFF.toInt())
+        countdownTextView.text = "Auto-redirecting to home in $countdownSeconds seconds..."
+        countdownTextView.textSize = 16f
+        countdownTextView.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
         countdownTextView.gravity = android.view.Gravity.CENTER
         countdownTextView.setPadding(0, 0, 0, 48)
         countdownTextView.setTypeface(null, android.graphics.Typeface.BOLD)
         layout.addView(countdownTextView)
         
-        // CTA: Continue with challenge
+        // CTA: Solve quiz to get more time (Primary action)
         val challengeButton = Button(this)
-        challengeButton.text = "🧠 Continue with Challenge"
-        challengeButton.textSize = 18f
-        challengeButton.setTextColor(0xFF6366F1.toInt())
-        challengeButton.setBackgroundColor(0xFFFFFFFF.toInt())
-        challengeButton.setPadding(32, 16, 32, 16)
+        challengeButton.text = "🧠 Solve Quiz to Get More Time"
+        challengeButton.textSize = 16f
+        challengeButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        challengeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
+        challengeButton.setPadding(32, 20, 32, 20)
+        val challengeParams = android.widget.LinearLayout.LayoutParams(
+            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        challengeParams.setMargins(0, 0, 0, 16)
+        challengeButton.layoutParams = challengeParams
         challengeButton.setOnClickListener {
             try {
-                val pkg = (lastBlockedPackage ?: "")
-                val engine = SmartBlockingEngine(this@OverlayBlockingService)
-                val limit = 0 // we don't have the exact limit here; challenge type selection can still proceed based on context
-                val decision = engine.shouldBlockApp(pkg, UsageUtils.getAppUsageMinutes(this@OverlayBlockingService, pkg), limit)
-                val activityIntent = Intent(this@OverlayBlockingService, AdvancedChallengeActivity::class.java).apply {
+                val pkg = lastBlockedPackage ?: ""
+                // Launch AppTimeIncreaseMathActivity which REQUIRES solving quiz before time increase
+                val activityIntent = Intent(this@OverlayBlockingService, AppTimeIncreaseMathActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    putExtra(AdvancedChallengeActivity.EXTRA_CHALLENGE_TYPE, decision.challengeType.name)
-                    putExtra(AdvancedChallengeActivity.EXTRA_PACKAGE_NAME, pkg)
-                    putExtra(AdvancedChallengeActivity.EXTRA_COOLING_OFF_PERIOD, decision.coolingOffPeriod)
-                    putExtra(AdvancedChallengeActivity.EXTRA_REASON, decision.reason.ifBlank { "Time limit reached" })
+                    putExtra("package_name", pkg)
+                    putExtra("app_name", blockedAppName)
                 }
                 startActivity(activityIntent)
                 hideBlockingOverlay()
             } catch (e: Exception) {
-                android.util.Log.e("OverlayBlockingService", "Failed to launch challenge: ${e.message}")
-                goToHome()
+                android.util.Log.e("OverlayBlockingService", "Failed to launch quiz: ${e.message}")
+                Toast.makeText(this, "Error launching quiz", Toast.LENGTH_SHORT).show()
             }
         }
         layout.addView(challengeButton)
 
-        // Home button
+        // Home button (Secondary action)
         val homeButton = Button(this)
-        homeButton.text = "🏠 Go to Home"
-        homeButton.textSize = 18f
-        homeButton.setTextColor(0xFF6366F1.toInt())
-        homeButton.setBackgroundColor(0xFFFFFFFF.toInt())
+        homeButton.text = "🏠 Accept Limit & Go Home"
+        homeButton.textSize = 14f
+        homeButton.setTextColor(ContextCompat.getColor(this, R.color.colorOnPrimary))
+        homeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.overlayLight))
         homeButton.setPadding(32, 16, 32, 16)
         homeButton.setOnClickListener {
             goToHome()
@@ -189,7 +240,11 @@ class OverlayBlockingService : Service() {
             override fun run() {
                 countdownSeconds--
                 val countdownTextView = overlayView?.tag as? TextView
-                countdownTextView?.text = "Redirecting in $countdownSeconds seconds..."
+                countdownTextView?.text = when {
+                    countdownSeconds > 1 -> "Auto-redirecting to home in $countdownSeconds seconds..."
+                    countdownSeconds == 1 -> "Redirecting to home in 1 second..."
+                    else -> "Redirecting now..."
+                }
                 
                 if (countdownSeconds > 0) {
                     handler.postDelayed(this, 1000)
@@ -203,6 +258,7 @@ class OverlayBlockingService : Service() {
     
     private fun goToHome() {
         try {
+            Toast.makeText(this, "App remains blocked. Take a healthy break! 😊", Toast.LENGTH_SHORT).show()
             val homeIntent = Intent(Intent.ACTION_MAIN)
             homeIntent.addCategory(Intent.CATEGORY_HOME)
             homeIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP

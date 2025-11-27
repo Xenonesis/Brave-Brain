@@ -24,6 +24,7 @@ class MathChallengeActivity : AppCompatActivity() {
     private var isTimeLimitAccess: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_math_challenge)
 

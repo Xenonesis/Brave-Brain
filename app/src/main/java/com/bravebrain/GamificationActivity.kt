@@ -11,6 +11,7 @@ import com.google.android.material.button.MaterialButton
 class GamificationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gamification)
 

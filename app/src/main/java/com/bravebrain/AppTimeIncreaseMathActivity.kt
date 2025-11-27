@@ -23,6 +23,7 @@ class AppTimeIncreaseMathActivity : AppCompatActivity() {
     private var targetAppName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_time_increase_math)
 

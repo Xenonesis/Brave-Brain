@@ -23,6 +23,7 @@ class TimeLimitActivity : AppCompatActivity() {
     private lateinit var appList: List<AppInfo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         val root = LayoutInflater.from(this).inflate(R.layout.activity_time_limit, null)
         setContentView(root)

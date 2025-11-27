@@ -1,13 +1,19 @@
 package com.bravebrain
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.os.Handler
 import android.os.Looper
 import android.app.usage.UsageStatsManager
 import android.app.usage.UsageEvents
+import androidx.core.app.NotificationCompat
 import java.util.*
 import java.text.SimpleDateFormat
 import kotlinx.coroutines.CoroutineScope
@@ -29,12 +35,63 @@ class AnalyticsService : Service() {
         private const val DAILY_STATS_KEY = "daily_stats"
         private const val WEEKLY_STATS_KEY = "weekly_stats"
         private const val PRODUCTIVITY_SCORE_KEY = "productivity_score"
+        private const val NOTIFICATION_ID = 2001
+        private const val CHANNEL_ID = "analytics_service_channel"
     }
     
     override fun onCreate() {
         super.onCreate()
+        android.util.Log.d("AnalyticsService", "Service created")
+        
+        // CRITICAL: Start foreground service immediately to avoid being killed on Android 8+
+        startForegroundWithNotification()
+        
         isRunning = true
         startAnalyticsCollection()
+    }
+    
+    private fun startForegroundWithNotification() {
+        try {
+            // Create notification channel for Android O+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    "Analytics Service",
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    description = "Background analytics collection"
+                    setShowBadge(false)
+                }
+                val manager = getSystemService(NotificationManager::class.java)
+                manager.createNotificationChannel(channel)
+            }
+            
+            val pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, MainActivity::class.java),
+                PendingIntent.FLAG_IMMUTABLE
+            )
+            
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Brave Brain Analytics")
+                .setContentText("Collecting usage insights")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .build()
+            
+            startForeground(NOTIFICATION_ID, notification)
+            android.util.Log.d("AnalyticsService", "Foreground service started")
+        } catch (e: Exception) {
+            android.util.Log.e("AnalyticsService", "Failed to start foreground: ${e.message}")
+        }
+    }
+    
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        android.util.Log.d("AnalyticsService", "onStartCommand called")
+        return START_STICKY
     }
     
     override fun onBind(intent: Intent?): IBinder? = null

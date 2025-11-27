@@ -27,6 +27,9 @@
     <color name="colorWarning">#D97706</color>
     <color name="colorWarningLight">#FEF3C7</color>
     <color name="warning_orange">#F97316</color>
+    <color name="warning_amber">#F59E0B</color>
+    <color name="warning_amber_light">#FEF3C7</color>
+    <color name="warning_amber_dark">#B45309</color>
     <color name="colorSuccess">#059669</color>
     <color name="colorSuccessLight">#F0FDF4</color>
     <color name="colorInfo">#2563EB</color>

@@ -9,6 +9,7 @@ import com.google.android.material.appbar.MaterialToolbar
 class ThemeSettingsActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_theme_settings)
         

@@ -27,6 +27,7 @@ class AddTimeActivity : AppCompatActivity() {
     private var timeToAdd: Int = 5 // Add 5 minutes by default
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_time)
 

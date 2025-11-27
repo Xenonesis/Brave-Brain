@@ -36,6 +36,7 @@ class AppSelectionActivity : AppCompatActivity() {
     private var filteredList: List<AppInfo> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         val root = LayoutInflater.from(this).inflate(R.layout.activity_app_selection, null)
         setContentView(root)

@@ -12,22 +12,28 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * This activity is deprecated in favor of TimeLimitBlockingActivity.
+ * It's kept for backward compatibility but now redirects users to the proper quiz flow.
+ * Users MUST solve a quiz before they can increase time - no bypass is allowed.
+ */
 class TimeIncreaseActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var countdownTextView: TextView? = null
-    private var countdownSeconds = 10
+    private var countdownSeconds = 30 // Increased to make bypass harder
     private var appName: String = ""
     private var packageName: String = ""
     private var isActivityActive = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(ThemeManager.getThemePreference(this))
         super.onCreate(savedInstanceState)
         
         // Setup modern back press handling
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Prevent back button from closing the screen
-                Toast.makeText(this@TimeIncreaseActivity, "Please make a choice or wait for the timer.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@TimeIncreaseActivity, "Solve the quiz to get more time, or go home.", Toast.LENGTH_SHORT).show()
             }
         })
         
@@ -75,23 +81,28 @@ class TimeIncreaseActivity : AppCompatActivity() {
             android.util.Log.d("TimeIncreaseActivity", "Views initialized")
             
             // Set app name in the question
-            findViewById<TextView>(R.id.questionText).text = "Do you want to increase the time limit for $appName?"
+            findViewById<TextView>(R.id.questionText).text = "Time limit reached for $appName.\n\nSolve a quiz to get more time!"
             
-            // Set up buttons
-            findViewById<Button>(R.id.yesButton).setOnClickListener {
+            // Set up buttons - Rename "Yes" to indicate quiz requirement
+            val yesButton = findViewById<Button>(R.id.yesButton)
+            yesButton.text = "🧠 Solve Quiz for More Time"
+            yesButton.setOnClickListener {
                 onYesClicked()
             }
             
-            findViewById<Button>(R.id.noButton).setOnClickListener {
+            // Rename "No" button
+            val noButton = findViewById<Button>(R.id.noButton)
+            noButton.text = "Go to Home"
+            noButton.setOnClickListener {
                 onNoClicked()
             }
             
             android.util.Log.d("TimeIncreaseActivity", "Buttons set up successfully")
             
-            // Start countdown
+            // Start countdown (for display only - goes to home, not back to app)
             startCountdown()
             
-            // Automatically redirect to home after countdown
+            // Automatically redirect to home after countdown (NOT the blocked app)
             handler.postDelayed({
                 if (isActivityActive) {
                     goToHome()
@@ -100,14 +111,11 @@ class TimeIncreaseActivity : AppCompatActivity() {
             
             android.util.Log.d("TimeIncreaseActivity", "onCreate completed successfully")
             
-            // Show a toast to confirm the activity is working
-            Toast.makeText(this, "Time increase screen shown for $appName", Toast.LENGTH_SHORT).show()
-            
         } catch (e: Exception) {
             android.util.Log.e("TimeIncreaseActivity", "Error in onCreate: ${e.message}")
             e.printStackTrace()
             
-            // Emergency fallback: go to home
+            // Emergency fallback: go to home (safe option)
             try {
                 val homeIntent = Intent(Intent.ACTION_MAIN)
                 homeIntent.addCategory(Intent.CATEGORY_HOME)
@@ -127,7 +135,7 @@ class TimeIncreaseActivity : AppCompatActivity() {
                 if (!isActivityActive) return
                 
                 countdownSeconds--
-                countdownTextView?.text = "Redirecting in $countdownSeconds seconds..."
+                countdownTextView?.text = "Redirecting to home in $countdownSeconds seconds..."
                 
                 if (countdownSeconds > 0) {
                     handler.postDelayed(this, 1000)
@@ -138,13 +146,13 @@ class TimeIncreaseActivity : AppCompatActivity() {
     }
     
     private fun onYesClicked() {
-        android.util.Log.d("TimeIncreaseActivity", "Yes button clicked for $appName")
+        android.util.Log.d("TimeIncreaseActivity", "Yes button clicked for $appName - launching quiz")
         
         // Stop the countdown
         handler.removeCallbacksAndMessages(null)
         
         try {
-            // Start app time increase math challenge
+            // Start app time increase math challenge - USER MUST SOLVE THIS
             val intent = Intent(this, AppTimeIncreaseMathActivity::class.java)
             intent.putExtra("package_name", packageName)
             intent.putExtra("app_name", appName)
@@ -162,7 +170,7 @@ class TimeIncreaseActivity : AppCompatActivity() {
         // Stop the countdown
         handler.removeCallbacksAndMessages(null)
         
-        // Go to home screen
+        // Go to home screen (no time increase without quiz)
         goToHome()
     }
     
