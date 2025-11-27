@@ -17,7 +17,6 @@ import java.util.Calendar
 import java.util.Locale
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             handleNotificationClick()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error starting app: ${e.message}", Toast.LENGTH_LONG).show()
+            FeedbackManager.showGenericError(this, e.message)
         }
     }
 
@@ -109,9 +108,9 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             NOTIFICATION_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Notification permission granted!", Toast.LENGTH_SHORT).show()
+                    FeedbackManager.showPermissionGranted(this, "Notification")
                 } else {
-                    Toast.makeText(this, "Notification permission denied. Some features may not work properly.", Toast.LENGTH_LONG).show()
+                    FeedbackManager.showPermissionDenied(this, "Notification")
                 }
             }
         }
@@ -133,7 +132,7 @@ class MainActivity : AppCompatActivity() {
             // Add null checks to prevent crashes
             if (accessButton == null || selectAppsButton == null || setTimeLimitsButton == null) {
                 android.util.Log.e("MainActivity", "One or more buttons not found in layout")
-                Toast.makeText(this, "UI Error: Missing buttons in layout", Toast.LENGTH_LONG).show()
+                FeedbackManager.showGenericError(this, "Missing buttons in layout")
                 return
             }
 
@@ -144,7 +143,7 @@ class MainActivity : AppCompatActivity() {
             accessButton.visibility = View.VISIBLE
             accessButton.setOnClickListener {
                 startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-                Toast.makeText(this, "Please grant usage access in settings", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showPermissionRequired(this, "Usage Access")
             }
         }
 
@@ -165,29 +164,33 @@ class MainActivity : AppCompatActivity() {
 
         selectAppsButton.setOnClickListener {
             if (hasUsageStatsPermission(this@MainActivity)) {
+                FeedbackManager.showNavigatingTo(this, "App Selection")
                 startActivity(Intent(this@MainActivity, AppSelectionActivity::class.java))
             } else {
-                Toast.makeText(this, "Please grant usage access first", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showPermissionRequired(this, "Usage Access")
             }
         }
 
         setTimeLimitsButton.setOnClickListener {
             if (hasSelectedApps) {
-                startActivity(Intent(this@MainActivity, TimeLimitBlockingActivity::class.java))
+                FeedbackManager.showNavigatingTo(this, "Time Limits")
+                startActivity(Intent(this@MainActivity, TimeLimitActivity::class.java))
             } else {
-                Toast.makeText(this, "Please select apps first", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showNoAppsSelected(this)
             }
         }
 
         // Gamification button
         val viewGamificationButton = findViewById<MaterialButton>(R.id.viewGamificationButton)
         viewGamificationButton?.setOnClickListener {
+            FeedbackManager.showNavigatingTo(this, "Achievements")
             startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
         }
 
         // Theme Settings button
         val themeSettingsButton = findViewById<MaterialButton>(R.id.themeSettingsButton)
         themeSettingsButton?.setOnClickListener {
+            FeedbackManager.showNavigatingTo(this, "Theme Settings")
             startActivity(Intent(this@MainActivity, ThemeSettingsActivity::class.java))
         }
 
@@ -204,7 +207,7 @@ class MainActivity : AppCompatActivity() {
             updateStatsDisplay()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error setting up UI: ${e.message}", Toast.LENGTH_LONG).show()
+            FeedbackManager.showGenericError(this, "UI setup failed: ${e.message}")
         }
     }
 
@@ -229,10 +232,10 @@ class MainActivity : AppCompatActivity() {
                         stopService(Intent(this@MainActivity, BlockerService::class.java))
                         // Start improved service
                         ContextCompat.startForegroundService(this@MainActivity, Intent(this@MainActivity, ImprovedBlockerService::class.java))
-                        Toast.makeText(this@MainActivity, "Monitoring service started", Toast.LENGTH_SHORT).show()
+                        FeedbackManager.showServiceStarted(this@MainActivity)
                     } catch (e: Exception) {
                         android.util.Log.e("MainActivity", "Failed to start service: ${e.message}")
-                        Toast.makeText(this@MainActivity, "Failed to start monitoring service: ${e.message}", Toast.LENGTH_LONG).show()
+                        FeedbackManager.showServiceError(this@MainActivity, e.message ?: "Unknown error")
                     }
                 }, 500) // 500ms delay
             } else {
@@ -246,7 +249,7 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error managing service: ${e.message}", Toast.LENGTH_LONG).show()
+            FeedbackManager.showServiceError(this, e.message ?: "Unknown error")
         }
     }
 
@@ -269,7 +272,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!android.provider.Settings.canDrawOverlays(this)) {
-                Toast.makeText(this, "Overlay permission needed for blocking screen. Please grant it in settings.", Toast.LENGTH_LONG).show()
+                FeedbackManager.showToast(this, "Overlay permission needed for blocking", FeedbackManager.FeedbackType.INFO, FeedbackManager.Duration.LONG)
                 
                 // Show a dialog explaining why we need overlay permission
                 androidx.appcompat.app.AlertDialog.Builder(this)
@@ -283,7 +286,7 @@ class MainActivity : AppCompatActivity() {
                         startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
                     }
                     .setNegativeButton("Later") { _, _ ->
-                        Toast.makeText(this, "You can grant overlay permission later in settings", Toast.LENGTH_SHORT).show()
+                        FeedbackManager.showToast(this, "You can grant overlay permission later in settings", FeedbackManager.FeedbackType.INFO)
                     }
                     .show()
             }
@@ -297,9 +300,9 @@ class MainActivity : AppCompatActivity() {
             OVERLAY_PERMISSION_REQUEST_CODE -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (android.provider.Settings.canDrawOverlays(this)) {
-                        Toast.makeText(this, "Overlay permission granted! Blocking screen will now work properly.", Toast.LENGTH_LONG).show()
+                        FeedbackManager.showPermissionGranted(this, "Overlay")
                     } else {
-                        Toast.makeText(this, "Overlay permission denied. Blocking screen may not work over other apps.", Toast.LENGTH_LONG).show()
+                        FeedbackManager.showPermissionDenied(this, "Overlay")
                     }
                 }
             }
@@ -338,7 +341,7 @@ class MainActivity : AppCompatActivity() {
             // Stop the refresh animation
             swipeRefreshLayout.isRefreshing = false
             
-            Toast.makeText(this, "Stats refreshed!", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showStatsRefreshed(this)
         }
         
         // Set refresh colors
@@ -998,18 +1001,18 @@ class MainActivity : AppCompatActivity() {
             val timeLimits = prefs.getString("time_limits", "")
             
             if (blockedApps.isEmpty()) {
-                Toast.makeText(this, "❌ No apps selected for blocking. Please select apps first.", Toast.LENGTH_LONG).show()
+                FeedbackManager.showNoAppsSelected(this)
                 return
             }
             
             if (timeLimits.isNullOrEmpty()) {
-                Toast.makeText(this, "❌ No time limits set. Please set time limits first.", Toast.LENGTH_LONG).show()
+                FeedbackManager.showToast(this, "No time limits set. Please set time limits first", FeedbackManager.FeedbackType.WARNING)
                 return
             }
             
             // Check permissions
             if (!hasUsageStatsPermission(this)) {
-                Toast.makeText(this, "❌ Missing usage stats permission. Please grant it.", Toast.LENGTH_LONG).show()
+                FeedbackManager.showPermissionRequired(this, "Usage Stats")
                 return
             }
             
@@ -1024,7 +1027,7 @@ class MainActivity : AppCompatActivity() {
                 .show()
                 
         } catch (e: Exception) {
-            Toast.makeText(this, "Error testing blocking: ${e.message}", Toast.LENGTH_LONG).show()
+            FeedbackManager.showGenericError(this, "Testing blocking: ${e.message}")
             android.util.Log.e("MainActivity", "Error in testBlockingSystem: ${e.message}")
         }
     }
@@ -1047,7 +1050,7 @@ class MainActivity : AppCompatActivity() {
                 UsageUtils.incrementUsageSeconds(this, packageName, 120) // 2 minutes worth
             }
             
-            Toast.makeText(this, "✅ Test setup complete! Now try opening a blocked app to see blocking in action.", Toast.LENGTH_LONG).show()
+            FeedbackManager.showToast(this, "Test setup complete! Try opening a blocked app", FeedbackManager.FeedbackType.SUCCESS, FeedbackManager.Duration.LONG)
             
             // Show instructions
             android.app.AlertDialog.Builder(this)
@@ -1061,7 +1064,7 @@ class MainActivity : AppCompatActivity() {
                 .show()
                 
         } catch (e: Exception) {
-            Toast.makeText(this, "Error executing test: ${e.message}", Toast.LENGTH_LONG).show()
+            FeedbackManager.showGenericError(this, "Executing test: ${e.message}")
             android.util.Log.e("MainActivity", "Error in executeBlockingTest: ${e.message}")
         }
     }
@@ -1078,16 +1081,16 @@ class MainActivity : AppCompatActivity() {
                 // Reset usage for today
                 UsageUtils.resetIfNeeded(this)
                 
-                Toast.makeText(this, "✅ Normal time limits restored!", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showToast(this, "Normal time limits restored", FeedbackManager.FeedbackType.SUCCESS)
                 
                 // Refresh the UI
                 setupUI()
             } else {
-                Toast.makeText(this, "❌ No backup limits found", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showToast(this, "No backup limits found", FeedbackManager.FeedbackType.WARNING)
             }
             
         } catch (e: Exception) {
-            Toast.makeText(this, "Error restoring limits: ${e.message}", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showGenericError(this, "Restoring limits: ${e.message}")
             android.util.Log.e("MainActivity", "Error in restoreNormalLimits: ${e.message}")
         }
     }
@@ -1098,7 +1101,7 @@ class MainActivity : AppCompatActivity() {
         val blockedApps = prefs.getStringSet("blocked_packages", emptySet()) ?: emptySet()
         
         if (blockedApps.isEmpty()) {
-            Toast.makeText(this, "Please select apps to block first", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showNoAppsSelected(this)
             return
         }
         
@@ -1131,7 +1134,7 @@ class MainActivity : AppCompatActivity() {
                     smartBlockingEngine.setBlockingStrategy(packageName, selectedStrategy)
                 }
                 
-                Toast.makeText(this, "Smart blocking strategy updated!", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showSettingsSaved(this)
                 
                 // Show context rules configuration
                 showContextRulesConfiguration(smartBlockingEngine)
@@ -1174,7 +1177,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .setPositiveButton("Save") { _, _ ->
-                Toast.makeText(this, "Context rules saved!", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showSettingsSaved(this)
                 
                 // Start analytics service if not already running
                 startAnalyticsService()
@@ -1187,7 +1190,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val analyticsIntent = Intent(this, AnalyticsService::class.java)
             startService(analyticsIntent)
-            Toast.makeText(this, "📊 Analytics tracking started", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Analytics tracking started", FeedbackManager.FeedbackType.SUCCESS)
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Error starting analytics service: ${e.message}")
         }
@@ -1250,11 +1253,12 @@ class MainActivity : AppCompatActivity() {
         try {
             stopService(Intent(this, BlockerService::class.java))
             stopService(Intent(this, ImprovedBlockerService::class.java))
+            FeedbackManager.showServiceStopped(this)
         } catch (e: Exception) {
             // Ignore errors
         }
         
-        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+        FeedbackManager.showLogoutSuccess(this)
         
         // Redirect to login
         redirectToLogin()

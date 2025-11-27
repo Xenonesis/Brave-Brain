@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -83,20 +82,24 @@ class AppSelectionActivity : AppCompatActivity() {
         selectAllButton.setOnClickListener {
             adapter.selectAll()
             updateSelectionCounter(adapter.getSelectedCount())
-            Toast.makeText(this, "All apps selected", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "All visible apps selected", FeedbackManager.FeedbackType.SUCCESS)
         }
         
         deselectAllButton.setOnClickListener {
             adapter.deselectAll()
             updateSelectionCounter(0)
-            Toast.makeText(this, "All apps deselected", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "All apps deselected", FeedbackManager.FeedbackType.INFO)
         }
         
         // Setup save button
         saveButton.setOnClickListener {
             val selectedApps = adapter.getSelectedApps()
+            if (selectedApps.isEmpty()) {
+                FeedbackManager.showNoAppsSelected(this)
+                return@setOnClickListener
+            }
             saveSelectedApps(selectedApps)
-            Toast.makeText(this, "Saved ${selectedApps.size} apps to block", Toast.LENGTH_LONG).show()
+            FeedbackManager.showAppsSelectionSaved(this, selectedApps.size)
             finish()
         }
     }

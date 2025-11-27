@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,7 +47,7 @@ class TimeLimitActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             val limits = adapter.getTimeLimits()
             saveTimeLimits(limits)
-            Toast.makeText(this, "Time limits saved", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showTimeLimitUpdated(this)
             
             // If this was triggered from a blocked app, redirect back to it
             if (specificAppPackage != null) {

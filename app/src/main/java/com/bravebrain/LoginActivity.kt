@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.button.MaterialButton
@@ -48,17 +47,17 @@ class LoginActivity : AppCompatActivity() {
                 
                 authResult.fold(
                     onSuccess = { user ->
-                        Toast.makeText(this@LoginActivity, "Welcome!", Toast.LENGTH_SHORT).show()
+                        FeedbackManager.showLoginSuccess(this@LoginActivity)
                         saveLoginState()
                         navigateToNextScreen()
                     },
                     onFailure = { error ->
-                        Toast.makeText(this@LoginActivity, "Google sign in failed: ${error.message}", Toast.LENGTH_LONG).show()
+                        FeedbackManager.showLoginError(this@LoginActivity, "Google sign in failed: ${error.message}")
                     }
                 )
             } catch (e: Exception) {
                 showLoading(false)
-                Toast.makeText(this@LoginActivity, "Google sign in failed: ${e.message}", Toast.LENGTH_LONG).show()
+                FeedbackManager.showLoginError(this@LoginActivity, "Google sign in failed: ${e.message}")
             }
         }
     }
@@ -149,12 +148,12 @@ class LoginActivity : AppCompatActivity() {
             
             result.fold(
                 onSuccess = { user ->
-                    Toast.makeText(this@LoginActivity, "Welcome back!", Toast.LENGTH_SHORT).show()
+                    FeedbackManager.showLoginSuccess(this@LoginActivity)
                     saveLoginState()
                     navigateToNextScreen()
                 },
                 onFailure = { error ->
-                    Toast.makeText(this@LoginActivity, "Login failed: ${error.message}", Toast.LENGTH_LONG).show()
+                    FeedbackManager.showLoginError(this@LoginActivity, "Login failed: ${error.message}")
                 }
             )
         }
@@ -172,12 +171,12 @@ class LoginActivity : AppCompatActivity() {
             
             result.fold(
                 onSuccess = { user ->
-                    Toast.makeText(this@LoginActivity, "Account created successfully!", Toast.LENGTH_SHORT).show()
+                    FeedbackManager.showSignupSuccess(this@LoginActivity)
                     saveLoginState()
                     navigateToNextScreen()
                 },
                 onFailure = { error ->
-                    Toast.makeText(this@LoginActivity, "Signup failed: ${error.message}", Toast.LENGTH_LONG).show()
+                    FeedbackManager.showLoginError(this@LoginActivity, "Signup failed: ${error.message}")
                 }
             )
         }

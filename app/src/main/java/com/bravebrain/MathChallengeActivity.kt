@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
 
@@ -93,15 +92,16 @@ class MathChallengeActivity : AppCompatActivity() {
         val userAnswer = answerInput.text.toString().toIntOrNull()
         
         if (userAnswer == null) {
-            Toast.makeText(this, "Please enter a valid number", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Please enter a valid number", FeedbackManager.FeedbackType.WARNING)
             return
         }
 
         if (userAnswer == currentAnswer) {
             problemsSolved++
-            Toast.makeText(this, "Correct! ${requiredProblems - problemsSolved} more to go", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showChallengeCorrect(this)
             
             if (problemsSolved >= requiredProblems) {
+                FeedbackManager.showChallengeCompleted(this)
                 // Check if this is for time limit access or app time increase
                 if (isTimeLimitAccess) {
                     // Allow access to time limit activity
@@ -111,10 +111,11 @@ class MathChallengeActivity : AppCompatActivity() {
                     increaseTimeLimitForApp()
                 }
             } else {
+                FeedbackManager.showToast(this, "${requiredProblems - problemsSolved} more to go", FeedbackManager.FeedbackType.INFO)
                 generateNewProblem()
             }
         } else {
-            Toast.makeText(this, "Incorrect! Try again", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showChallengeIncorrect(this, 999)
             answerInput.text.clear()
             answerInput.requestFocus()
         }
@@ -123,12 +124,12 @@ class MathChallengeActivity : AppCompatActivity() {
     // This method is no longer used - app time increases are handled by AppTimeIncreaseMathActivity
     private fun increaseTimeLimitForApp() {
         // This should not be called anymore
-        Toast.makeText(this, "Error: This functionality has been moved", Toast.LENGTH_SHORT).show()
+        FeedbackManager.showGenericError(this, "This functionality has been moved")
         goToHome()
     }
     
     private fun allowTimeLimitAccess() {
-        Toast.makeText(this, "Math challenge completed! Accessing time limits...", Toast.LENGTH_LONG).show()
+        FeedbackManager.showActionCompleted(this, "Math challenge")
         
         // Start time limit activity
         val intent = Intent(this, TimeLimitActivity::class.java)

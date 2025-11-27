@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
 
@@ -107,15 +106,16 @@ class AddTimeActivity : AppCompatActivity() {
         val userAnswer = answerInput.text.toString().toIntOrNull()
         
         if (userAnswer == null) {
-            Toast.makeText(this, "Please enter a valid number", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Please enter a valid number", FeedbackManager.FeedbackType.WARNING)
             return
         }
 
         if (userAnswer == currentAnswer) {
             problemsSolved++
-            Toast.makeText(this, "Correct! ${requiredProblems - problemsSolved} more to go", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showChallengeCorrect(this)
             
             if (problemsSolved >= requiredProblems) {
+                FeedbackManager.showChallengeCompleted(this)
                 // Show add time buttons
                 problemText.text = "How much time do you want to add?"
                 answerInput.visibility = View.GONE
@@ -125,10 +125,11 @@ class AddTimeActivity : AppCompatActivity() {
                 add10Button.visibility = View.VISIBLE
                 add15Button.visibility = View.VISIBLE
             } else {
+                FeedbackManager.showToast(this, "${requiredProblems - problemsSolved} more to go", FeedbackManager.FeedbackType.INFO)
                 generateNewProblem()
             }
         } else {
-            Toast.makeText(this, "Incorrect! Try again", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showChallengeIncorrect(this, 999) // Unlimited attempts
             answerInput.text.clear()
             answerInput.requestFocus()
         }
@@ -152,7 +153,7 @@ class AddTimeActivity : AppCompatActivity() {
         val newTimeLimitsStr = timeLimits.entries.joinToString("|") { "${it.key},${it.value}" }
         prefs.edit().putString("time_limits", newTimeLimitsStr).apply()
 
-        Toast.makeText(this, "Time limit extended by $minutes minutes!", Toast.LENGTH_LONG).show()
+        FeedbackManager.showTimeExtended(this, minutes)
         redirectToApp(blockedAppPackage)
     }
 

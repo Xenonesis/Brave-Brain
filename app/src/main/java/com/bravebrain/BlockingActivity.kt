@@ -8,7 +8,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -45,7 +44,7 @@ class BlockingActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Prevent back button from closing the blocking screen
-                Toast.makeText(this@BlockingActivity, "App is blocked. Solve a quiz to get more time.", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showBlockingBypassDenied(this@BlockingActivity)
             }
         })
         
@@ -224,7 +223,7 @@ class BlockingActivity : AppCompatActivity() {
             finish()
         } catch (e: Exception) {
             android.util.Log.e("BlockingActivity", "Failed to launch quiz: ${e.message}")
-            Toast.makeText(this, "Error launching challenge", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showGenericError(this, "Error launching challenge")
         }
     }
     
@@ -236,7 +235,7 @@ class BlockingActivity : AppCompatActivity() {
             startActivity(homeIntent)
             finish()
         } catch (e: Exception) {
-            Toast.makeText(this, "Error going to home: ${e.message}", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showGenericError(this, "Error going to home")
             finish()
         }
     }

@@ -2,7 +2,6 @@ package com.bravebrain
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +30,7 @@ object GamificationUtils {
                 apply()
             }
             
-            Toast.makeText(context, "🎉 Level Up! You're now Level $newLevel!", Toast.LENGTH_LONG).show()
+            FeedbackManager.showLevelUp(context, newLevel)
             
             // Trigger level up notification
             triggerLevelUpNotification(context, newLevel)
@@ -42,7 +41,7 @@ object GamificationUtils {
             }
             
             if (reason.isNotEmpty()) {
-                Toast.makeText(context, "+$amount XP: $reason", Toast.LENGTH_SHORT).show()
+                FeedbackManager.showXPEarned(context, amount)
             }
             
             // Trigger XP notification
@@ -101,7 +100,7 @@ object GamificationUtils {
                 apply()
             }
             
-            Toast.makeText(context, "🏆 Badge Unlocked: $badgeName!", Toast.LENGTH_LONG).show()
+            FeedbackManager.showBadgeUnlocked(context, badgeName)
             awardXP(context, 50, "Badge earned!")
             
             // Trigger badge notification

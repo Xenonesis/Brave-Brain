@@ -277,20 +277,20 @@ class NotificationPreferenceActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.buttonResetDefaults).setOnClickListener {
             preferenceManager.resetToDefaults()
             loadCurrentPreferences()
-            Toast.makeText(this, "Preferences reset to defaults", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Preferences reset to defaults", FeedbackManager.FeedbackType.SUCCESS)
         }
 
         // View detailed feedback
         findViewById<MaterialButton>(R.id.buttonViewFeedback).setOnClickListener {
             // This could open a detailed feedback activity in the future
-            Toast.makeText(this, "Detailed feedback view coming soon!", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Detailed feedback view coming soon", FeedbackManager.FeedbackType.INFO)
         }
 
         // Clear feedback data
         findViewById<MaterialButton>(R.id.buttonClearFeedback).setOnClickListener {
             feedbackManager.clearAllFeedback()
             setupFeedbackSection()
-            Toast.makeText(this, "Feedback data cleared", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showToast(this, "Feedback data cleared", FeedbackManager.FeedbackType.SUCCESS)
         }
     }
 

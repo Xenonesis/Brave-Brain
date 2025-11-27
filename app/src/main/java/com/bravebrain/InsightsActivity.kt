@@ -265,7 +265,7 @@ class InsightsActivity : AppCompatActivity() {
         // Reload data after a short delay
         findViewById<Button>(R.id.refreshButton).postDelayed({
             loadAnalyticsData()
-            Toast.makeText(this, "Analytics refreshed!", Toast.LENGTH_SHORT).show()
+            FeedbackManager.showStatsRefreshed(this)
         }, 1000)
     }
     

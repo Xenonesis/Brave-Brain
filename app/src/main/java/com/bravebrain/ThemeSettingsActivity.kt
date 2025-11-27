@@ -45,6 +45,14 @@ class ThemeSettingsActivity : AppCompatActivity() {
                 else -> ThemeManager.THEME_SYSTEM
             }
             ThemeManager.saveThemePreference(this, newTheme)
+            
+            // Show feedback for theme change
+            val themeName = when (newTheme) {
+                ThemeManager.THEME_LIGHT -> "Light"
+                ThemeManager.THEME_DARK -> "Dark"
+                else -> "System Default"
+            }
+            FeedbackManager.showThemeChanged(this, themeName)
         }
     }
 }
