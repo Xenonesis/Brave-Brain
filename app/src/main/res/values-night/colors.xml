@@ -1,152 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary Colors - Dark Theme -->
-    <color name="colorPrimary">#818CF8</color>
-    <color name="colorPrimaryVariant">#6366F1</color>
-    <color name="colorPrimaryLight">#A5B4FC</color>
-    <color name="colorSecondary">#38BDF8</color>
-    <color name="colorSecondaryVariant">#0EA5E9</color>
-    <color name="colorTertiary">#A5B4FC</color>
-    <color name="colorTertiaryVariant">#818CF8</color>
+    <!-- Primary Colors - Dark Theme with Silver Accent -->
+    <color name="colorPrimary">#C0C0C0</color>
+    <color name="colorPrimaryVariant">#A8A8A8</color>
+    <color name="colorPrimaryLight">#D4D4D4</color>
+    <color name="colorSecondary">#B8B8B8</color>
+    <color name="colorSecondaryVariant">#9E9E9E</color>
+    <color name="colorTertiary">#CACACA</color>
+    <color name="colorTertiaryVariant">#B0B0B0</color>
     
     <!-- On Colors -->
-    <color name="colorOnPrimary">#0F172A</color>
-    <color name="colorOnSecondary">#0F172A</color>
-    <color name="colorOnTertiary">#0F172A</color>
+    <color name="colorOnPrimary">#0C0C0C</color>
+    <color name="colorOnSecondary">#0C0C0C</color>
+    <color name="colorOnTertiary">#0C0C0C</color>
     
-    <!-- Background Colors - Deep Dark -->
-    <color name="colorBackground">#0F172A</color>
-    <color name="colorBackgroundSecondary">#1E293B</color>
-    <color name="colorSurface">#1E293B</color>
-    <color name="colorSurfaceVariant">#334155</color>
-    <color name="colorSurfaceContainer">#1E293B</color>
-    <color name="colorOnBackground">#F1F5F9</color>
-    <color name="colorOnSurface">#E2E8F0</color>
-    <color name="colorOnSurfaceVariant">#94A3B8</color>
+    <!-- Background Colors - Premium Black -->
+    <color name="colorBackground">#0C0C0C</color>
+    <color name="colorBackgroundSecondary">#141414</color>
+    <color name="colorSurface">#161616</color>
+    <color name="colorSurfaceVariant">#1E1E1E</color>
+    <color name="colorSurfaceContainer">#141414</color>
+    <color name="colorOnBackground">#E8E8E8</color>
+    <color name="colorOnSurface">#D4D4D4</color>
+    <color name="colorOnSurfaceVariant">#A0A0A0</color>
     
     <!-- Status Colors -->
     <color name="colorError">#F87171</color>
-    <color name="colorErrorLight">#450A0A</color>
-    <color name="colorErrorContainer">#7F1D1D</color>
+    <color name="colorErrorLight">#2A0F0F</color>
+    <color name="colorErrorContainer">#4A1515</color>
     <color name="colorWarning">#FBBF24</color>
-    <color name="colorWarningLight">#451A03</color>
+    <color name="colorWarningLight">#2A1F0A</color>
     <color name="warning_orange">#FB923C</color>
     <color name="warning_amber">#FBBF24</color>
-    <color name="warning_amber_light">#451A03</color>
+    <color name="warning_amber_light">#2A1F0A</color>
     <color name="warning_amber_dark">#FCD34D</color>
     <color name="colorSuccess">#34D399</color>
-    <color name="colorSuccessLight">#022C22</color>
-    <color name="colorSuccessContainer">#065F46</color>
+    <color name="colorSuccessLight">#0A2A1A</color>
+    <color name="colorSuccessContainer">#154A30</color>
     <color name="colorInfo">#60A5FA</color>
-    <color name="colorInfoLight">#172554</color>
+    <color name="colorInfoLight">#0F1A2A</color>
     
-    <!-- Gradient Colors -->
-    <color name="gradientStart">#6366F1</color>
-    <color name="gradientMid">#818CF8</color>
-    <color name="gradientEnd">#A5B4FC</color>
-    <color name="gradientScreenTime">#4F46E5</color>
-    <color name="gradientScreenTimeEnd">#6366F1</color>
+    <!-- Gradient Colors - Silver Tones -->
+    <color name="gradientStart">#808080</color>
+    <color name="gradientMid">#A0A0A0</color>
+    <color name="gradientEnd">#C0C0C0</color>
+    <color name="gradientScreenTime">#707070</color>
+    <color name="gradientScreenTimeEnd">#909090</color>
     <color name="gradientSuccess">#34D399</color>
     <color name="gradientSuccessEnd">#10B981</color>
     <color name="gradientWarning">#FBBF24</color>
     <color name="gradientWarningEnd">#F59E0B</color>
-    <color name="gradientSecondary">#38BDF8</color>
-    <color name="gradientSecondaryEnd">#22D3EE</color>
+    <color name="gradientSecondary">#B0B0B0</color>
+    <color name="gradientSecondaryEnd">#C8C8C8</color>
     
-    <!-- Card Colors -->
-    <color name="cardBackground">#1E293B</color>
-    <color name="cardBackgroundSecondary">#334155</color>
-    <color name="cardBorder">#475569</color>
-    <color name="cardBorderLight">#334155</color>
+    <!-- Card Colors - Premium Dark -->
+    <color name="cardBackground">#141414</color>
+    <color name="cardBackgroundSecondary">#1A1A1A</color>
+    <color name="cardBorder">#2A2A2A</color>
+    <color name="cardBorderLight">#222222</color>
     <color name="cardShadow">#000000</color>
-    <color name="cardElevated">#334155</color>
-    <color name="cardStroke">#475569</color>
+    <color name="cardElevated">#1E1E1E</color>
+    <color name="cardStroke">#2E2E2E</color>
     
-    <!-- Text Colors -->
-    <color name="textPrimary">#F1F5F9</color>
-    <color name="textSecondary">#94A3B8</color>
-    <color name="textTertiary">#64748B</color>
-    <color name="textQuaternary">#475569</color>
+    <!-- Text Colors - Silver Palette -->
+    <color name="textPrimary">#E8E8E8</color>
+    <color name="textSecondary">#A8A8A8</color>
+    <color name="textTertiary">#787878</color>
+    <color name="textQuaternary">#505050</color>
     <color name="textOnGradient">#FFFFFF</color>
-    <color name="textHighlight">#A5B4FC</color>
-    <color name="textLink">#818CF8</color>
+    <color name="textHighlight">#D4D4D4</color>
+    <color name="textLink">#C0C0C0</color>
     
     <!-- Interactive States -->
-    <color name="colorSelectedBackground">#312E81</color>
-    <color name="colorSelectedBorder">#818CF8</color>
-    <color name="colorSelectedText">#C7D2FE</color>
-    <color name="colorHover">#334155</color>
-    <color name="colorPressed">#475569</color>
-    <color name="colorRipple">#4338CA</color>
-    <color name="colorDivider">#475569</color>
-    <color name="colorSearchBackground">#334155</color>
-    <color name="colorFocused">#312E81</color>
+    <color name="colorSelectedBackground">#1E1E1E</color>
+    <color name="colorSelectedBorder">#C0C0C0</color>
+    <color name="colorSelectedText">#E8E8E8</color>
+    <color name="colorHover">#1A1A1A</color>
+    <color name="colorPressed">#242424</color>
+    <color name="colorRipple">#404040</color>
+    <color name="colorDivider">#2A2A2A</color>
+    <color name="colorSearchBackground">#1A1A1A</color>
+    <color name="colorFocused">#1E1E1E</color>
     
     <!-- Progress Colors -->
-    <color name="progressBarBackground">#475569</color>
-    <color name="progressBarFill">#818CF8</color>
-    <color name="progressBarSecondary">#38BDF8</color>
+    <color name="progressBarBackground">#2A2A2A</color>
+    <color name="progressBarFill">#C0C0C0</color>
+    <color name="progressBarSecondary">#A0A0A0</color>
     <color name="progressBarWarning">#FBBF24</color>
     <color name="progressBarDanger">#F87171</color>
-    <color name="progressTrack">#334155</color>
+    <color name="progressTrack">#1E1E1E</color>
     
     <!-- Chart Colors -->
-    <color name="chartColor1">#818CF8</color>
-    <color name="chartColor2">#38BDF8</color>
+    <color name="chartColor1">#C0C0C0</color>
+    <color name="chartColor2">#A0A0A0</color>
     <color name="chartColor3">#34D399</color>
     <color name="chartColor4">#FBBF24</color>
-    <color name="chartColor5">#A5B4FC</color>
-    <color name="chartColor6">#22D3EE</color>
-    <color name="chartColor7">#A78BFA</color>
+    <color name="chartColor5">#D4D4D4</color>
+    <color name="chartColor6">#888888</color>
+    <color name="chartColor7">#B8B8B8</color>
     <color name="chartColor8">#F472B6</color>
     
     <!-- Badge Colors -->
-    <color name="badgeDefault">#334155</color>
-    <color name="badgeDefaultText">#94A3B8</color>
-    <color name="badgePrimary">#312E81</color>
-    <color name="badgePrimaryText">#C7D2FE</color>
-    <color name="badgeSuccess">#022C22</color>
+    <color name="badgeDefault">#1E1E1E</color>
+    <color name="badgeDefaultText">#A8A8A8</color>
+    <color name="badgePrimary">#242424</color>
+    <color name="badgePrimaryText">#D4D4D4</color>
+    <color name="badgeSuccess">#0A2A1A</color>
     <color name="badgeSuccessText">#6EE7B7</color>
-    <color name="badgeWarning">#451A03</color>
+    <color name="badgeWarning">#2A1F0A</color>
     <color name="badgeWarningText">#FCD34D</color>
-    <color name="badgeError">#450A0A</color>
+    <color name="badgeError">#2A0F0F</color>
     <color name="badgeErrorText">#FCA5A5</color>
-    <color name="badgeInfo">#172554</color>
+    <color name="badgeInfo">#0F1A2A</color>
     <color name="badgeInfoText">#93C5FD</color>
     
-    <!-- Accent Colors -->
-    <color name="colorAccentLight">#312E81</color>
-    <color name="colorAccentMedium">#4338CA</color>
-    <color name="colorAccentDark">#6366F1</color>
-    <color name="colorAccentVibrant">#8B5CF6</color>
+    <!-- Accent Colors - Silver -->
+    <color name="colorAccentLight">#1E1E1E</color>
+    <color name="colorAccentMedium">#404040</color>
+    <color name="colorAccentDark">#606060</color>
+    <color name="colorAccentVibrant">#C0C0C0</color>
     
     <!-- Overlay Colors -->
-    <color name="overlayLight">#33FFFFFF</color>
-    <color name="overlayDark">#CC000000</color>
-    <color name="overlayBlur">#E6000000</color>
-    <color name="overlayScrim">#CC0F172A</color>
+    <color name="overlayLight">#20FFFFFF</color>
+    <color name="overlayDark">#E6000000</color>
+    <color name="overlayBlur">#F0000000</color>
+    <color name="overlayScrim">#E60C0C0C</color>
     
-    <!-- System Colors -->
-    <color name="statusBarColor">#0F172A</color>
-    <color name="navigationBarColor">#0F172A</color>
-    <color name="windowBackground">#0F172A</color>
+    <!-- System Colors - Premium Black -->
+    <color name="statusBarColor">#0C0C0C</color>
+    <color name="navigationBarColor">#0C0C0C</color>
+    <color name="windowBackground">#0C0C0C</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     
-    <!-- Icon Colors -->
-    <color name="iconPrimary">#F1F5F9</color>
-    <color name="iconSecondary">#94A3B8</color>
-    <color name="iconTertiary">#64748B</color>
-    <color name="iconAccent">#818CF8</color>
+    <!-- Icon Colors - Silver -->
+    <color name="iconPrimary">#E8E8E8</color>
+    <color name="iconSecondary">#A8A8A8</color>
+    <color name="iconTertiary">#707070</color>
+    <color name="iconAccent">#C0C0C0</color>
     
     <!-- Divider -->
-    <color name="divider">#475569</color>
+    <color name="divider">#2A2A2A</color>
     
     <!-- Time-based Colors -->
-    <color name="morningGradient">#451A03</color>
-    <color name="afternoonGradient">#172554</color>
-    <color name="eveningGradient">#312E81</color>
-    <color name="nightGradient">#4C1D95</color>
+    <color name="morningGradient">#1A1A1A</color>
+    <color name="afternoonGradient">#141414</color>
+    <color name="eveningGradient">#101010</color>
+    <color name="nightGradient">#0C0C0C</color>
     
     <!-- Compatibility Aliases -->
     <color name="background_light">@color/colorBackground</color>
