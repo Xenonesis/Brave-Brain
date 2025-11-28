@@ -183,6 +183,7 @@ class DataSyncManager(private val context: Context) {
                 syncAnalytics()
                 syncGamification()
                 syncUserProfile()
+                syncDailyScreenTime()
                 Log.d(TAG, "Data sync completed successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "Error during data sync: ${e.message}", e)
@@ -366,6 +367,53 @@ class DataSyncManager(private val context: Context) {
             pm.getApplicationLabel(appInfo).toString()
         } catch (e: Exception) {
             packageName
+        }
+    }
+    
+    /**
+     * Syncs daily screentime data to Firestore
+     */
+    private suspend fun syncDailyScreenTime() {
+        try {
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            
+            // Get total screen time from UsageUtils
+            val totalScreenTimeMs = UsageUtils.getTotalUsage(context)
+            val screenTimeMinutes = (totalScreenTimeMs / (1000 * 60)).toInt()
+            
+            // Get top apps usage
+            val usageMap = UsageUtils.getUsage(context)
+            val topApps = usageMap.entries
+                .sortedByDescending { it.value }
+                .take(5)
+                .map { entry ->
+                    mapOf(
+                        "packageName" to entry.key,
+                        "appName" to getAppName(entry.key),
+                        "usageTimeMs" to entry.value,
+                        "usageMinutes" to (entry.value / (1000 * 60)).toInt()
+                    )
+                }
+            
+            // Get hourly breakdown (simplified version - tracks current hour)
+            val calendar = Calendar.getInstance()
+            val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+            val hourlyBreakdown = mapOf(
+                "hour_$currentHour" to totalScreenTimeMs,
+                "lastUpdated" to System.currentTimeMillis()
+            )
+            
+            Log.d(TAG, "Syncing daily screentime for $today: ${screenTimeMinutes}m")
+            
+            firestoreService.saveDailyScreenTime(
+                date = today,
+                totalScreenTimeMs = totalScreenTimeMs,
+                screenTimeMinutes = screenTimeMinutes,
+                topApps = topApps,
+                hourlyBreakdown = hourlyBreakdown
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Error syncing daily screentime: ${e.message}", e)
         }
     }
     

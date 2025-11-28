@@ -70,3 +70,14 @@ data class UserFeedback(
     val context: Map<String, Any> = emptyMap(),
     val timestamp: Timestamp = Timestamp.now()
 )
+
+data class DailyScreenTime(
+    @DocumentId val id: String = "",
+    val userId: String = "",
+    val date: String = "",
+    val totalScreenTimeMs: Long = 0,
+    val screenTimeMinutes: Int = 0,
+    val topApps: List<Map<String, Any>> = emptyList(),
+    val hourlyBreakdown: Map<String, Long> = emptyMap(),
+    val timestamp: Timestamp = Timestamp.now()
+)

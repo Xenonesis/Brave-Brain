@@ -278,4 +278,67 @@ class FirestoreService(private val context: Context) {
             Result.failure(e)
         }
     }
+    
+    // Daily ScreenTime Operations
+    suspend fun saveDailyScreenTime(
+        date: String, 
+        totalScreenTimeMs: Long, 
+        screenTimeMinutes: Int,
+        topApps: List<Map<String, Any>> = emptyList(),
+        hourlyBreakdown: Map<String, Long> = emptyMap()
+    ): Result<Unit> {
+        val userId = getUserId() ?: return Result.failure(Exception("User not authenticated"))
+        return try {
+            val screenTimeData = DailyScreenTime(
+                userId = userId,
+                date = date,
+                totalScreenTimeMs = totalScreenTimeMs,
+                screenTimeMinutes = screenTimeMinutes,
+                topApps = topApps,
+                hourlyBreakdown = hourlyBreakdown
+            )
+            // Use document ID based on user+date to allow upserts
+            val docId = "${userId}_$date"
+            db.collection("dailyScreenTime").document(docId).set(screenTimeData, SetOptions.merge()).await()
+            Log.d(TAG, "Daily screentime saved for date $date: ${screenTimeMinutes}m")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving daily screentime: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getScreenTimeHistory(days: Int = 30): Result<List<DailyScreenTime>> {
+        val userId = getUserId() ?: return Result.failure(Exception("User not authenticated"))
+        return try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, -days)
+            val startDate = dateFormat.format(calendar.time)
+            
+            val snapshot = db.collection("dailyScreenTime")
+                .whereEqualTo("userId", userId)
+                .whereGreaterThanOrEqualTo("date", startDate)
+                .orderBy("date", Query.Direction.DESCENDING)
+                .get()
+                .await()
+            
+            Result.success(snapshot.toObjects(DailyScreenTime::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting screentime history: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getScreenTimeForDate(date: String): Result<DailyScreenTime?> {
+        val userId = getUserId() ?: return Result.failure(Exception("User not authenticated"))
+        return try {
+            val docId = "${userId}_$date"
+            val doc = db.collection("dailyScreenTime").document(docId).get().await()
+            Result.success(doc.toObject(DailyScreenTime::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting screentime for date: ${e.message}", e)
+            Result.failure(e)
+        }
+    }
 }

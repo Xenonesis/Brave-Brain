@@ -314,6 +314,17 @@
                         android:layout_marginBottom="16dp" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/viewScreentimeHistoryButton"
+                        style="@style/Widget.App.Button.Outlined.Large"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="View Screentime History"
+                        android:layout_marginBottom="12dp"
+                        app:icon="@drawable/ic_trending_up"
+                        app:iconGravity="start"
+                        app:iconPadding="14dp" />
+
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/viewGamificationButton"
                         style="@style/Widget.App.Button.Success.Large"
                         android:layout_width="match_parent"

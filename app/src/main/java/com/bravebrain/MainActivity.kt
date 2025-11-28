@@ -193,6 +193,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
         }
 
+        // View Screentime History button
+        val viewScreentimeHistoryButton = findViewById<MaterialButton>(R.id.viewScreentimeHistoryButton)
+        viewScreentimeHistoryButton?.setOnClickListener {
+            FeedbackManager.showNavigatingTo(this, "Screentime History")
+            startActivity(Intent(this@MainActivity, ScreentimeHistoryActivity::class.java))
+        }
+
         // Theme Settings button
         val themeSettingsButton = findViewById<MaterialButton>(R.id.themeSettingsButton)
         themeSettingsButton?.setOnClickListener {

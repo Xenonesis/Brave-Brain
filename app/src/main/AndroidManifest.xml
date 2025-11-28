@@ -127,6 +127,10 @@
             android:exported="true"
             android:theme="@style/Theme.Testing" />
 
+        <activity android:name=".ScreentimeHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Testing" />
+
         <receiver android:name=".DashboardWidgetProvider"
             android:exported="true">
             <intent-filter>
