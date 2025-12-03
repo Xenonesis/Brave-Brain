@@ -122,12 +122,15 @@
 
                         <!-- Light Theme Option -->
                         <LinearLayout
+                            android:id="@+id/lightThemeContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
                             android:padding="12dp"
                             android:background="@drawable/ripple_background"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_marginBottom="8dp">
 
                             <FrameLayout
@@ -178,12 +181,15 @@
 
                         <!-- Dark Theme Option -->
                         <LinearLayout
+                            android:id="@+id/darkThemeContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
                             android:padding="12dp"
                             android:background="@drawable/ripple_background"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_marginBottom="8dp">
 
                             <FrameLayout
@@ -234,12 +240,15 @@
 
                         <!-- System Default Option -->
                         <LinearLayout
+                            android:id="@+id/systemThemeContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
                             android:padding="12dp"
-                            android:background="@drawable/ripple_background">
+                            android:background="@drawable/ripple_background"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <FrameLayout
                                 android:layout_width="44dp"
