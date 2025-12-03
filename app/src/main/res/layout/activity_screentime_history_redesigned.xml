@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:fitsSystemWindows="true">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground"
+        app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="16dp">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back"
+                app:tint="@color/textPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Screen Time"
+                android:textSize="18sp"
+                android:textColor="@color/textPrimary"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintStart_toEndOf="@id/backButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="4dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshScreentime"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
+
+                <!-- ========================================= -->
+                <!-- TIME PERIOD SELECTOR -->
+                <!-- ========================================= -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/cardBackground"
+                    app:strokeColor="@color/cardBorder"
+                    app:strokeWidth="0.5dp">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        app:tabMode="fixed"
+                        app:tabGravity="fill"
+                        app:tabIndicatorColor="@color/colorPrimary"
+                        app:tabIndicatorHeight="3dp"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabIndicatorGravity="bottom"
+                        app:tabTextColor="@color/textSecondary"
+                        app:tabSelectedTextColor="@color/colorPrimary"
+                        app:tabTextAppearance="@style/TextAppearance.App.Tab"
+                        app:tabRippleColor="@color/colorRipple" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ========================================= -->
+                <!-- WEEKLY SUMMARY CARD -->
+                <!-- ========================================= -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/statsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="20dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="This Week"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorOnPrimary"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:id="@+id/weekRangeText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nov 22 - 28"
+                                android:textSize="13sp"
+                                android:textColor="@color/colorOnPrimary"
+                                android:alpha="0.8" />
+
+                        </LinearLayout>
+
+                        <!-- Main Stats Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <!-- Total Time -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/totalWeeklyTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="18h 42m"
+                                    android:textSize="28sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:letterSpacing="-0.02" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Total Screen Time"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:alpha="0.8"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                            <!-- Trend Indicator -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="end">
+
+                                <LinearLayout
+                                    android:id="@+id/trendContainer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/trend_chip_down"
+                                    android:paddingHorizontal="12dp"
+                                    android:paddingVertical="6dp">
+
+                                    <TextView
+                                        android:id="@+id/trendIcon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="↓"
+                                        android:textSize="12sp"
+                                        android:textColor="#10B981"
+                                        android:layout_marginEnd="4dp" />
+
+                                    <TextView
+                                        android:id="@+id/trendPercentage"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="12%"
+                                        android:textSize="13sp"
+                                        android:textColor="#10B981"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="vs last week"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:alpha="0.6"
+                                    android:layout_marginTop="4dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorOnPrimary"
+                            android:alpha="0.2"
+                            android:layout_marginVertical="20dp" />
+
+                        <!-- Secondary Stats Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <!-- Daily Average -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/dailyAverageTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2h 40m"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Daily Avg"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:alpha="0.7"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="40dp"
+                                android:background="@color/colorOnPrimary"
+                                android:alpha="0.2" />
+
+                            <!-- Best Day -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/bestDayTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1h 20m"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Best Day"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:alpha="0.7"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="40dp"
+                                android:background="@color/colorOnPrimary"
+                                android:alpha="0.2" />
+
+                            <!-- Goals Met -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/goalsMet"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5/7"
+                                    android:textSize="20sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Goals Met"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/colorOnPrimary"
+                                    android:alpha="0.7"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Stats Container for dynamic content -->
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/statsContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+                        </ScrollView>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ========================================= -->
+                <!-- WEEKLY CHART VISUALIZATION -->
+                <!-- ========================================= -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/cardBackground"
+                    app:strokeColor="@color/cardBorder"
+                    app:strokeWidth="0.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Daily Usage"
+                            android:textSize="16sp"
+                            android:textColor="@color/textPrimary"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginBottom="20dp" />
+
+                        <!-- Simple Bar Chart -->
+                        <LinearLayout
+                            android:id="@+id/weeklyChartContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:orientation="horizontal"
+                            android:gravity="bottom"
+                            android:baselineAligned="false">
+
+                            <!-- Mon -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barMon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="60dp"
+                                    android:background="@drawable/chart_bar_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="M"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Tue -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barTue"
+                                    android:layout_width="24dp"
+                                    android:layout_height="45dp"
+                                    android:background="@drawable/chart_bar_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="T"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Wed -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barWed"
+                                    android:layout_width="24dp"
+                                    android:layout_height="80dp"
+                                    android:background="@drawable/chart_bar_warning" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="W"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Thu -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barThu"
+                                    android:layout_width="24dp"
+                                    android:layout_height="55dp"
+                                    android:background="@drawable/chart_bar_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="T"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/colorPrimary"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Fri -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barFri"
+                                    android:layout_width="24dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/chart_bar_success" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="F"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Sat -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barSat"
+                                    android:layout_width="24dp"
+                                    android:layout_height="70dp"
+                                    android:background="@drawable/chart_bar_primary" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="S"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                            <!-- Sun -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center_horizontal">
+
+                                <View
+                                    android:id="@+id/barSun"
+                                    android:layout_width="24dp"
+                                    android:layout_height="35dp"
+                                    android:background="@drawable/chart_bar_success" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="S"
+                                    android:textSize="11sp"
+                                    android:textColor="@color/textSecondary"
+                                    android:layout_marginTop="8dp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <!-- Legend -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="20dp">
+
+                            <View
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:background="@drawable/legend_dot_success"
+                                android:layout_marginEnd="6dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Under Limit"
+                                android:textSize="11sp"
+                                android:textColor="@color/textSecondary"
+                                android:layout_marginEnd="16dp" />
+
+                            <View
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:background="@drawable/legend_dot_warning"
+                                android:layout_marginEnd="6dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Over Limit"
+                                android:textSize="11sp"
+                                android:textColor="@color/textSecondary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ========================================= -->
+                <!-- HISTORY LIST HEADER -->
+                <!-- ========================================= -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="History"
+                    android:textSize="16sp"
+                    android:textColor="@color/textPrimary"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="12dp"
+                    android:paddingStart="4dp" />
+
+                <!-- Progress Bar -->
+                <ProgressBar
+                    android:id="@+id/progressBarScreentime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="32dp"
+                    android:visibility="gone" />
+
+                <!-- Empty State -->
+                <LinearLayout
+                    android:id="@+id/emptyStateContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="40dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📊"
+                        android:textSize="48sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <TextView
+                        android:id="@+id/emptyStateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No data available yet"
+                        android:textSize="16sp"
+                        android:textColor="@color/textPrimary"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start using the app to track your usage"
+                        android:textSize="14sp"
+                        android:textColor="@color/textSecondary"
+                        android:gravity="center"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- RecyclerView for history -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewScreentimeHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

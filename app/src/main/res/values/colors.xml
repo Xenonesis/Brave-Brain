@@ -157,4 +157,45 @@
     <color name="text_secondary">@color/textSecondary</color>
     <color name="card_background">@color/cardBackground</color>
     <color name="primaryLight">@color/colorPrimaryLight</color>
+    
+    <!-- ========================================= -->
+    <!-- NEW UI REDESIGN COLORS -->
+    <!-- ========================================= -->
+    
+    <!-- Hero Section Gradient - Modern Purple/Blue -->
+    <color name="heroGradientStart">#6366F1</color>
+    <color name="heroGradientMid">#8B5CF6</color>
+    <color name="heroGradientEnd">#A855F7</color>
+    <color name="heroTextPrimary">#FFFFFF</color>
+    <color name="heroTextSecondary">#E0E7FF</color>
+    <color name="heroCardBackground">#FFFFFF</color>
+    <color name="heroAccentCard">#7C3AED</color>
+    
+    <!-- Bottom Navigation Colors -->
+    <color name="bottomNavBackground">#FFFFFF</color>
+    <color name="bottomNavBorder">#E2E8F0</color>
+    <color name="bottomNavActiveIndicator">#EEF2FF</color>
+    
+    <!-- Insight Card Colors -->
+    <color name="insightCardBackground">#FEF3C7</color>
+    <color name="insightCardBorder">#FDE68A</color>
+    <color name="insightTextPrimary">#92400E</color>
+    <color name="insightTextSecondary">#B45309</color>
+    
+    <!-- Focus Mode Colors -->
+    <color name="focusModeGradientStart">#10B981</color>
+    <color name="focusModeGradientEnd">#059669</color>
+    
+    <!-- App Item Colors -->
+    <color name="appItemBackground">#F8FAFC</color>
+    <color name="appItemIconBackground">#F1F5F9</color>
+    
+    <!-- Glass Effect Colors -->
+    <color name="glassBackground">#CCFFFFFF</color>
+    <color name="glassBorder">#33FFFFFF</color>
+    
+    <!-- Animated Ring Colors -->
+    <color name="ringProgressGood">#10B981</color>
+    <color name="ringProgressModerate">#F59E0B</color>
+    <color name="ringProgressHigh">#EF4444</color>
 </resources>

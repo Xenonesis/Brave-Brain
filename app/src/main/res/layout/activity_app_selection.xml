@@ -80,6 +80,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
+        android:paddingBottom="24dp"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Header Card -->
@@ -263,20 +265,38 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Save Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveButton"
+        <!-- Save Button Container -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="Save Selection"
-            android:textSize="15sp"
-            android:textColor="@color/colorOnPrimary"
-            android:textAllCaps="false"
-            android:fontFamily="sans-serif-medium"
-            app:cornerRadius="12dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:rippleColor="@color/colorRipple"
-            android:layout_marginBottom="20dp" />
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Save Selection"
+                android:textSize="16sp"
+                android:textColor="@color/colorOnPrimary"
+                android:textAllCaps="false"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.02"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/colorPrimary"
+                app:rippleColor="@color/colorRipple"
+                app:icon="@drawable/ic_save"
+                app:iconGravity="textStart"
+                app:iconPadding="12dp"
+                app:iconSize="20dp"
+                app:iconTint="@color/colorOnPrimary"
+                android:elevation="4dp"
+                android:stateListAnimator="@null" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 

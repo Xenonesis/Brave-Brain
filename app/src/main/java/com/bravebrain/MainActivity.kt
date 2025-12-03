@@ -16,12 +16,15 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -124,16 +127,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         try {
-            // Update date display
+            // Update date display and greeting
             updateDateDisplay()
+            updateGreeting()
             
             val prefs = getSharedPreferences("blocked_apps", Context.MODE_PRIVATE)
             val hasSelectedApps = (prefs.getStringSet("blocked_packages", emptySet())?.isNotEmpty() == true)
             val hasTimeLimits = !prefs.getString("time_limits", null).isNullOrEmpty()
 
-            val accessButton = findViewById<MaterialButton>(R.id.accessButton)
-            val selectAppsButton = findViewById<MaterialButton>(R.id.selectAppsButton)
-            val setTimeLimitsButton = findViewById<MaterialButton>(R.id.setTimeLimitsButton)
+            // New UI uses View instead of MaterialButton for action cards
+            val accessButton = findViewById<View>(R.id.accessButton)
+            val selectAppsButton = findViewById<View>(R.id.selectAppsButton)
+            val setTimeLimitsButton = findViewById<View>(R.id.setTimeLimitsButton)
             
             // Add null checks to prevent crashes
             if (accessButton == null || selectAppsButton == null || setTimeLimitsButton == null) {
@@ -143,84 +148,132 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Show/hide access button based on permission
-        if (hasUsageStatsPermission(this)) {
-            accessButton.visibility = View.GONE
-        } else {
-            accessButton.visibility = View.VISIBLE
-            accessButton.setOnClickListener {
-                startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-                FeedbackManager.showPermissionRequired(this, "Usage Access")
+            if (hasUsageStatsPermission(this)) {
+                accessButton.visibility = View.GONE
+            } else {
+                accessButton.visibility = View.VISIBLE
+                accessButton.setOnClickListener {
+                    startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+                    FeedbackManager.showPermissionRequired(this, "Usage Access")
+                }
             }
-        }
 
             // Update button states based on app state
-            if (hasSelectedApps) {
-                selectAppsButton.text = "Select Apps to Block"
-                setTimeLimitsButton.isEnabled = true
+            if (!hasSelectedApps) {
+                setTimeLimitsButton.alpha = 0.5f
             } else {
-                selectAppsButton.text = "Select Apps to Block"
-                setTimeLimitsButton.isEnabled = false
+                setTimeLimitsButton.alpha = 1.0f
             }
 
-            if (hasTimeLimits) {
-                setTimeLimitsButton.text = "Update Time Limits"
-            } else {
-                setTimeLimitsButton.text = "Set Time Limits"
+            selectAppsButton.setOnClickListener {
+                if (hasUsageStatsPermission(this@MainActivity)) {
+                    FeedbackManager.showNavigatingTo(this, "App Selection")
+                    startActivity(Intent(this@MainActivity, AppSelectionActivity::class.java))
+                } else {
+                    FeedbackManager.showPermissionRequired(this, "Usage Access")
+                }
             }
 
-        selectAppsButton.setOnClickListener {
-            if (hasUsageStatsPermission(this@MainActivity)) {
-                FeedbackManager.showNavigatingTo(this, "App Selection")
-                startActivity(Intent(this@MainActivity, AppSelectionActivity::class.java))
-            } else {
-                FeedbackManager.showPermissionRequired(this, "Usage Access")
+            setTimeLimitsButton.setOnClickListener {
+                if (hasSelectedApps) {
+                    FeedbackManager.showNavigatingTo(this, "Time Limits")
+                    startActivity(Intent(this@MainActivity, TimeLimitActivity::class.java))
+                } else {
+                    FeedbackManager.showNoAppsSelected(this)
+                }
             }
-        }
 
-        setTimeLimitsButton.setOnClickListener {
-            if (hasSelectedApps) {
-                FeedbackManager.showNavigatingTo(this, "Time Limits")
-                startActivity(Intent(this@MainActivity, TimeLimitActivity::class.java))
-            } else {
-                FeedbackManager.showNoAppsSelected(this)
+            // Gamification button (now a View/MaterialCardView)
+            val viewGamificationButton = findViewById<View>(R.id.viewGamificationButton)
+            viewGamificationButton?.setOnClickListener {
+                FeedbackManager.showNavigatingTo(this, "Achievements")
+                startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
             }
-        }
 
-        // Gamification button
-        val viewGamificationButton = findViewById<MaterialButton>(R.id.viewGamificationButton)
-        viewGamificationButton?.setOnClickListener {
-            FeedbackManager.showNavigatingTo(this, "Achievements")
-            startActivity(Intent(this@MainActivity, GamificationActivity::class.java))
-        }
+            // View Screentime History button
+            val viewScreentimeHistoryButton = findViewById<View>(R.id.viewScreentimeHistoryButton)
+            viewScreentimeHistoryButton?.setOnClickListener {
+                FeedbackManager.showNavigatingTo(this, "Screentime History")
+                startActivity(Intent(this@MainActivity, ScreentimeHistoryActivity::class.java))
+            }
 
-        // View Screentime History button
-        val viewScreentimeHistoryButton = findViewById<MaterialButton>(R.id.viewScreentimeHistoryButton)
-        viewScreentimeHistoryButton?.setOnClickListener {
-            FeedbackManager.showNavigatingTo(this, "Screentime History")
-            startActivity(Intent(this@MainActivity, ScreentimeHistoryActivity::class.java))
-        }
+            // Theme Settings button (now a LinearLayout)
+            val themeSettingsButton = findViewById<View>(R.id.themeSettingsButton)
+            themeSettingsButton?.setOnClickListener {
+                FeedbackManager.showNavigatingTo(this, "Theme Settings")
+                startActivity(Intent(this@MainActivity, ThemeSettingsActivity::class.java))
+            }
 
-        // Theme Settings button
-        val themeSettingsButton = findViewById<MaterialButton>(R.id.themeSettingsButton)
-        themeSettingsButton?.setOnClickListener {
-            FeedbackManager.showNavigatingTo(this, "Theme Settings")
-            startActivity(Intent(this@MainActivity, ThemeSettingsActivity::class.java))
-        }
-
-        // Logout button
-        val logoutButton = findViewById<MaterialButton>(R.id.logoutButton)
-        logoutButton?.setOnClickListener {
-            showLogoutConfirmation()
-        }
-
-        // Notification Preferences button - this is added dynamically in addTestButton()
-        // No need to set it up here as it's handled separately
+            // Logout button (now a LinearLayout)
+            val logoutButton = findViewById<View>(R.id.logoutButton)
+            logoutButton?.setOnClickListener {
+                showLogoutConfirmation()
+            }
+            
+            // Setup bottom navigation
+            setupBottomNavigation()
 
             // Update stats display
             updateStatsDisplay()
+            
+            // Update streak badge
+            updateStreakBadge()
+            
         } catch (e: Exception) {
             e.printStackTrace()
             FeedbackManager.showGenericError(this, "UI setup failed: ${e.message}")
+        }
+    }
+    
+    private fun updateGreeting() {
+        val greetingText = findViewById<TextView>(R.id.greetingText)
+        if (greetingText != null) {
+            val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            val greeting = when {
+                hour < 12 -> "Good Morning 👋"
+                hour < 17 -> "Good Afternoon 👋"
+                hour < 21 -> "Good Evening 👋"
+                else -> "Good Night 🌙"
+            }
+            greetingText.text = greeting
+        }
+    }
+    
+    private fun setupBottomNavigation() {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        bottomNav?.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Already on home
+                    true
+                }
+                R.id.navigation_stats -> {
+                    startActivity(Intent(this, ScreentimeHistoryActivity::class.java))
+                    true
+                }
+                R.id.navigation_focus -> {
+                    startActivity(Intent(this, AppSelectionActivity::class.java))
+                    true
+                }
+                R.id.navigation_achievements -> {
+                    startActivity(Intent(this, GamificationActivity::class.java))
+                    true
+                }
+                R.id.navigation_settings -> {
+                    startActivity(Intent(this, ThemeSettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+    
+    private fun updateStreakBadge() {
+        val streakCount = findViewById<TextView>(R.id.streakCount)
+        if (streakCount != null) {
+            val prefs = getSharedPreferences("gamification_prefs", Context.MODE_PRIVATE)
+            val currentStreak = prefs.getInt("current_streak", 0)
+            streakCount.text = currentStreak.toString()
         }
     }
 
@@ -401,6 +454,25 @@ class MainActivity : AppCompatActivity() {
             } else {
                 android.util.Log.e("MainActivity", "totalScreenTime TextView not found")
             }
+            
+            // Update progress ring (new UI)
+            val screenTimeProgress = findViewById<CircularProgressIndicator>(R.id.screenTimeProgress)
+            if (screenTimeProgress != null) {
+                // Calculate progress based on daily limit (default 4 hours = 240 minutes)
+                val dailyLimit = 240 // 4 hours in minutes
+                val progress = ((totalDeviceMinutes.toFloat() / dailyLimit) * 100).toInt().coerceIn(0, 100)
+                screenTimeProgress.progress = progress
+                
+                // Update status indicator based on progress
+                updateStatusIndicator(progress)
+            }
+            
+            // Update pickups count (new UI element)
+            val pickupsCountView = findViewById<TextView>(R.id.pickupsCount)
+            if (pickupsCountView != null) {
+                val pickups = getPhonePickupsCount()
+                pickupsCountView.text = pickups.toString()
+            }
 
             // Update usage graph
             updateUsageGraph(topAppsUsage, selectedAppUsage, totalDeviceMinutes)
@@ -411,12 +483,101 @@ class MainActivity : AppCompatActivity() {
             // Update enhanced stats
             updateEnhancedStats()
             
+            // Update insight text (new UI)
+            updateInsightText(totalDeviceMinutes)
+            
             // Log stats for debugging
             android.util.Log.d("MainActivity", "Stats updated - Total Device: ${totalDeviceMinutes}m, Selected Apps: ${selectedAppUsage.values.sum()}m")
             
         } catch (e: Exception) {
             e.printStackTrace()
             android.util.Log.e("MainActivity", "Error updating stats: ${e.message}")
+        }
+    }
+    
+    private fun updateStatusIndicator(progress: Int) {
+        val statusText = findViewById<TextView>(R.id.statusText)
+        val statusDot = findViewById<View>(R.id.statusDot)
+        val statusIndicator = findViewById<LinearLayout>(R.id.statusIndicator)
+        
+        if (statusText != null && statusDot != null && statusIndicator != null) {
+            when {
+                progress < 50 -> {
+                    statusText.text = "On Track!"
+                    statusText.setTextColor(ContextCompat.getColor(this, R.color.colorSuccess))
+                    statusIndicator.background = ContextCompat.getDrawable(this, R.drawable.status_chip_success)
+                    statusDot.background = ContextCompat.getDrawable(this, R.drawable.status_dot_success)
+                }
+                progress < 80 -> {
+                    statusText.text = "Getting Close"
+                    statusText.setTextColor(ContextCompat.getColor(this, R.color.colorWarning))
+                    statusIndicator.background = ContextCompat.getDrawable(this, R.drawable.status_chip_warning)
+                    statusDot.background = ContextCompat.getDrawable(this, R.drawable.status_dot_warning)
+                }
+                else -> {
+                    statusText.text = "Limit Reached!"
+                    statusText.setTextColor(ContextCompat.getColor(this, R.color.colorError))
+                    statusIndicator.background = ContextCompat.getDrawable(this, R.drawable.status_chip_danger)
+                    statusDot.background = ContextCompat.getDrawable(this, R.drawable.status_dot_danger)
+                }
+            }
+        }
+    }
+    
+    private fun getPhonePickupsCount(): Int {
+        // Get approximate pickups from usage patterns
+        return try {
+            val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            val startTime = calendar.timeInMillis
+            val endTime = System.currentTimeMillis()
+            
+            val events = usageStatsManager.queryEvents(startTime, endTime)
+            var pickups = 0
+            var lastEventType = -1
+            
+            while (events.hasNextEvent()) {
+                val event = android.app.usage.UsageEvents.Event()
+                events.getNextEvent(event)
+                
+                // Count MOVE_TO_FOREGROUND events as approximate pickups
+                if (event.eventType == android.app.usage.UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                    if (lastEventType != android.app.usage.UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                        pickups++
+                    }
+                }
+                lastEventType = event.eventType
+            }
+            
+            pickups
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error getting pickups: ${e.message}")
+            0
+        }
+    }
+    
+    private fun updateInsightText(totalMinutes: Int) {
+        val insightText = findViewById<TextView>(R.id.insightText)
+        if (insightText != null) {
+            val prefs = getSharedPreferences("usage_history", Context.MODE_PRIVATE)
+            val yesterdayMinutes = prefs.getInt("yesterday_total_minutes", totalMinutes)
+            
+            val insight = when {
+                totalMinutes == 0 -> "Start your day with intention! Your screen time journey begins now. 🌟"
+                totalMinutes < yesterdayMinutes * 0.8 -> {
+                    val reduction = ((1 - totalMinutes.toFloat() / yesterdayMinutes) * 100).toInt()
+                    "Amazing! You've reduced screen time by $reduction% compared to yesterday. Keep it up! 🎉"
+                }
+                totalMinutes < 60 -> "Great start! Less than an hour of screen time so far. 👏"
+                totalMinutes < 120 -> "You're doing well! Stay mindful of your usage. 💪"
+                totalMinutes < 180 -> "Consider taking a screen break soon. 🌿"
+                else -> "Time for a digital detox! Step away and recharge. 🧘"
+            }
+            
+            insightText.text = insight
         }
     }
 
@@ -908,102 +1069,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addTestButton() {
-        try {
-            val container = findViewById<LinearLayout>(R.id.buttonContainer)
-            
-            // Create test blocking button
-            val testButton = MaterialButton(this).apply {
-                text = "🧪 Test Blocking System"
-                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.warning_orange))
-                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                setPadding(32, 24, 32, 24)
-                textSize = 16f
-                
-                setOnClickListener {
-                    testBlockingSystem()
-                }
-            }
-            
-            // Add some margin
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 16, 0, 0)
-            }
-            testButton.layoutParams = params
-            
-            container.addView(testButton)
-            
-            // Add Analytics Dashboard button
-            val analyticsButton = MaterialButton(this).apply {
-                text = "📊 View Analytics & Insights"
-                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.primary_blue))
-                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                setPadding(32, 24, 32, 24)
-                textSize = 16f
-                
-                setOnClickListener {
-                    startActivity(Intent(this@MainActivity, InsightsActivity::class.java))
-                }
-            }
-            
-            val analyticsParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 16, 0, 0)
-            }
-            analyticsButton.layoutParams = analyticsParams
-            container.addView(analyticsButton)
-            
-            // Add Smart Blocking Configuration button
-            val smartBlockingButton = MaterialButton(this).apply {
-                text = "🧠 Smart Blocking Settings"
-                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.success_green))
-                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                setPadding(32, 24, 32, 24)
-                textSize = 16f
-                
-                setOnClickListener {
-                    showSmartBlockingOptions()
-                }
-            }
-            
-            val smartBlockingParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 16, 0, 0)
-            }
-            smartBlockingButton.layoutParams = smartBlockingParams
-            container.addView(smartBlockingButton)
-
-            // Add Notification Preferences button
-            val notificationPrefsButton = MaterialButton(this).apply {
-                text = "🔔 Notification Preferences"
-                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                setPadding(32, 24, 32, 24)
-                textSize = 16f
-                
-                setOnClickListener {
-                    startActivity(Intent(this@MainActivity, NotificationPreferenceActivity::class.java))
-                }
-            }
-
-            val notificationPrefsParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 16, 0, 0)
-            }
-            notificationPrefsButton.layoutParams = notificationPrefsParams
-            container.addView(notificationPrefsButton)
-            
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error adding test button: ${e.message}")
-        }
+        // Test buttons are no longer needed in the redesigned UI
+        // The functionality is now available through the settings menu
+        // Keeping minimal debug options in logcat
+        android.util.Log.d("MainActivity", "Redesigned UI active - test buttons disabled")
     }
     
     private fun testBlockingSystem() {

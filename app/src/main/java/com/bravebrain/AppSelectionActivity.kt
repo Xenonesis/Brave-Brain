@@ -114,14 +114,14 @@ class AppSelectionActivity : AppCompatActivity() {
             selectionCounter.visibility = View.VISIBLE
             counterText.text = "$count app${if (count == 1) "" else "s"} selected"
             // Update save button text and state
-            saveButton.text = "💾 Save $count App${if (count == 1) "" else "s"}"
+            saveButton.text = "Save $count App${if (count == 1) "" else "s"}"
             saveButton.isEnabled = true
             saveButton.alpha = 1.0f
         } else {
             selectionCounter.visibility = View.GONE
-            saveButton.text = "💾 Save Selection"
+            saveButton.text = "Select Apps to Save"
             saveButton.isEnabled = false
-            saveButton.alpha = 0.6f
+            saveButton.alpha = 0.5f
         }
     }
     

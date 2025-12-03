@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow layer -->
+    <item android:top="-4dp" android:left="-2dp" android:right="-2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0A000000" />
+            <corners android:topLeftRadius="28dp" android:topRightRadius="28dp" />
+        </shape>
+    </item>
+    <!-- Main background with glassmorphism effect -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bottomNavBackground" />
+            <corners android:topLeftRadius="28dp" android:topRightRadius="28dp" />
+        </shape>
+    </item>
+    <!-- Top subtle border -->
+    <item android:top="0dp" android:bottom="-1dp">
+        <shape android:shape="rectangle">
+            <stroke android:width="0.5dp" android:color="@color/bottomNavBorder" />
+            <corners android:topLeftRadius="28dp" android:topRightRadius="28dp" />
+        </shape>
+    </item>
+</layer-list>
